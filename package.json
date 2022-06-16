@@ -1,6 +1,6 @@
 {
   "name": "@nadjitan/surveyor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "A library for a capstone project",
   "files": [
