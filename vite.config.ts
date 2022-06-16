@@ -1,29 +1,25 @@
-import { resolve } from "node:path"
 import { defineConfig } from "vite"
+import { resolve } from "path"
 import react from "@vitejs/plugin-react"
-import tsConfigPaths from "vite-tsconfig-paths"
-import dts from "vite-plugin-dts"
 
-export default defineConfig(configEnv => ({
-  plugins: [
-    react(),
-    tsConfigPaths(),
-    dts({
-      include: ["lib/index.ts"],
-      beforeWriteFile: (filePath, content) => ({
-        filePath: filePath.replace("/lib", ""),
-        content,
-      }),
-    }),
-  ],
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "lib"),
+    },
+  },
   build: {
     lib: {
-      entry: resolve("lib", "index.ts"),
+      entry: resolve(__dirname, "lib", "index.ts"),
       name: "Surveyor",
-      fileName: format => `surveyor.${format}.js`,
+      formats: ["es", "cjs"],
+      fileName: ext => `surveyor.${ext}.js`,
     },
     rollupOptions: {
       external: ["react"],
     },
+    target: "esnext",
+    sourcemap: true,
   },
-}))
+})

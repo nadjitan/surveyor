@@ -54,6 +54,7 @@ const Debug: FC = () => {
         left: 0,
         display: "grid",
         userSelect: "none",
+        pointerEvents: "none",
         width: "160px",
         height: "60px",
         padding: "20px",
