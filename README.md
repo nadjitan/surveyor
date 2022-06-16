@@ -1,3 +1,6 @@
-# Capstone Library
+> **Warning**
+> Do not use in Production
 
-A library made for a capstone project.
+# Capstone Package
+
+A package made for a capstone project that records user clicks into a database.
