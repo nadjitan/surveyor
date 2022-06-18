@@ -21,11 +21,10 @@ const Debug: FC = () => {
       let x = clientX - 100
       let y = clientY - 110
 
+      // Prevent going past boundaries of body
       const { offsetWidth, offsetHeight } = debugDiv.current!
-      // Prevent going past right & bottom of body
       const rEdge = document.body.offsetWidth - offsetWidth
       const bEdge = document.body.offsetHeight - offsetHeight
-
       if (x < 0) x = 0
       if (y < 0) y = 0
       if (x > rEdge) x = rEdge

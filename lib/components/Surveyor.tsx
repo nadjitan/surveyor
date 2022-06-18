@@ -1,6 +1,6 @@
 import Hashids from "hashids"
-import { FC, useState } from "react"
-import { PropsWithChildren, useEffect, useRef } from "react"
+import { FC, useEffect, useState } from "react"
+import { PropsWithChildren } from "react"
 import Debug from "./Debug"
 
 type Data =
@@ -26,41 +26,17 @@ const Surveyor: FC<PropsWithChildren<{
   let elems: HTMLElement[]
   let telemetry: Telemetry = { data: [] }
 
-  let queue: Promise<Telemetry | void> = Promise.resolve()
-
-  const putTelemetry = async (t: Telemetry) => {
-    const putTemplate = (data: Telemetry) =>
-      fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          telemetry: { ...data, data: JSON.stringify(t.data) },
-        }),
-        keepalive: true,
-        redirect: "follow",
-      })
-
-    if (t.id !== undefined) {
-      const response = await putTemplate(t)
-
-      telemetry = await response.json()
-      telemetry = { ...telemetry, data: JSON.parse(telemetry.data) }
-      sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
-    } else {
-      queue = queue.then(async tel => {
-        const toPass = tel ? tel : t
-        const response = await putTemplate(toPass)
-
-        telemetry = await response.json()
-        telemetry = { ...telemetry, data: JSON.parse(telemetry.data) }
-        sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
-
-        return telemetry
-      })
-    }
-  }
+  const putTemplate = (tel: Telemetry) =>
+    fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        telemetry: { data: JSON.stringify(tel.data) },
+      }),
+      keepalive: true,
+    })
 
   useEffect(() => {
     setUrl(window.location.href)
@@ -75,10 +51,14 @@ const Surveyor: FC<PropsWithChildren<{
       document.body.querySelectorAll("*:not(script):not(style)")
     )
     elems.forEach((elem, index) => {
+      const newClass = `srvyr-${hashids.encode(index)}`
       if (index === 0) {
-        document.body.classList.add(`srvyr-${hashids.encode(index)}`)
+        // Avoid repetition of class name
+        if (!document.body.classList.contains(newClass))
+          document.body.classList.add(newClass)
       } else {
-        elem.classList.add(`srvyr-${hashids.encode(index)}`)
+        if (!elem.classList.contains(newClass))
+          elem.classList.add(`srvyr-${hashids.encode(index)}`)
       }
     })
 
@@ -96,14 +76,26 @@ const Surveyor: FC<PropsWithChildren<{
       }
 
       if (debug !== undefined && debug === true) {
-        console.table(telemetry.data.map((d: Data) => d.action))
+        console.table(telemetry)
       }
-      // Save telemetry to server
-      putTelemetry(telemetry)
+      sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
+    }
+
+    window.onbeforeunload = (e: BeforeUnloadEvent) => {
+      putTemplate(telemetry)
+
+      // Delay fetch because Firefox is unreliable with "unload"
+      const time = Date.now()
+      while (Date.now() - time < 500) {
+        console.log("waiting")
+      }
+
+      return
     }
 
     return () => {
       document.body.onclick = null
+      window.onbeforeunload = null
     }
   })
 
