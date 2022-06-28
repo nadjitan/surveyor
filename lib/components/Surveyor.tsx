@@ -1,30 +1,43 @@
 import Hashids from "hashids"
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 import { PropsWithChildren } from "react"
 import Debug from "./Debug"
 
-type Data =
-  | {
-      url: string
-      action: string
-    }[]
-  | any
 interface Telemetry {
   id?: string
-  data: Data
+  data: {
+    url: string
+    action: string
+  }[]
 }
 
-const Surveyor: FC<PropsWithChildren<{
-  debug?: boolean
-  /**
-   * The url of you REST api that will be used to store the telemetry
-   */
-  apiUrl: string
-}>> = ({ children, debug, apiUrl }) => {
+const Surveyor: FC<
+  PropsWithChildren<{
+    /**
+     * Enable showing of class and
+     * tag name of an element.
+     */
+    debug?: boolean
+    /**
+     * The url of you REST api that will be used
+     * to store the telemetry.
+     *
+     * Example of a Prisma model:
+     * ```js
+     * model Telemetry {
+     *   id   String @id @default(uuid())
+     *   data String
+     * }
+     * ```
+     */
+    apiUrl: string
+  }>
+> = ({ children, debug, apiUrl }) => {
   const hashids = new Hashids("srvyr", 8)
   const [url, setUrl] = useState<string>()
   let elems: HTMLElement[]
   let telemetry: Telemetry = { data: [] }
+  let sendingDiv = useRef<HTMLDivElement>(null)
 
   const putTemplate = (tel: Telemetry) =>
     fetch(apiUrl, {
@@ -38,10 +51,11 @@ const Surveyor: FC<PropsWithChildren<{
       keepalive: true,
     })
 
+  // On page load
   useEffect(() => {
     setUrl(window.location.href)
     // When page load always check if there is a telemetry in sessionStorage
-    if (sessionStorage.length === 0) {
+    if (sessionStorage.getItem("srvyr") === null) {
       sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
     } else {
       telemetry = JSON.parse(sessionStorage.getItem("srvyr")!)
@@ -61,7 +75,9 @@ const Surveyor: FC<PropsWithChildren<{
           elem.classList.add(`srvyr-${hashids.encode(index)}`)
       }
     })
-
+  }, [])
+  // For event listeners
+  useEffect(() => {
     document.body.onclick = (e: MouseEvent | FocusEvent) => {
       e.stopPropagation()
       const target = e.target as HTMLElement
@@ -69,10 +85,21 @@ const Surveyor: FC<PropsWithChildren<{
         target.className &&
         Array.from(target.classList).find(c => c.startsWith("srvyr-"))
 
-      // Update telemetry variable
-      telemetry = {
-        ...telemetry,
-        data: [...telemetry.data, { url: url!, action: targetClass }],
+      if (telemetry.data.length === 0) {
+        telemetry = {
+          ...telemetry,
+          data: [{ url: url!, action: targetClass! }],
+        }
+      }
+      // Update telemetry data array
+      if (
+        // Avoid duplicating latest click
+        telemetry.data[telemetry.data.length - 1].action !== targetClass
+      ) {
+        telemetry = {
+          ...telemetry,
+          data: [...telemetry.data, { url: url!, action: targetClass! }],
+        }
       }
 
       if (debug !== undefined && debug === true) {
@@ -81,17 +108,25 @@ const Surveyor: FC<PropsWithChildren<{
       sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
     }
 
-    window.onbeforeunload = (e: BeforeUnloadEvent) => {
-      putTemplate(telemetry)
+    const unload = (e: BeforeUnloadEvent) => {
+      document.body.onclick = null
+      if (telemetry.data.length !== 0) {
+        sendingDiv.current!.style.display = "grid"
+        putTemplate(telemetry)
 
-      // Delay fetch because Firefox is unreliable with "unload"
-      const time = Date.now()
-      while (Date.now() - time < 500) {
-        console.log("waiting")
+        // Delay because Firefox is unreliable with unload listener
+        if (navigator.userAgent.indexOf("Firefox") != -1) {
+          const time = Date.now()
+          while (Date.now() - time < 800) {
+            console.log("waiting...")
+          }
+        }
+
+        return null
       }
-
-      return
     }
+
+    window.onbeforeunload = unload
 
     return () => {
       document.body.onclick = null
@@ -102,6 +137,21 @@ const Surveyor: FC<PropsWithChildren<{
   return (
     <>
       {debug && <Debug />} {children}
+      <div
+        ref={sendingDiv}
+        style={{
+          display: "none",
+          border: "2px solid black",
+          padding: "1.5rem 2.5rem 1.5rem 2.5rem",
+          borderRadius: "2rem",
+          right: 50,
+          bottom: 40,
+          position: "absolute",
+        }}>
+        <div style={{ fontSize: "2rem", fontFamily: "Helvetica" }}>
+          Sending...
+        </div>
+      </div>
     </>
   )
 }

@@ -12,9 +12,9 @@ module.exports = {
   previewHead: head => `
   ${head}
   <style>
-    body {
+    body, html {
       width: 100%;
-      height: 100vh;
+      height: 100%;
     }
     #root {
       width: 100%;
