@@ -10,18 +10,20 @@ export default {
 } as ComponentMeta<typeof Surveyor>
 
 const Template: ComponentStory<typeof Surveyor> = args => {
-  useEffect(() => {
-    initSurveyor("https://capstone-api-theta.vercel.app/api/telemetry")
-  }, [])
+  // useEffect(() => {
+  //   initSurveyor("https://capstone-api-theta.vercel.app/api/telemetry")
+  // }, [])
   return (
-    <>
+    <Surveyor
+      apiUrl="https://capstone-api-theta.vercel.app/api/telemetry"
+      debug={true}>
       <button>Test</button>
       <button>Test</button>
       <button>Test</button>
       <button>Test</button>
       <button>Test</button>
       <button>Test</button>
-    </>
+    </Surveyor>
   )
 }
 

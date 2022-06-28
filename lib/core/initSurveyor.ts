@@ -9,9 +9,11 @@ interface Telemetry {
 }
 
 /**
+ * Needs to be called for each HTML page.
  *
  * @param apiUrl The url of you REST api that will be used
  * to store the telemetry.
+ *
  * @example
  * This is the object model for each data
  * ```ts
@@ -23,6 +25,7 @@ interface Telemetry {
  */
 function initSurveyor(apiUrl: string) {
   let sendingParentDiv = document.createElement("div")
+  sendingParentDiv.id = "srvyr-notif-send"
   sendingParentDiv.style.display = "none"
   sendingParentDiv.style.position = "fixed"
   sendingParentDiv.style.width = "100vw"
@@ -43,7 +46,9 @@ function initSurveyor(apiUrl: string) {
   sendingChild.innerText = "Sending..."
   sendingDiv.appendChild(sendingChild)
   sendingParentDiv.appendChild(sendingDiv)
-  document.body.prepend(sendingParentDiv)
+  if (!document.getElementById("srvyr-notif-send")) {
+    document.body.prepend(sendingParentDiv)
+  }
 
   function addListeners() {
     document.body.onclick = (e: MouseEvent | FocusEvent) => {
@@ -115,12 +120,7 @@ function initSurveyor(apiUrl: string) {
       keepalive: true,
     })
 
-  // Avoid duplicating instance
-  if (
-    !Array.from(document.body.classList).find(c => c.startsWith("srvyr-")) &&
-    typeof window !== undefined &&
-    typeof document !== undefined
-  ) {
+  function addClasses() {
     gApiUrl = apiUrl
     url = window.location.href
     // When page load always check if there is a telemetry in sessionStorage
@@ -144,7 +144,10 @@ function initSurveyor(apiUrl: string) {
           elem.classList.add(`srvyr-${hashids.encode(index)}`)
       }
     })
+  }
 
+  if (typeof window !== undefined && typeof document !== undefined) {
+    addClasses()
     addListeners()
   }
 }
