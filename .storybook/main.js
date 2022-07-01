@@ -9,22 +9,6 @@ module.exports = {
     "@storybook/addon-interactions",
   ],
   framework: "@storybook/react",
-  previewHead: head => `
-  ${head}
-  <style>
-    body, html {
-      width: 100%;
-      height: 100%;
-    }
-    #root {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-    }
-  </style>
-`,
   core: {
     builder: "@storybook/builder-vite",
   },

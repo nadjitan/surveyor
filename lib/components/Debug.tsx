@@ -1,7 +1,9 @@
-import { FC, useEffect, useRef } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 
 const Debug: FC = () => {
   let debugDiv = useRef<HTMLDivElement>(null)
+  const [tagName, setTagName] = useState("")
+  const [targetClass, seTargetClass] = useState("")
 
   useEffect(() => {
     document.onmousemove = ({
@@ -13,13 +15,15 @@ const Debug: FC = () => {
       const targetClass =
         t.className && Array.from(t.classList).find(c => c.startsWith("srvyr-"))
       if (targetClass) {
-        const child = debugDiv.current?.firstElementChild
-        debugDiv.current!.style.display = "fixed"
-        child!.innerHTML = `<p>tag: ${t.tagName}</p><p>class: ${targetClass}</p>`
+        setTagName(t.tagName)
+        seTargetClass("." + targetClass)
+      } else {
+        setTagName(t.tagName)
+        seTargetClass("")
       }
 
-      let x = clientX - 100
-      let y = clientY - 110
+      let x = clientX + 15
+      let y = clientY + 15
 
       // Prevent going past boundaries of body
       const { offsetWidth, offsetHeight } = debugDiv.current!
@@ -52,20 +56,27 @@ const Debug: FC = () => {
         top: 0,
         left: 0,
         display: "grid",
+        placeItems: "center",
         userSelect: "none",
         pointerEvents: "none",
-        width: "160px",
-        height: "60px",
-        padding: "20px",
+        width: "max-content",
+        height: "max-content",
+        padding: "0.5rem 1rem",
         backgroundColor: "rgba(0, 0, 0, 0.6)",
         borderRadius: 10,
         color: "white",
         font: "12px monospace",
         zIndex: 100,
         transition: "all 0.01s linear, opacity 0.25s ease",
-      }}
-    >
-      <div style={{ width: "100%", height: "100%" }}></div>
+      }}>
+      <div>
+        <div style={{ marginBottom: "8px" }}>
+          tag: <span style={{ fontStyle: "italic" }}>{tagName}</span>
+        </div>
+        <div>
+          class: <span style={{ fontWeight: "bold" }}>{targetClass}</span>
+        </div>
+      </div>
     </div>
   )
 }

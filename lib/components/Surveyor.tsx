@@ -13,6 +13,7 @@ interface Telemetry {
 
 const Surveyor: FC<
   PropsWithChildren<{
+    logClicks?: boolean
     /**
      * Enable showing of class and
      * tag name of an element.
@@ -32,7 +33,7 @@ const Surveyor: FC<
      */
     apiUrl: string
   }>
-> = ({ children, debug, apiUrl }) => {
+> = ({ children, logClicks = true, debug, apiUrl }) => {
   const hashids = new Hashids("srvyr", 8)
   const [url, setUrl] = useState<string>()
   let elems: HTMLElement[]
@@ -51,7 +52,6 @@ const Surveyor: FC<
       keepalive: true,
     })
 
-  // On page load
   useEffect(() => {
     setUrl(window.location.href)
     // When page load always check if there is a telemetry in sessionStorage
@@ -75,62 +75,58 @@ const Surveyor: FC<
           elem.classList.add(`srvyr-${hashids.encode(index)}`)
       }
     })
-  }, [])
-  // For event listeners
-  useEffect(() => {
-    document.body.onclick = (e: MouseEvent | FocusEvent) => {
-      e.stopPropagation()
-      const target = e.target as HTMLElement
-      const targetClass =
-        target.className &&
-        Array.from(target.classList).find(c => c.startsWith("srvyr-"))
 
-      if (telemetry.data.length === 0) {
-        telemetry = {
-          ...telemetry,
-          data: [{ url: url!, action: targetClass! }],
+    if (logClicks) {
+      document.body.onclick = (e: MouseEvent | FocusEvent) => {
+        e.stopPropagation()
+        const target = e.target as HTMLElement
+        const targetClass =
+          target.className &&
+          Array.from(target.classList).find(c => c.startsWith("srvyr-"))
+
+        if (telemetry.data.length === 0) {
+          telemetry = {
+            ...telemetry,
+            data: [{ url: url!, action: targetClass! }],
+          }
         }
-      }
-      // Update telemetry data array
-      if (
-        // Avoid duplicating latest click
-        telemetry.data[telemetry.data.length - 1].action !== targetClass
-      ) {
-        telemetry = {
-          ...telemetry,
-          data: [...telemetry.data, { url: url!, action: targetClass! }],
+        // Update telemetry data array
+        if (
+          // Avoid duplicating latest click
+          telemetry.data[telemetry.data.length - 1].action !== targetClass
+        ) {
+          telemetry = {
+            ...telemetry,
+            data: [...telemetry.data, { url: url!, action: targetClass! }],
+          }
         }
+
+        if (debug !== undefined && debug === true) {
+          console.table(telemetry)
+        }
+        sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
       }
 
-      if (debug !== undefined && debug === true) {
-        console.table(telemetry)
-      }
-      sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
-    }
+      window.onbeforeunload = (e: BeforeUnloadEvent) => {
+        document.body.onclick = null
+        if (telemetry.data.length !== 0) {
+          sendingDiv.current!.style.display = "grid"
+          putTemplate(telemetry)
 
-    const unload = (e: BeforeUnloadEvent) => {
-      document.body.onclick = null
-      if (telemetry.data.length !== 0) {
-        sendingDiv.current!.style.display = "grid"
-        putTemplate(telemetry)
-
-        // Delay because Firefox is unreliable with unload listener
-        if (navigator.userAgent.indexOf("Firefox") != -1) {
+          // Delay because Firefox is unreliable with unload listener
           const time = Date.now()
           while (Date.now() - time < 800) {
             console.log("waiting...")
           }
+
+          return null
         }
-
-        return null
       }
-    }
 
-    window.onbeforeunload = unload
-
-    return () => {
-      document.body.onclick = null
-      window.onbeforeunload = null
+      return () => {
+        document.body.onclick = null
+        window.onbeforeunload = null
+      }
     }
   })
 
