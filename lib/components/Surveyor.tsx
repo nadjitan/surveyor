@@ -7,12 +7,15 @@ interface Telemetry {
   id?: string
   data: {
     url: string
-    action: string
+    class: string
   }[]
 }
 
 const Surveyor: FC<
   PropsWithChildren<{
+    /**
+     * Whether to send data or not. Defaults to ```true```
+     */
     logClicks?: boolean
     /**
      * Enable showing of class and
@@ -20,7 +23,7 @@ const Surveyor: FC<
      */
     debug?: boolean
     /**
-     * The url of you REST api that will be used
+     * The url of your REST api that will be used
      * to store the telemetry.
      *
      * Example of a Prisma model:
@@ -87,17 +90,17 @@ const Surveyor: FC<
         if (telemetry.data.length === 0) {
           telemetry = {
             ...telemetry,
-            data: [{ url: url!, action: targetClass! }],
+            data: [{ url: url!, class: targetClass! }],
           }
         }
         // Update telemetry data array
         if (
           // Avoid duplicating latest click
-          telemetry.data[telemetry.data.length - 1].action !== targetClass
+          telemetry.data[telemetry.data.length - 1].class !== targetClass
         ) {
           telemetry = {
             ...telemetry,
-            data: [...telemetry.data, { url: url!, action: targetClass! }],
+            data: [...telemetry.data, { url: url!, class: targetClass! }],
           }
         }
 
@@ -138,7 +141,7 @@ const Surveyor: FC<
         style={{
           display: "none",
           border: "2px solid black",
-          padding: "1.5rem 2.5rem 1.5rem 2.5rem",
+          padding: "1.5rem 2.5rem",
           borderRadius: "2rem",
           right: 50,
           bottom: 40,
