@@ -1,0 +1,7 @@
+.clientBody {
+  @apply min-h-screen w-full grid text-theme-on-background;
+  grid-template-areas:
+    "lnav content rnav"
+    "lnav content rnav";
+  grid-template-columns: 80px 1fr 350px;
+}

@@ -2,6 +2,7 @@ import Hashids from "hashids"
 import { FC, useEffect, useRef, useState } from "react"
 import { PropsWithChildren } from "react"
 import Debug from "./Debug"
+import React from "react"
 
 interface Telemetry {
   id?: string

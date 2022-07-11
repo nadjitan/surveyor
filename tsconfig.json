@@ -19,8 +19,9 @@
     "declarationMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["lib/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["./lib"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
