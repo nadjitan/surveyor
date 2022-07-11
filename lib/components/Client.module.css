@@ -1,7 +1,102 @@
 .clientBody {
-  @apply min-h-screen w-full grid text-theme-on-background;
+  @apply svyr-min-h-screen svyr-w-full svyr-grid svyr-text-theme-on-background;
   grid-template-areas:
     "lnav content rnav"
     "lnav content rnav";
   grid-template-columns: 80px 1fr 350px;
+}
+h1 {
+  @apply svyr-text-3xl svyr-text-theme-on-surface md:svyr-text-3xl lg:svyr-text-5xl;
+}
+h2 {
+  @apply svyr-text-2xl svyr-text-theme-on-surface md:svyr-text-2xl lg:svyr-text-4xl;
+}
+h3 {
+  @apply svyr-text-xl svyr-font-medium svyr-text-theme-on-surface md:svyr-text-xl lg:svyr-text-3xl;
+}
+h4 {
+  @apply svyr-text-lg svyr-font-medium svyr-text-theme-on-surface;
+}
+p {
+  @apply svyr-text-sm svyr-text-theme-on-surface md:svyr-text-base lg:svyr-text-lg;
+}
+span {
+  @apply svyr-flex svyr-items-center svyr-text-theme-on-surface;
+}
+ul {
+  @apply svyr-list-inside svyr-list-disc svyr-text-theme-on-surface;
+}
+svg {
+  @apply svyr-cursor-pointer;
+}
+
+input {
+  @apply placeholder:svyr-font-inter-medium placeholder:svyr-text-theme-grey svyr-text-sm focus:svyr-outline-none;
+}
+
+button {
+  @apply svyr-font-inter-medium svyr-bg-theme-primary svyr-flex svyr-flex-row svyr-justify-center svyr-rounded-full svyr-text-sm svyr-py-3 svyr-px-4;
+}
+
+.leftNav {
+  @apply svyr-max-h-screen svyr-min-h-screen svyr-bg-theme-surface svyr-flex svyr-flex-col;
+  grid-area: "lnav";
+}
+.leftNav .lItem {
+  @apply svyr-flex svyr-flex-col svyr-items-center svyr-justify-center svyr-w-full svyr-h-16 svyr-cursor-pointer svyr-py-10 svyr-mt-4;
+}
+
+.clientContent {
+  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-h-full svyr-bg-theme-background;
+  grid-area: "content";
+}
+.clientContent .ccHeader {
+  @apply svyr-w-full svyr-justify-between svyr-flex;
+}
+.clientContent .ccHeaderL {
+  @apply svyr-flex svyr-flex-row svyr-justify-center svyr-items-center;
+}
+.clientContent .ccHeaderR {
+  @apply svyr-w-48 svyr-rounded-full svyr-text-sm;
+}
+.clientContent .ccBody {
+  @apply svyr-bg-theme-surface svyr-h-full svyr-w-full svyr-box-border svyr-p-6 svyr-mt-8;
+}
+.clientContent .ccBodyTop {
+  @apply svyr-bg-theme-surface svyr-h-full svyr-w-full svyr-box-border svyr-p-6 svyr-mt-8;
+}
+.clientContent .ccBodyBottom {
+  @apply svyr-bg-theme-surface svyr-h-96 svyr-w-full svyr-overflow-hidden svyr-box-border svyr-p-6 svyr-mt-4;
+}
+.clientContent .ccBodyBottom .pathDataContainer {
+  @apply svyr-bg-theme-container svyr-flex svyr-flex-row svyr-p-3 svyr-items-center svyr-mt-2 svyr-rounded-md;
+}
+.clientContent .ccBodyBottom .pathDataContainer h5 {
+  @apply svyr-text-theme-on-surface svyr-font-inter-semibold svyr-w-14;
+}
+.clientContent .ccBodyBottom .pathDataContainer p {
+  @apply svyr-text-theme-on-surface svyr-text-sm;
+}
+
+.rightNav {
+  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-bg-theme-surface svyr-overflow-hidden;
+  grid-area: "rnav";
+}
+.rightNav .rnContainer {
+  @apply svyr-flex svyr-flex-col svyr-overflow-x-hidden svyr-overflow-y-auto svyr-h-full svyr-w-full svyr-mt-2 svyr-overflow-hidden;
+}
+.rightNav .rnContainer .rnItem {
+  @apply svyr-bg-theme-container svyr-w-full svyr-box-border svyr-p-3 svyr-rounded-md svyr-mt-2 svyr-select-none svyr-cursor-pointer hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface;
+}
+.rightNav .rnContainer .rnItem:first-of-type {
+  @apply svyr-bg-theme-selected;
+}
+.rightNav .rnContainer .rnItem h5 {
+  @apply svyr-text-theme-on-surface svyr-text-sm svyr-font-inter-medium svyr-break-words;
+}
+.rightNav .rnContainer .rnItem:first-of-type p {
+  @apply svyr-text-theme-on-surface;
+}
+.rightNav .rnContainer .rnItem p {
+  @apply svyr-text-theme-grey svyr-text-sm;
 }

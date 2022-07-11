@@ -18,7 +18,7 @@ export default defineConfig({
       fileName: ext => `surveyor.${ext}.js`,
     },
     rollupOptions: {
-      external: ["react"],
+      external: ["react", "react-dom"],
     },
     target: "esnext",
     sourcemap: true,

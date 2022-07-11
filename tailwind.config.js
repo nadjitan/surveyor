@@ -31,6 +31,7 @@ module.exports = {
     },
   },
   plugins: [],
+  prefix: "svyr-",
   // corePlugins: {
   //   preflight: false,
   // },
