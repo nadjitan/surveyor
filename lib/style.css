@@ -42,3 +42,13 @@
   --on-surface: rgb(48, 54, 47);
   --shadow: rgb(51, 51, 51);
 }
+
+.svyr-selected {
+  @apply svyr-relative before:svyr-absolute before:svyr-h-full
+  before:svyr-w-full before:svyr-border-4
+  before:svyr-border-[green] before:svyr-bg-[green]/50
+  before:svyr-content-[''];
+}
+.svyr-node-selected {
+  @apply svyr-bg-theme-on-surface;
+}

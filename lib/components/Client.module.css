@@ -47,7 +47,7 @@ button {
 }
 
 .clientContent {
-  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-h-full svyr-bg-theme-background;
+  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-h-full svyr-bg-theme-background svyr-min-w-full svyr-max-w-full svyr-overflow-x-hidden;
   grid-area: "content";
 }
 .clientContent .ccHeader {
