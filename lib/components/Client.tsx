@@ -5,6 +5,7 @@ import {
   LoadingIcon,
   PlayIcon,
   SearchIcon,
+  StopIcon,
   TempIcon,
 } from "./icons"
 import clientStyle from "./Client.module.css"
@@ -38,7 +39,6 @@ const Client: FC<
   const [page, setPage] = useState<"data" | "replay">("replay")
 
   let recordedElems = useRef<Data[]>([])
-  let timelineElem = useRef<HTMLIFrameElement>(null)
 
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
@@ -75,57 +75,81 @@ const Client: FC<
       follower = divFollower
     }
 
-    const elem = iframeDoc.body.querySelector(
-      `.${clicks[arrIndex].class}`
-    ) as HTMLElement
+    const elemToFollow = iframeDoc.body.getElementsByClassName(
+      clicks[arrIndex].class
+    )[0] as HTMLElement
 
+    const bcr = elemToFollow!.getBoundingClientRect()
     // FOLLOWER STYLES
-    const bcr = elem!.getBoundingClientRect()
     follower!.style.transition = "all 0.2s linear, opacity 0.25s ease"
     follower!.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
     follower!.style.width = `${bcr.width}px`
     follower!.style.height = `${bcr.height}px`
     follower!.style.display = "grid"
-    if (elem!.tagName !== "A") elem!.click()
-  }
-
-  function activateNode(index: number) {
+    if (elemToFollow!.tagName !== "A") elemToFollow!.click()
+    // ACTIVATE TIMELINE NODE
     if (prevNode) prevNode.classList.remove("svyr-node-selected")
-    tlNodes[index].classList.add("svyr-node-selected")
-    prevNode = tlNodes[index] as HTMLElement
+    tlNodes[arrIndex].classList.add("svyr-node-selected")
+    prevNode = tlNodes[arrIndex] as HTMLElement
   }
 
   useEffect(() => {
     if (page === "replay") {
-      // timelineElem = document.getElementById("timeline") as HTMLIFrameElement
-      // while (timelineElem.current!.firstChild?.nextSibling) {
-      //   timelineElem.current!.removeChild(
-      //     timelineElem.current!.firstChild?.nextSibling
-      //   )
-      // }
-
-      // clicks.forEach((d, index) => {
-      //   const tlItem = document.createElement("div")
-      //   tlItem.classList.add(
-      //     "hover:svyr-bg-theme-primary",
-      //     `svyr-ml-${4}`,
-      //     "svyr-w-4",
-      //     "svyr-h-4",
-      //     "svyr-border-[2px]",
-      //     "svyr-border-theme-grey",
-      //     "svyr-bg-theme-surface",
-      //     "svyr-rotate-45",
-      //     "svyr-cursor-pointer"
-      //   )
-      //   timelineElem.current!.appendChild(tlItem)
-      // })
-
       if (loadIframe) setUrl(window.location.origin)
 
       const replayBtn = document.getElementById("btn-replay")
+      const replayStop = document.getElementById("btn-stop")
 
       const iframeLoadingElem = document.getElementById("svyr-iframe-loading")
       iframe = document.getElementById("svyr-website") as HTMLIFrameElement
+
+      /**
+       * REPLAY SYSTEM
+       */
+      function replay() {
+        replayBtn!.style.display = "none"
+        replayStop!.style.display = "flex"
+        // ALWAYS RESET ON CLICK
+        arrIndex = 0
+        // LOOPING CLICKS DATA
+        const clicksInterval = setInterval(() => {
+          if (arrIndex < clicks.length) {
+            // IF IFRAME IS NOT EQUAL TO DATA URL
+            if (iframe.src !== clicks[arrIndex].url) {
+              paused = true
+
+              // iframeDoc.body.removeChild(divFollower)
+              iframe.src = clicks[arrIndex].url
+              iframeLoadingElem!.style.display = "flex"
+
+              iframe.onload = e => {
+                iframeLoadingElem!.style.display = "none"
+                iframeDoc = iframe.contentDocument!
+                // WAIT SURVEYOR SCRIPTS
+                onClassChange(iframeDoc.body, () => {
+                  paused = false
+                })
+              }
+            }
+            if (paused === false) {
+              moveFollower()
+              arrIndex++
+            }
+          } else {
+            paused = true
+            clearInterval(clicksInterval)
+            replayBtn!.style.display = "flex"
+            replayStop!.style.display = "none"
+          }
+        }, delay)
+
+        replayStop!.onclick = () => {
+          paused = true
+          clearInterval(clicksInterval)
+          replayBtn!.style.display = "flex"
+          replayStop!.style.display = "none"
+        }
+      }
 
       iframe.onload = () => {
         iframeDoc = iframe.contentDocument!
@@ -147,48 +171,15 @@ const Client: FC<
         //   }
         // })
 
-        // REPLAY SYSTEM
-        replayBtn!.onclick = () => {
-          // ALWAYS RESET ON CLICK
-          arrIndex = 0
-
-          // LOOPING CLASSES
-          const clicksInterval = setInterval(() => {
-            if (arrIndex < clicks.length) {
-              // IF IFRAME IS NOT EQUAL TO DATA URL
-              if (iframe.src !== clicks[arrIndex].url) {
-                paused = true
-
-                // iframeDoc.body.removeChild(divFollower)
-                iframe.src = clicks[arrIndex].url
-                iframeLoadingElem!.style.display = "flex"
-
-                iframe.onload = e => {
-                  iframeLoadingElem!.style.display = "none"
-                  iframeDoc = iframe.contentDocument!
-                  // WAIT SURVEYOR SCRIPTS
-                  onClassChange(iframeDoc.body, () => {
-                    paused = false
-                  })
-                }
-              }
-              if (paused === false) {
-                moveFollower()
-                activateNode(arrIndex)
-                arrIndex++
-              }
-            } else {
-              clearInterval(clicksInterval)
-            }
-          }, delay)
-        }
+        replayBtn!.onclick = replay
 
         // TIMELINE NODES
         tlNodes = document.getElementsByClassName("svyr-tl-node")
         Array.from(tlNodes).map((elem, index) => {
           elem.addEventListener("click", () => {
             paused = true
-            activateNode(index)
+            replayBtn!.style.display = "flex"
+            replayStop!.style.display = "none"
             arrIndex = index
 
             if (iframe.src !== clicks[arrIndex].url) {
@@ -198,7 +189,7 @@ const Client: FC<
               iframe.onload = e => {
                 iframeLoadingElem!.style.display = "none"
                 iframeDoc = iframe.contentDocument!
-                // WAIT SURVEYOR SCRIPTS
+                replayBtn!.onclick = replay
                 onClassChange(iframeDoc.body, () => {
                   moveFollower()
                 })
@@ -297,12 +288,21 @@ const Client: FC<
 
               <button
                 id="btn-replay"
-                className="svyr-w-28 svyr-rounded-full svyr-text-sm">
+                className="svyr-w-max svyr-rounded-full svyr-text-sm">
                 <PlayIcon
                   spanClass="svyr-w-7 svyr-h-full"
                   svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
                 />
                 <span>Play</span>
+              </button>
+              <button
+                id="btn-stop"
+                className="svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm svyr-hidden">
+                <StopIcon
+                  spanClass="svyr-w-7 svyr-h-full"
+                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+                />
+                <span>Stop</span>
               </button>
             </div>
 
@@ -324,7 +324,6 @@ const Client: FC<
                 Timeline
               </h5>
               <div
-                ref={timelineElem}
                 id="timeline"
                 className="svyr-relative svyr-h-5/6 svyr-overflow-y-hidden svyr-overflow-x-auto svyr-min-w-full svyr-max-w-max svyr-flex svyr-flex-row svyr-items-center">
                 <div className="svyr-h-[2px] svyr-bg-theme-grey svyr-max-w-max svyr-min-w-full svyr-flex svyr-flex-row svyr-items-center svyr-overflow-visible">

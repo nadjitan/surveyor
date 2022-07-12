@@ -21,6 +21,19 @@ export const TempIcon: FC<IconProps> = props => (
     </svg>
   </span>
 )
+export const StopIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.375 20.25H5.625a1.875 1.875 0 0 1-1.875-1.875V5.625A1.875 1.875 0 0 1 5.625 3.75h12.75a1.875 1.875 0 0 1 1.875 1.875v12.75a1.875 1.875 0 0 1-1.875 1.875Z"></path>
+    </svg>
+  </span>
+)
 export const PlayIcon: FC<IconProps> = props => (
   <span title={props.title} onClick={props.onClick} className={props.spanClass}>
     <svg

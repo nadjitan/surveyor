@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         "theme-primary": "var(--primary)",
+        "theme-primary-disabled": "var(--primary-disabled)",
         "theme-secondary": "var(--secondary)",
         "theme-tertiary": "var(--tertiary)",
         "theme-background": "var(--background)",

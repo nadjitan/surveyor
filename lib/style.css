@@ -17,6 +17,7 @@
 
 :root {
   --primary: rgb(92, 56, 255);
+  --primary-disabled: rgb(64, 41, 166);
   --secondary: rgb(51, 171, 160);
   --tertiary: rgb(108, 105, 120);
   --background: rgb(19, 21, 23);
