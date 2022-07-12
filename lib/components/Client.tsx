@@ -1,5 +1,12 @@
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
-import { DeleteIcon, EditIcon, PlayIcon, SearchIcon, TempIcon } from "./icons"
+import {
+  DeleteIcon,
+  EditIcon,
+  LoadingIcon,
+  PlayIcon,
+  SearchIcon,
+  TempIcon,
+} from "./icons"
 import clientStyle from "./Client.module.css"
 
 type Data = { url: string; class: string }
@@ -36,33 +43,56 @@ const Client: FC<
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
 
-  let prevEl: HTMLElement | null = null
   let arrIndex = 0
   let paused = false
-  const delay = 500
+  const delay = 700
 
   let tlNodes: HTMLCollectionOf<Element>
   let prevNode: HTMLElement | null = null
 
-  function activateElem() {
-    let elem: HTMLElement
-    iframeDoc.body.querySelectorAll("*").forEach(el => {
-      if (el.classList.contains(clicks[arrIndex].class))
-        elem = el as HTMLElement
-    })
+  function createFollower() {
+    const divFollower = iframeDoc.createElement("div")
+    divFollower.id = "svyr-follower"
+    divFollower.style.display = "none"
+    divFollower.style.position = "absolute"
+    divFollower.style.left = "0px"
+    divFollower.style.top = "0px"
+    divFollower.style.width = "50px"
+    divFollower.style.height = "50px"
+    divFollower.style.border = "2px solid green"
+    divFollower.style.background = "rgb(0 128 0 / 0.5)"
+    iframeDoc.body.style.position = "relative"
+    iframeDoc.body.appendChild(divFollower)
 
-    // TOGGLE STYLES
-    if (prevEl) prevEl.classList.remove("svyr-selected")
-    elem!.classList.add("svyr-selected")
-    if (elem!.tagName !== "A") elem!.click()
-
-    prevEl = elem!
+    return divFollower
   }
 
-  function activateNode(index: number, nodes: HTMLCollectionOf<Element>) {
+  function moveFollower() {
+    let follower = iframeDoc.getElementById("svyr-follower")
+    if (!follower) {
+      const divFollower = createFollower()
+      iframeDoc.body.appendChild(divFollower)
+      follower = divFollower
+    }
+
+    const elem = iframeDoc.body.querySelector(
+      `.${clicks[arrIndex].class}`
+    ) as HTMLElement
+
+    // FOLLOWER STYLES
+    const bcr = elem!.getBoundingClientRect()
+    follower!.style.transition = "all 0.2s linear, opacity 0.25s ease"
+    follower!.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
+    follower!.style.width = `${bcr.width}px`
+    follower!.style.height = `${bcr.height}px`
+    follower!.style.display = "grid"
+    if (elem!.tagName !== "A") elem!.click()
+  }
+
+  function activateNode(index: number) {
     if (prevNode) prevNode.classList.remove("svyr-node-selected")
-    nodes[index].classList.add("svyr-node-selected")
-    prevNode = nodes[index] as HTMLElement
+    tlNodes[index].classList.add("svyr-node-selected")
+    prevNode = tlNodes[index] as HTMLElement
   }
 
   useEffect(() => {
@@ -92,52 +122,35 @@ const Client: FC<
 
       if (loadIframe) setUrl(window.location.origin)
 
-      tlNodes = document.getElementsByClassName("svyr-tl-node")
-      Array.from(tlNodes).map((elem, index) => {
-        elem.addEventListener("click", () => {
-          arrIndex = index
-          paused = true
-
-          if (iframe.src !== clicks[arrIndex].url) {
-            iframe.src = clicks[arrIndex].url
-            iframe.onload = e => {
-              iframeDoc = iframeDoc = iframe.contentDocument!
-              activateElem()
-            }
-          } else {
-            activateElem()
-          }
-        })
-      })
-
       const replayBtn = document.getElementById("btn-replay")
 
-      iframe = document.getElementById("srvyr-website") as HTMLIFrameElement
+      const iframeLoadingElem = document.getElementById("svyr-iframe-loading")
+      iframe = document.getElementById("svyr-website") as HTMLIFrameElement
 
       iframe.onload = () => {
-        iframeDoc = iframeDoc = iframe.contentDocument!
+        iframeDoc = iframe.contentDocument!
+        iframeLoadingElem!.style.display = "none"
 
         // RECORDING
-        iframeDoc.addEventListener("click", e => {
-          const elem = e.target! as HTMLElement
-          const targetClass =
-            elem.className &&
-            Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
+        // iframeDoc.addEventListener("click", e => {
+        //   const elem = e.target! as HTMLElement
+        //   const targetClass =
+        //     elem.className &&
+        //     Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
 
-          if (targetClass) {
-            recordedElems.current.push({
-              url: iframe.src,
-              class: targetClass,
-            })
-            console.log(recordedElems)
-          }
-        })
+        //   if (targetClass) {
+        //     recordedElems.current.push({
+        //       url: iframe.src,
+        //       class: targetClass,
+        //     })
+        //     console.log(recordedElems)
+        //   }
+        // })
 
         // REPLAY SYSTEM
         replayBtn!.onclick = () => {
           // ALWAYS RESET ON CLICK
           arrIndex = 0
-          prevEl = null
 
           // LOOPING CLASSES
           const clicksInterval = setInterval(() => {
@@ -146,17 +159,22 @@ const Client: FC<
               if (iframe.src !== clicks[arrIndex].url) {
                 paused = true
 
+                // iframeDoc.body.removeChild(divFollower)
                 iframe.src = clicks[arrIndex].url
+                iframeLoadingElem!.style.display = "flex"
+
                 iframe.onload = e => {
-                  iframeDoc = iframeDoc = iframe.contentDocument!
+                  iframeLoadingElem!.style.display = "none"
+                  iframeDoc = iframe.contentDocument!
+                  // WAIT SURVEYOR SCRIPTS
                   onClassChange(iframeDoc.body, () => {
                     paused = false
                   })
                 }
               }
               if (paused === false) {
-                activateElem()
-                activateNode(arrIndex, tlNodes)
+                moveFollower()
+                activateNode(arrIndex)
                 arrIndex++
               }
             } else {
@@ -164,6 +182,32 @@ const Client: FC<
             }
           }, delay)
         }
+
+        // TIMELINE NODES
+        tlNodes = document.getElementsByClassName("svyr-tl-node")
+        Array.from(tlNodes).map((elem, index) => {
+          elem.addEventListener("click", () => {
+            paused = true
+            activateNode(index)
+            arrIndex = index
+
+            if (iframe.src !== clicks[arrIndex].url) {
+              iframe.src = clicks[arrIndex].url
+              iframeLoadingElem!.style.display = "flex"
+
+              iframe.onload = e => {
+                iframeLoadingElem!.style.display = "none"
+                iframeDoc = iframe.contentDocument!
+                // WAIT SURVEYOR SCRIPTS
+                onClassChange(iframeDoc.body, () => {
+                  moveFollower()
+                })
+              }
+            } else {
+              moveFollower()
+            }
+          })
+        })
       }
     }
   }, [page])
@@ -262,11 +306,18 @@ const Client: FC<
               </button>
             </div>
 
-            <iframe
-              id="srvyr-website"
-              src={url}
-              className="svyr-border svyr-w-full svyr-h-full svyr-mt-8 svyr-border-theme-surface"
-            />
+            <div className="svyr-border svyr-w-full svyr-h-full svyr-mt-8 svyr-border-theme-surface svyr-grid svyr-relative">
+              <iframe
+                id="svyr-website"
+                src={url}
+                className="svyr-w-full svyr-h-full"
+              />
+              <div
+                id="svyr-iframe-loading"
+                className="svyr-absolute svyr-flex svyr-flex-row svyr-items-center svyr-right-5 svyr-bottom-5">
+                <LoadingIcon svgClass="svyr-fill-theme-grey" />
+              </div>
+            </div>
 
             <div className="svyr-bg-theme-surface svyr-h-40 svyr-min-w-full svyr-w-full svyr-relative svyr-overflow-y-hidden svyr-box-border svyr-p-6 svyr-mt-4">
               <h5 className="svyr-text-theme-grey svyr-font-inter-semibold">
