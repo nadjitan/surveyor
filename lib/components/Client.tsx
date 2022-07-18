@@ -9,197 +9,50 @@ import {
   TempIcon,
 } from "./icons"
 import clientStyle from "./Client.module.css"
-
-type Data = { url: string; class: string }
-
-function onClassChange(element: HTMLElement, callback: (node: Node) => void) {
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (
-        mutation.type === "attributes" &&
-        mutation.attributeName === "class"
-      ) {
-        callback(mutation.target)
-      }
-    })
-  })
-  observer.observe(element, { attributes: true })
-  return observer.disconnect
-}
+import {
+  mapTelemetries,
+  startClient,
+  fetchTelemetries,
+} from "../utils/utilsSurveyor"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
- *
- * @returns void
  */
 const Client: FC<
-  PropsWithChildren<{ clicks: Data[]; loadIframe: boolean }>
-> = ({ clicks, loadIframe }) => {
+  PropsWithChildren<{ apiUrl: string; loadIframe: boolean }>
+> = ({ apiUrl, loadIframe }) => {
   const [url, setUrl] = useState("")
   const [page, setPage] = useState<"data" | "replay">("replay")
 
-  let recordedElems = useRef<Data[]>([])
+  const [recordedPaths, setRecordedPaths] = useState<
+    { url: string; class: string }[]
+  >([])
 
-  let iframe: HTMLIFrameElement
-  let iframeDoc: Document
+  const [telemetryIndex, setTelemetryIndex] = useState(0)
+  const mappedClicks = mapTelemetries([
+    {
+      id: "test",
+      data: [
+        { url: "http://localhost:3000/", class: "srvyr-2W3kK3Om" },
+        { url: "http://localhost:3000/", class: "srvyr-KLjWGj2Q" },
+        { url: "http://localhost:3000/about", class: "srvyr-ZpPZdXxY" },
+        { url: "http://localhost:3000/about", class: "srvyr-ax37qjEW" },
+        { url: "http://localhost:3000/about", class: "srvyr-KLjWGj2Q" },
+        { url: "http://localhost:3000/", class: "srvyr-KLjWGj2Q" },
+        { url: "http://localhost:3000/", class: "srvyr-2W3kK3Om" },
+      ],
+    },
+  ])
 
-  let arrIndex = 0
-  let paused = false
-  const delay = 700
-
-  let tlNodes: HTMLCollectionOf<Element>
-  let prevNode: HTMLElement | null = null
-
-  function createFollower() {
-    const divFollower = iframeDoc.createElement("div")
-    divFollower.id = "svyr-follower"
-    divFollower.style.display = "none"
-    divFollower.style.position = "absolute"
-    divFollower.style.left = "0px"
-    divFollower.style.top = "0px"
-    divFollower.style.width = "50px"
-    divFollower.style.height = "50px"
-    divFollower.style.border = "2px solid green"
-    divFollower.style.background = "rgb(0 128 0 / 0.5)"
-    iframeDoc.body.style.position = "relative"
-    iframeDoc.body.appendChild(divFollower)
-
-    return divFollower
-  }
-
-  function moveFollower() {
-    let follower = iframeDoc.getElementById("svyr-follower")
-    if (!follower) {
-      const divFollower = createFollower()
-      iframeDoc.body.appendChild(divFollower)
-      follower = divFollower
-    }
-
-    const elemToFollow = iframeDoc.body.getElementsByClassName(
-      clicks[arrIndex].class
-    )[0] as HTMLElement
-
-    const bcr = elemToFollow!.getBoundingClientRect()
-    // FOLLOWER STYLES
-    follower!.style.transition = "all 0.2s linear, opacity 0.25s ease"
-    follower!.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
-    follower!.style.width = `${bcr.width}px`
-    follower!.style.height = `${bcr.height}px`
-    follower!.style.display = "grid"
-    if (elemToFollow!.tagName !== "A") elemToFollow!.click()
-    // ACTIVATE TIMELINE NODE
-    if (prevNode) prevNode.classList.remove("svyr-node-selected")
-    tlNodes[arrIndex].classList.add("svyr-node-selected")
-    prevNode = tlNodes[arrIndex] as HTMLElement
-  }
+  // useEffect(() => {
+  //   fetchTelemetries(apiUrl).then(d => setTelemetries(d))
+  // }, [])
 
   useEffect(() => {
     if (page === "replay") {
       if (loadIframe) setUrl(window.location.origin)
 
-      const replayBtn = document.getElementById("btn-replay")
-      const replayStop = document.getElementById("btn-stop")
-
-      const iframeLoadingElem = document.getElementById("svyr-iframe-loading")
-      iframe = document.getElementById("svyr-website") as HTMLIFrameElement
-
-      /**
-       * REPLAY SYSTEM
-       */
-      function replay() {
-        replayBtn!.style.display = "none"
-        replayStop!.style.display = "flex"
-        // ALWAYS RESET ON CLICK
-        arrIndex = 0
-        // LOOPING CLICKS DATA
-        const clicksInterval = setInterval(() => {
-          if (arrIndex < clicks.length) {
-            // IF IFRAME IS NOT EQUAL TO DATA URL
-            if (iframe.src !== clicks[arrIndex].url) {
-              paused = true
-
-              // iframeDoc.body.removeChild(divFollower)
-              iframe.src = clicks[arrIndex].url
-              iframeLoadingElem!.style.display = "flex"
-
-              iframe.onload = e => {
-                iframeLoadingElem!.style.display = "none"
-                iframeDoc = iframe.contentDocument!
-                // WAIT SURVEYOR SCRIPTS
-                onClassChange(iframeDoc.body, () => {
-                  paused = false
-                })
-              }
-            }
-            if (paused === false) {
-              moveFollower()
-              arrIndex++
-            }
-          } else {
-            paused = true
-            clearInterval(clicksInterval)
-            replayBtn!.style.display = "flex"
-            replayStop!.style.display = "none"
-          }
-        }, delay)
-
-        replayStop!.onclick = () => {
-          paused = true
-          clearInterval(clicksInterval)
-          replayBtn!.style.display = "flex"
-          replayStop!.style.display = "none"
-        }
-      }
-
-      iframe.onload = () => {
-        iframeDoc = iframe.contentDocument!
-        iframeLoadingElem!.style.display = "none"
-
-        // RECORDING
-        // iframeDoc.addEventListener("click", e => {
-        //   const elem = e.target! as HTMLElement
-        //   const targetClass =
-        //     elem.className &&
-        //     Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
-
-        //   if (targetClass) {
-        //     recordedElems.current.push({
-        //       url: iframe.src,
-        //       class: targetClass,
-        //     })
-        //     console.log(recordedElems)
-        //   }
-        // })
-
-        replayBtn!.onclick = replay
-
-        // TIMELINE NODES
-        tlNodes = document.getElementsByClassName("svyr-tl-node")
-        Array.from(tlNodes).map((elem, index) => {
-          elem.addEventListener("click", () => {
-            paused = true
-            replayBtn!.style.display = "flex"
-            replayStop!.style.display = "none"
-            arrIndex = index
-
-            if (iframe.src !== clicks[arrIndex].url) {
-              iframe.src = clicks[arrIndex].url
-              iframeLoadingElem!.style.display = "flex"
-
-              iframe.onload = e => {
-                iframeLoadingElem!.style.display = "none"
-                iframeDoc = iframe.contentDocument!
-                replayBtn!.onclick = replay
-                onClassChange(iframeDoc.body, () => {
-                  moveFollower()
-                })
-              }
-            } else {
-              moveFollower()
-            }
-          })
-        })
-      }
+      startClient(mappedClicks, telemetryIndex)
     }
   }, [page])
 
@@ -327,8 +180,8 @@ const Client: FC<
                 id="timeline"
                 className="svyr-relative svyr-h-5/6 svyr-overflow-y-hidden svyr-overflow-x-auto svyr-min-w-full svyr-max-w-max svyr-flex svyr-flex-row svyr-items-center">
                 <div className="svyr-h-[2px] svyr-bg-theme-grey svyr-max-w-max svyr-min-w-full svyr-flex svyr-flex-row svyr-items-center svyr-overflow-visible">
-                  {clicks &&
-                    clicks.map(c => (
+                  {mappedClicks &&
+                    [...mappedClicks.get(telemetryIndex)?.data!].map(c => (
                       <div className="svyr-h-max svyr-w-max svyr-ml-4">
                         <div className="svyr-tl-node hover:svyr-bg-theme-on-surface svyr-w-4 svyr-h-4 svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface svyr-rotate-45 svyr-cursor-pointer" />
                       </div>
@@ -424,10 +277,6 @@ const Client: FC<
           </>
         )}
       </nav>
-
-      {/* <footer className="border box-border" style={{ gridArea: "footer" }}>
-        footer
-      </footer> */}
     </div>
   )
 }
