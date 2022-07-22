@@ -1,45 +1,55 @@
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
-import {
-  DeleteIcon,
-  EditIcon,
-  LoadingIcon,
-  PlayIcon,
-  SearchIcon,
-  StopIcon,
-  TempIcon,
-} from "./icons"
+import { TempIcon } from "./icons"
 import clientStyle from "./Client.module.css"
 import {
   mapTelemetries,
   startClient,
   fetchTelemetries,
 } from "../utils/utilsSurveyor"
+import { VizBody, VizNav } from "./Viz"
+import { ReplayBody, ReplayNav } from "./Replay"
+import { Recording, Telemetry } from "../utils/types"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
  */
-const Client: FC<
-  PropsWithChildren<{ apiUrl: string; loadIframe: boolean }>
-> = ({ apiUrl, loadIframe }) => {
+const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
+  apiUrl,
+  loadIframe = true,
+}) => {
   const [url, setUrl] = useState("")
   const [page, setPage] = useState<"data" | "replay">("replay")
 
-  const [recordedPaths, setRecordedPaths] = useState<
-    { url: string; class: string }[]
-  >([])
+  const [recordedPaths, setRecordedPaths] = useState<Recording[]>([
+    {
+      title: "About Page",
+      data: [
+        { url: "https://localhost:3000", class: "srvyr-VEXGgXLz" },
+        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
+      ],
+    },
+    {
+      title: "About Page",
+      data: [
+        { url: "https://localhost:3000", class: "srvyr-VEXGgXLz" },
+        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
+      ],
+    },
+  ])
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
   const mappedClicks = mapTelemetries([
     {
-      id: "test",
+      id: "37aed957-bcbd-4ecd-9eec-fb1d9933ee20",
       data: [
-        { url: "http://localhost:3000/", class: "srvyr-2W3kK3Om" },
-        { url: "http://localhost:3000/", class: "srvyr-KLjWGj2Q" },
-        { url: "http://localhost:3000/about", class: "srvyr-ZpPZdXxY" },
-        { url: "http://localhost:3000/about", class: "srvyr-ax37qjEW" },
-        { url: "http://localhost:3000/about", class: "srvyr-KLjWGj2Q" },
-        { url: "http://localhost:3000/", class: "srvyr-KLjWGj2Q" },
-        { url: "http://localhost:3000/", class: "srvyr-2W3kK3Om" },
+        { url: "http://localhost:3000/", class: "srvyr-ZpPZbdPx" },
+        { url: "http://localhost:3000/", class: "srvyr-VEXGgXLz" },
+        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
+        { url: "http://localhost:3000/about", class: "srvyr-zpjNoVXD" },
+        { url: "http://localhost:3000/about", class: "srvyr-zpjNVjDa" },
+        { url: "http://localhost:3000/login", class: "srvyr-9kPYa6Pw" },
+        { url: "http://localhost:3000/login", class: "srvyr-qVXLL8Xz" },
+        { url: "http://localhost:3000/login", class: "srvyr-ax37YqjE" },
       ],
     },
   ])
@@ -74,207 +84,21 @@ const Client: FC<
         <iframe id="svyr-website" src={url} className="svyr-border svyr-h-full svyr-box-border" /> */}
 
         {page === "data" ? (
-          <>
-            <div className={clientStyle.ccHeader}>
-              <div className={clientStyle.ccHeaderL}>
-                <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
-                <h4 className="svyr-font-inter-semibold svyr-ml-3">
-                  About Page
-                </h4>
-                <EditIcon
-                  spanClass="svyr-w-8 svyr-h-full svyr-ml-6"
-                  svgClass="svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
-                />
-                <DeleteIcon
-                  spanClass="svyr-w-8 svyr-h-full"
-                  svgClass="svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
-                />
-              </div>
-
-              <button className={clientStyle.ccHeaderR}>
-                <PlayIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
-                />
-                <span>Play a Recording</span>
-              </button>
-            </div>
-
-            <div className={clientStyle.ccBodyTop}>
-              <h5 className="svyr-text-theme-grey svyr-font-inter-semibold">
-                User Performance Chart
-              </h5>
-            </div>
-
-            <div className={clientStyle.ccBodyBottom}>
-              <h5 className="svyr-text-theme-grey svyr-font-inter-semibold">
-                Recorded User Performance
-              </h5>
-              <div className="svyr-h-5/6 svyr-w-full svyr-overflow-x-hidden svyr-overflow-y-auto">
-                <div className={clientStyle.pathDataContainer}>
-                  <h5>100%</h5>
-                  <p>home &gt; about</p>
-                </div>
-                <div className={clientStyle.pathDataContainer}>
-                  <h5>40%</h5>
-                  <p>home &gt; channels &gt; home &gt; store &gt; about</p>
-                </div>
-                <div className={clientStyle.pathDataContainer}>
-                  <h5>10%</h5>
-                  <p>
-                    home &gt; store &gt; channels &gt; contact us &gt; home &gt;
-                    about
-                  </p>
-                </div>
-              </div>
-            </div>
-          </>
+          <VizBody />
         ) : (
-          <>
-            <div className="svyr-w-full svyr-justify-between svyr-flex">
-              <div className="svyr-flex svyr-flex-row svyr-justify-center svyr-items-center">
-                <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
-                <h4 className="svyr-font-inter-semibold svyr-ml-3">
-                  37aed957-bcbd-4ecd-9eec-fb1d9933ee20
-                </h4>
-              </div>
-
-              <button
-                id="btn-replay"
-                className="svyr-w-max svyr-rounded-full svyr-text-sm">
-                <PlayIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
-                />
-                <span>Play</span>
-              </button>
-              <button
-                id="btn-stop"
-                className="svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm svyr-hidden">
-                <StopIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
-                />
-                <span>Stop</span>
-              </button>
-            </div>
-
-            <div className="svyr-border svyr-w-full svyr-h-full svyr-mt-8 svyr-border-theme-surface svyr-grid svyr-relative">
-              <iframe
-                id="svyr-website"
-                src={url}
-                className="svyr-w-full svyr-h-full"
-              />
-              <div
-                id="svyr-iframe-loading"
-                className="svyr-absolute svyr-flex svyr-flex-row svyr-items-center svyr-right-5 svyr-bottom-5">
-                <LoadingIcon svgClass="svyr-fill-theme-grey" />
-              </div>
-            </div>
-
-            <div className="svyr-bg-theme-surface svyr-h-40 svyr-min-w-full svyr-w-full svyr-relative svyr-overflow-y-hidden svyr-box-border svyr-p-6 svyr-mt-4">
-              <h5 className="svyr-text-theme-grey svyr-font-inter-semibold">
-                Timeline
-              </h5>
-              <div
-                id="timeline"
-                className="svyr-relative svyr-h-5/6 svyr-overflow-y-hidden svyr-overflow-x-auto svyr-min-w-full svyr-max-w-max svyr-flex svyr-flex-row svyr-items-center">
-                <div className="svyr-h-[2px] svyr-bg-theme-grey svyr-max-w-max svyr-min-w-full svyr-flex svyr-flex-row svyr-items-center svyr-overflow-visible">
-                  {mappedClicks &&
-                    [...mappedClicks.get(telemetryIndex)?.data!].map(c => (
-                      <div className="svyr-h-max svyr-w-max svyr-ml-4">
-                        <div className="svyr-tl-node hover:svyr-bg-theme-on-surface svyr-w-4 svyr-h-4 svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface svyr-rotate-45 svyr-cursor-pointer" />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </>
+          <ReplayBody
+            mappedClicks={mappedClicks}
+            url={url}
+            telemetryIndex={telemetryIndex}
+          />
         )}
       </main>
 
       <nav className={clientStyle.rightNav}>
         {page === "data" ? (
-          <>
-            <div className="svyr-h-24">
-              <p className="svyr-text-theme-grey svyr-text-sm svyr-font-inter-semibold">
-                Recorded Paths
-              </p>
-              <div className="svyr-flex svyr-flex-row svyr-w-full svyr-h-12 svyr-mt-4 svyr-overflow-hidden svyr-rounded-full svyr-border-[2px] svyr-border-theme-grey">
-                <input
-                  type="text"
-                  placeholder="Search a pathing..."
-                  className="svyr-w-full svyr-bg-theme-surface svyr-text-theme-on-surface svyr-box-border svyr-p-4"
-                />
-                <SearchIcon
-                  svgClass="svyr-fill-theme-grey svyr-h-6 svyr-w-6"
-                  spanClass="svyr-w-12 svyr-h-full"
-                />
-              </div>
-            </div>
-
-            <div className={clientStyle.rnContainer}>
-              {/* <span className="svyr-text-theme-grey svyr-m-auto svyr-text-sm svyr-font-inter-medium">
-            Record a path to get started!
-          </span> */}
-              <div className={clientStyle.rnItem}>
-                <h5>About Page</h5>
-                <p>demopage.com/channels/about</p>
-              </div>
-              <div className={clientStyle.rnItem}>
-                <h5>About Page</h5>
-                <p>demopage.com/channels/about</p>
-              </div>
-              <div className={clientStyle.rnItem}>
-                <h5>Channels Page</h5>
-                <p>demopage.com/channels</p>
-              </div>
-            </div>
-
-            <div className="svyr-w-full svyr-h-16 svyr-justify-center svyr-flex svyr-mt-4">
-              <button className="svyr-w-4/5 svyr-rounded-full svyr-text-sm">
-                <PlayIcon
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
-                  spanClass="svyr-w-8 svyr-h-full"
-                />
-                <span>Record a new path</span>
-              </button>
-            </div>
-          </>
+          <VizNav recordings={recordedPaths} />
         ) : (
-          <>
-            <div className="svyr-h-24">
-              <p className="svyr-text-theme-grey svyr-text-sm svyr-font-inter-semibold">
-                Recordings
-              </p>
-              <div className="svyr-flex svyr-flex-row svyr-w-full svyr-h-12 svyr-mt-4 svyr-overflow-hidden svyr-rounded-full svyr-border-[2px] svyr-border-theme-grey">
-                <input
-                  type="text"
-                  placeholder="Search by ID..."
-                  className="svyr-w-full svyr-bg-theme-surface svyr-text-theme-on-surface svyr-box-border svyr-p-4"
-                />
-                <SearchIcon
-                  svgClass="svyr-fill-theme-grey svyr-h-6 svyr-w-6"
-                  spanClass="svyr-w-12 svyr-h-full"
-                />
-              </div>
-            </div>
-
-            <div className={clientStyle.rnContainer}>
-              {/* <span className="text-theme-grey m-auto text-sm font-inter-medium">
-            Record a path to get started!
-          </span> */}
-              <div className={clientStyle.rnItem}>
-                <h5>37aed957-bcbd-4ecd-9eec-fb1d9933ee20</h5>
-              </div>
-              <div className={clientStyle.rnItem}>
-                <h5>47e36606-669d-4554-a3ee-9cd175d4ace3</h5>
-              </div>
-              <div className={clientStyle.rnItem}>
-                <h5>79007d35-8e20-4447-8564-6332b7eeb57a</h5>
-              </div>
-            </div>
-          </>
+          <ReplayNav mappedClicks={mappedClicks} />
         )}
       </nav>
     </div>

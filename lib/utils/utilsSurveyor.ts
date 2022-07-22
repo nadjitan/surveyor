@@ -1,3 +1,5 @@
+import { MappedClicks, Telemetry } from "./types"
+
 export function onClassChange(
   element: HTMLElement,
   callback: (node: Node) => void
@@ -24,12 +26,7 @@ export async function fetchTelemetries(apiUrl: string) {
   }[]
 }
 
-export function mapTelemetries(
-  telemetries: {
-    id: string
-    data: { url: string; class: string }[]
-  }[]
-) {
+export function mapTelemetries(telemetries: Telemetry[]) {
   const map = new Map<
     number,
     { id: string; data: { url: string; class: string }[] }
@@ -43,18 +40,15 @@ export function mapTelemetries(
 }
 
 export function startClient(
-  mappedClicks: Map<
-    number,
-    { id: string; data: { url: string; class: string }[] }
-  >,
+  mappedClicks: MappedClicks,
   telemetryIndex: number
 ) {
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
 
   let dataIndex = 0
-  let stop = false
-  const delay = 700
+  let play = false
+  const delay = 1000
 
   let timelineNode: HTMLCollectionOf<Element>
   let prevTimelineNode: HTMLElement | null = null
@@ -98,7 +92,7 @@ export function startClient(
     follower.style.width = `${bcr.width}px`
     follower.style.height = `${bcr.height}px`
     follower.style.display = "grid"
-    if (elemToFollow!.tagName !== "A") elemToFollow!.click()
+    if (elemToFollow!.tagName !== "A" && play === true) elemToFollow!.click()
     // ACTIVATE TIMELINE NODE
     if (prevTimelineNode)
       prevTimelineNode.classList.remove("svyr-node-selected")
@@ -116,7 +110,7 @@ export function startClient(
    * REPLAY SYSTEM
    */
   function replay() {
-    stop = false
+    play = true
     replayBtn.style.display = "none"
     replayStop.style.display = "flex"
     // ALWAYS RESET ON CLICK
@@ -129,7 +123,7 @@ export function startClient(
         if (
           iframe.src !== mappedClicks.get(telemetryIndex)?.data[dataIndex].url
         ) {
-          stop = true
+          play = false
 
           iframe.src = mappedClicks.get(telemetryIndex)?.data[dataIndex].url!
           iframeLoadingElem.style.display = "flex"
@@ -137,15 +131,15 @@ export function startClient(
           iframe.onload = () => {
             iframeLoadingElem.style.display = "none"
             iframeDoc = iframe.contentDocument!
-            stop = false
+            play = true
           }
         }
-        if (stop === false) {
+        if (play === true) {
           moveFollower()
           dataIndex++
         }
       } else {
-        stop = true
+        play = false
         clearInterval(clicksInterval)
         replayBtn.style.display = "flex"
         replayStop.style.display = "none"
@@ -153,7 +147,7 @@ export function startClient(
     }, delay)
 
     replayStop.onclick = () => {
-      stop = true
+      play = false
       clearInterval(clicksInterval)
       replayBtn.style.display = "flex"
       replayStop.style.display = "none"
@@ -186,7 +180,7 @@ export function startClient(
     timelineNode = document.getElementsByClassName("svyr-tl-node")
     Array.from(timelineNode).map((elem, index) => {
       elem.addEventListener("click", () => {
-        stop = true
+        play = false
         replayBtn.style.display = "flex"
         replayStop.style.display = "none"
         dataIndex = index

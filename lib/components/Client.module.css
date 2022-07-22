@@ -1,5 +1,5 @@
 .clientBody {
-  @apply svyr-min-h-screen svyr-w-full svyr-grid svyr-text-theme-on-background;
+  @apply svyr-grid svyr-min-h-screen svyr-w-full svyr-text-theme-on-background;
   grid-template-areas:
     "lnav content rnav"
     "lnav content rnav";
@@ -31,72 +31,72 @@ svg {
 }
 
 input {
-  @apply placeholder:svyr-font-inter-medium placeholder:svyr-text-theme-grey svyr-text-sm focus:svyr-outline-none;
+  @apply svyr-text-sm placeholder:svyr-font-inter-medium placeholder:svyr-text-theme-grey focus:svyr-outline-none;
 }
 
 button {
-  @apply svyr-font-inter-medium svyr-bg-theme-primary svyr-flex svyr-flex-row svyr-justify-center svyr-rounded-full svyr-text-sm svyr-py-3 svyr-px-4;
+  @apply svyr-flex svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-3 svyr-px-4 svyr-font-inter-medium svyr-text-sm;
 }
 
 .leftNav {
-  @apply svyr-max-h-screen svyr-min-h-screen svyr-bg-theme-surface svyr-flex svyr-flex-col;
+  @apply svyr-flex svyr-max-h-screen svyr-min-h-screen svyr-flex-col svyr-bg-theme-surface;
   grid-area: "lnav";
 }
 .leftNav .lItem {
-  @apply svyr-flex svyr-flex-col svyr-items-center svyr-justify-center svyr-w-full svyr-h-16 svyr-cursor-pointer svyr-py-10 svyr-mt-4;
+  @apply svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-cursor-pointer svyr-flex-col svyr-items-center svyr-justify-center svyr-py-10;
 }
 
 .clientContent {
-  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-h-full svyr-bg-theme-background svyr-min-w-full svyr-max-w-full svyr-overflow-x-hidden;
+  @apply svyr-box-border svyr-flex svyr-h-full svyr-max-h-screen svyr-min-h-screen svyr-min-w-full svyr-max-w-full svyr-flex-col svyr-overflow-x-hidden svyr-bg-theme-background svyr-p-8;
   grid-area: "content";
 }
 .clientContent .ccHeader {
-  @apply svyr-w-full svyr-justify-between svyr-flex;
+  @apply svyr-flex svyr-w-full svyr-justify-between;
 }
 .clientContent .ccHeaderL {
-  @apply svyr-flex svyr-flex-row svyr-justify-center svyr-items-center;
+  @apply svyr-flex svyr-flex-row svyr-items-center svyr-justify-center;
 }
 .clientContent .ccHeaderR {
   @apply svyr-w-48 svyr-rounded-full svyr-text-sm;
 }
 .clientContent .ccBody {
-  @apply svyr-bg-theme-surface svyr-h-full svyr-w-full svyr-box-border svyr-p-6 svyr-mt-8;
+  @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyTop {
-  @apply svyr-bg-theme-surface svyr-h-full svyr-w-full svyr-box-border svyr-p-6 svyr-mt-8;
+  @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyBottom {
-  @apply svyr-bg-theme-surface svyr-h-96 svyr-w-full svyr-overflow-hidden svyr-box-border svyr-p-6 svyr-mt-4;
+  @apply svyr-mt-4 svyr-box-border svyr-h-96 svyr-w-full svyr-overflow-hidden svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyBottom .pathDataContainer {
-  @apply svyr-bg-theme-container svyr-flex svyr-flex-row svyr-p-3 svyr-items-center svyr-mt-2 svyr-rounded-md;
+  @apply svyr-mt-2 svyr-flex svyr-flex-row svyr-items-center svyr-rounded-md svyr-bg-theme-container svyr-p-3;
 }
 .clientContent .ccBodyBottom .pathDataContainer h5 {
-  @apply svyr-text-theme-on-surface svyr-font-inter-semibold svyr-w-14;
+  @apply svyr-w-14 svyr-font-inter-semibold svyr-text-theme-on-surface;
 }
 .clientContent .ccBodyBottom .pathDataContainer p {
-  @apply svyr-text-theme-on-surface svyr-text-sm;
+  @apply svyr-text-sm svyr-text-theme-on-surface;
 }
 
 .rightNav {
-  @apply svyr-max-h-screen svyr-min-h-screen svyr-box-border svyr-p-8 svyr-flex svyr-flex-col svyr-bg-theme-surface svyr-overflow-hidden;
+  @apply svyr-box-border svyr-flex svyr-max-h-screen svyr-min-h-screen svyr-flex-col svyr-overflow-hidden svyr-bg-theme-surface svyr-p-8;
   grid-area: "rnav";
 }
 .rightNav .rnContainer {
-  @apply svyr-flex svyr-flex-col svyr-overflow-x-hidden svyr-overflow-y-auto svyr-h-full svyr-w-full svyr-mt-2 svyr-overflow-hidden;
+  @apply svyr-mt-2 svyr-flex svyr-h-full svyr-w-full svyr-flex-col svyr-overflow-hidden svyr-overflow-y-auto svyr-overflow-x-hidden;
 }
 .rightNav .rnContainer .rnItem {
-  @apply svyr-bg-theme-container svyr-w-full svyr-box-border svyr-p-3 svyr-rounded-md svyr-mt-2 svyr-select-none svyr-cursor-pointer hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface;
+  @apply svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface;
 }
-.rightNav .rnContainer .rnItem:first-of-type {
+/* .rightNav .rnContainer .rnItem:first-of-type {
   @apply svyr-bg-theme-selected;
-}
+} */
 .rightNav .rnContainer .rnItem h5 {
-  @apply svyr-text-theme-on-surface svyr-text-sm svyr-font-inter-medium svyr-break-words;
+  @apply svyr-break-words svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface;
 }
-.rightNav .rnContainer .rnItem:first-of-type p {
+/* .rightNav .rnContainer .rnItem:first-of-type p {
   @apply svyr-text-theme-on-surface;
-}
+} */
 .rightNav .rnContainer .rnItem p {
-  @apply svyr-text-theme-grey svyr-text-sm;
+  @apply svyr-text-sm svyr-text-theme-grey;
 }
