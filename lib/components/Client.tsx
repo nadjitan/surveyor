@@ -5,7 +5,7 @@ import {
   mapTelemetries,
   startClient,
   fetchTelemetries,
-} from "../utils/utilsSurveyor"
+} from "../utils/utilsClient"
 import { VizBody, VizNav } from "./Viz"
 import { ReplayBody, ReplayNav } from "./Replay"
 import { Recording, Telemetry } from "../utils/types"

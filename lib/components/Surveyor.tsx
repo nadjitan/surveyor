@@ -2,7 +2,6 @@ import Hashids from "hashids"
 import { FC, useEffect, useRef, useState } from "react"
 import { PropsWithChildren } from "react"
 import Debug from "./Debug"
-import React from "react"
 
 interface Telemetry {
   id?: string
@@ -10,6 +9,8 @@ interface Telemetry {
     url: string
     class: string
   }[]
+  startTime: string
+  endTime: string
 }
 
 const Surveyor: FC<
@@ -41,7 +42,11 @@ const Surveyor: FC<
   const hashids = new Hashids("srvyr", 8)
   const [url, setUrl] = useState<string>()
   let elems: HTMLElement[]
-  let telemetry: Telemetry = { data: [] }
+  let telemetry: Telemetry = {
+    data: [],
+    startTime: new Date().toISOString(),
+    endTime: "",
+  }
   let sendingDiv = useRef<HTMLDivElement>(null)
 
   const putTemplate = (tel: Telemetry) =>
@@ -51,7 +56,11 @@ const Surveyor: FC<
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        telemetry: { data: JSON.stringify(tel.data) },
+        telemetry: {
+          data: JSON.stringify(tel.data),
+          startTime: tel.startTime,
+          endTime: new Date().toISOString(),
+        },
       }),
       keepalive: true,
     })
