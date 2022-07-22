@@ -20,17 +20,11 @@ export function onClassChange(
 
 export async function fetchTelemetries(apiUrl: string) {
   const res = await fetch(apiUrl, { method: "GET" })
-  return (await res.json()) as {
-    id: string
-    data: { url: string; class: string }[]
-  }[]
+  return (await res.json()) as Telemetry[]
 }
 
 export function mapTelemetries(telemetries: Telemetry[]) {
-  const map = new Map<
-    number,
-    { id: string; data: { url: string; class: string }[] }
-  >()
+  const map = new Map<number, Telemetry>()
 
   telemetries.map((t, i) => {
     map.set(i, t)
@@ -39,10 +33,24 @@ export function mapTelemetries(telemetries: Telemetry[]) {
   return map
 }
 
-export function startClient(
-  mappedClicks: MappedClicks,
-  telemetryIndex: number
-) {
+export function initViz() {
+  // RECORDING
+  // iframeDoc.addEventListener("click", e => {
+  //   const elem = e.target! as HTMLElement
+  //   const targetClass =
+  //     elem.className &&
+  //     Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
+  //   if (targetClass) {
+  //     recordedElems.current.push({
+  //       url: iframe.src,
+  //       class: targetClass,
+  //     })
+  //     console.log(recordedElems)
+  //   }
+  // })
+}
+
+export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
 
@@ -157,22 +165,6 @@ export function startClient(
   iframe.onload = () => {
     iframeDoc = iframe.contentDocument!
     iframeLoadingElem.style.display = "none"
-
-    // RECORDING
-    // iframeDoc.addEventListener("click", e => {
-    //   const elem = e.target! as HTMLElement
-    //   const targetClass =
-    //     elem.className &&
-    //     Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
-
-    //   if (targetClass) {
-    //     recordedElems.current.push({
-    //       url: iframe.src,
-    //       class: targetClass,
-    //     })
-    //     console.log(recordedElems)
-    //   }
-    // })
 
     replayBtn.onclick = replay
 

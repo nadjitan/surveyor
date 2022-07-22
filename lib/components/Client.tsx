@@ -3,12 +3,12 @@ import { TempIcon } from "./icons"
 import clientStyle from "./Client.module.css"
 import {
   mapTelemetries,
-  startClient,
+  initReplay,
   fetchTelemetries,
 } from "../utils/utilsClient"
 import { VizBody, VizNav } from "./Viz"
 import { ReplayBody, ReplayNav } from "./Replay"
-import { Recording, Telemetry } from "../utils/types"
+import { MappedClicks, Recording, Telemetry } from "../utils/types"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
@@ -38,33 +38,19 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
   ])
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
-  const mappedClicks = mapTelemetries([
-    {
-      id: "37aed957-bcbd-4ecd-9eec-fb1d9933ee20",
-      data: [
-        { url: "http://localhost:3000/", class: "srvyr-ZpPZbdPx" },
-        { url: "http://localhost:3000/", class: "srvyr-VEXGgXLz" },
-        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
-        { url: "http://localhost:3000/about", class: "srvyr-zpjNoVXD" },
-        { url: "http://localhost:3000/about", class: "srvyr-zpjNVjDa" },
-        { url: "http://localhost:3000/login", class: "srvyr-9kPYa6Pw" },
-        { url: "http://localhost:3000/login", class: "srvyr-qVXLL8Xz" },
-        { url: "http://localhost:3000/login", class: "srvyr-ax37YqjE" },
-      ],
-    },
-  ])
-
-  // useEffect(() => {
-  //   fetchTelemetries(apiUrl).then(d => setTelemetries(d))
-  // }, [])
+  const [mappedClicks, setMappedClicks] = useState<MappedClicks | null>(null)
 
   useEffect(() => {
-    if (page === "replay") {
+    fetchTelemetries(apiUrl).then(d => setMappedClicks(mapTelemetries(d)))
+  }, [])
+
+  useEffect(() => {
+    if (page === "replay" && mappedClicks) {
       if (loadIframe) setUrl(window.location.origin)
 
-      startClient(mappedClicks, telemetryIndex)
+      initReplay(mappedClicks!, telemetryIndex)
     }
-  }, [page])
+  }, [page, mappedClicks, telemetryIndex])
 
   return (
     <div className={clientStyle.clientBody}>
@@ -87,7 +73,7 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
           <VizBody />
         ) : (
           <ReplayBody
-            mappedClicks={mappedClicks}
+            mappedClicks={mappedClicks!}
             url={url}
             telemetryIndex={telemetryIndex}
           />
@@ -98,7 +84,11 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
         {page === "data" ? (
           <VizNav recordings={recordedPaths} />
         ) : (
-          <ReplayNav mappedClicks={mappedClicks} />
+          <ReplayNav
+            mappedClicks={mappedClicks!}
+            telemetryIndex={telemetryIndex}
+            setTelemetryIndex={setTelemetryIndex}
+          />
         )}
       </nav>
     </div>

@@ -4,6 +4,8 @@ export type Telemetry = {
     url: string
     class: string
   }[]
+  startTime: string
+  endTime: string
 }
 
 export type MappedClicks = Map<number, Telemetry>
