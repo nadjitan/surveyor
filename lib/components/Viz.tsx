@@ -1,4 +1,4 @@
-import { Recording, Telemetry } from "@/utils/types"
+import { Recording } from "@/utils/types"
 import { FC } from "react"
 import clientStyle from "./Client.module.css"
 import { DeleteIcon, EditIcon, PlayIcon, SearchIcon } from "./icons"

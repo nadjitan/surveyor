@@ -1,14 +1,10 @@
-import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
-import { TempIcon } from "./icons"
+import { FC, useEffect, useState } from "react"
+import { MappedClicks, Recording } from "../utils/types"
+import { fetchTelemetries, initReplay, mapTelemetries } from "../utils/client"
 import clientStyle from "./Client.module.css"
-import {
-  mapTelemetries,
-  initReplay,
-  fetchTelemetries,
-} from "../utils/utilsClient"
-import { VizBody, VizNav } from "./Viz"
+import { TempIcon } from "./icons"
 import { ReplayBody, ReplayNav } from "./Replay"
-import { MappedClicks, Recording, Telemetry } from "../utils/types"
+import { VizBody, VizNav } from "./Viz"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
@@ -29,10 +25,10 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
       ],
     },
     {
-      title: "About Page",
+      title: "Login Page",
       data: [
-        { url: "https://localhost:3000", class: "srvyr-VEXGgXLz" },
-        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
+        { url: "https://localhost:3000", class: "srvyr-AYj8YOXp" },
+        { url: "http://localhost:3000/about", class: "srvyr-zpjNVjDa" },
       ],
     },
   ])
@@ -73,9 +69,8 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
           <VizBody />
         ) : (
           <ReplayBody
-            mappedClicks={mappedClicks!}
             url={url}
-            telemetryIndex={telemetryIndex}
+            clicksData={mappedClicks?.get(telemetryIndex)!}
           />
         )}
       </main>

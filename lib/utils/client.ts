@@ -1,26 +1,23 @@
 import { MappedClicks, Telemetry } from "./types"
 
-export function onClassChange(
-  element: HTMLElement,
-  callback: (node: Node) => void
-) {
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (
-        mutation.type === "attributes" &&
-        mutation.attributeName === "class"
-      ) {
-        callback(mutation.target)
-      }
-    })
-  })
-  observer.observe(element, { attributes: true })
-  return observer.disconnect
-}
+// function onClassChange(element: HTMLElement, callback: (node: Node) => void) {
+//   const observer = new MutationObserver(mutations => {
+//     mutations.forEach(mutation => {
+//       if (
+//         mutation.type === "attributes" &&
+//         mutation.attributeName === "class"
+//       ) {
+//         callback(mutation.target)
+//       }
+//     })
+//   })
+//   observer.observe(element, { attributes: true })
+//   return observer.disconnect
+// }
 
-export async function fetchTelemetries(apiUrl: string) {
+export async function fetchTelemetries(apiUrl: string): Promise<Telemetry[]> {
   const res = await fetch(apiUrl, { method: "GET" })
-  return (await res.json()) as Telemetry[]
+  return await res.json()
 }
 
 export function mapTelemetries(telemetries: Telemetry[]) {
@@ -78,7 +75,7 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
     return divFollower
   }
 
-  function moveFollower() {
+  function moveFollower(clickElem = true) {
     let follower = iframeDoc.getElementById("svyr-follower")!
     if (!follower) {
       const divFollower = createFollower()
@@ -100,7 +97,7 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
     follower.style.width = `${bcr.width}px`
     follower.style.height = `${bcr.height}px`
     follower.style.display = "grid"
-    if (elemToFollow!.tagName !== "A" && play === true) elemToFollow!.click()
+    if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
     // ACTIVATE TIMELINE NODE
     if (prevTimelineNode)
       prevTimelineNode.classList.remove("svyr-node-selected")
@@ -187,10 +184,10 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
             iframeLoadingElem.style.display = "none"
             iframeDoc = iframe.contentDocument!
             // replayBtn.onclick = replay
-            setTimeout(() => moveFollower(), 100)
+            setTimeout(() => moveFollower(false), 100)
           }
         } else {
-          moveFollower()
+          moveFollower(false)
         }
       })
     })

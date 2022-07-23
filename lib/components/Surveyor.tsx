@@ -1,6 +1,5 @@
 import Hashids from "hashids"
-import { FC, useEffect, useRef, useState } from "react"
-import { PropsWithChildren } from "react"
+import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import Debug from "./Debug"
 
 interface Telemetry {

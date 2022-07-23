@@ -1,16 +1,15 @@
-import { MappedClicks } from "../utils/types"
-import { Dispatch, FC, SetStateAction, useState } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
+import { MappedClicks, Telemetry } from "../utils/types"
 import clientStyle from "./Client.module.css"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
 export const ReplayBody: FC<{
-  mappedClicks: MappedClicks
+  clicksData: Telemetry
   url: string
-  telemetryIndex: number
-}> = ({ mappedClicks, url, telemetryIndex }) => {
+}> = ({ clicksData, url }) => {
   return (
     <>
-      {mappedClicks ? (
+      {clicksData ? (
         <>
           <div className="svyr-flex svyr-w-full svyr-justify-between">
             <div className="svyr-flex svyr-flex-row svyr-items-center svyr-justify-center">
@@ -59,7 +58,7 @@ export const ReplayBody: FC<{
               id="timeline"
               className="svyr-relative svyr-flex svyr-h-5/6 svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-x-auto svyr-overflow-y-hidden">
               <div className="svyr-flex svyr-h-[2px] svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-visible svyr-bg-theme-grey">
-                {[...mappedClicks.get(telemetryIndex)?.data!].map(c => (
+                {clicksData.data.map(c => (
                   <div className="svyr-ml-4 svyr-h-max svyr-w-max">
                     <div className="svyr-tl-node svyr-h-4 svyr-w-4 svyr-rotate-45 svyr-cursor-pointer svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface hover:svyr-bg-theme-on-surface" />
                   </div>
