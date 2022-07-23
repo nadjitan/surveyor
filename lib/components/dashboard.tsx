@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react"
-import { MappedClicks, Recording } from "../utils/types"
+import { MappedClicks, Recording } from "@/utils/types"
 import { fetchTelemetries, initReplay, mapTelemetries } from "../utils/client"
-import clientStyle from "./Client.module.css"
+import clientStyle from "./dashboard.module.css"
 import { TempIcon } from "./icons"
-import { ReplayBody, ReplayNav } from "./Replay"
-import { VizBody, VizNav } from "./Viz"
+import { ReplayBody, ReplayNav } from "./replay"
+import { VizBody, VizNav } from "./viz"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work

@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react"
-import { MappedClicks, Telemetry } from "../utils/types"
+import { MappedClicks, Telemetry } from "@/utils/types"
 import clientStyle from "./Client.module.css"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 

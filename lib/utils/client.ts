@@ -97,6 +97,7 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
     follower.style.width = `${bcr.width}px`
     follower.style.height = `${bcr.height}px`
     follower.style.display = "grid"
+    follower.style.pointerEvents = "none"
     if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
     // ACTIVATE TIMELINE NODE
     if (prevTimelineNode)
