@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client"
 import { Surveyor } from "../lib"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <Surveyor logClicks={false} debug={true} apiUrl={""}>
+  <Surveyor logClicks={false} debug={true} apiUrl={import.meta.env.API_URL}>
     <div>
       <div className="dashboard">
         <div className="left">

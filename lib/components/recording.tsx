@@ -11,8 +11,8 @@ const RecordingBody: FC<{
     let path: Recording = { title: "", data: [] }
     let paths: Recording[] = []
 
-    if (localStorage.getItem("srvyrPaths") !== null) {
-      paths = JSON.parse(sessionStorage.getItem("srvyrPaths")!)
+    if (localStorage.getItem("srvyr-paths")) {
+      paths = JSON.parse(sessionStorage.getItem("srvyr-paths")!)
     }
 
     iframe.onload = () => {
