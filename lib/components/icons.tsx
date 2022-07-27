@@ -21,6 +21,33 @@ export const TempIcon: FC<IconProps> = props => (
     </svg>
   </span>
 )
+export const SaveIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.833 1.5H3A1.5 1.5 0 0 0 1.5 3v18A1.5 1.5 0 0 0 3 22.5h18a1.504 1.504 0 0 0 1.5-1.5V6.167L17.833 1.5ZM5.25 8.25v-3h9v3h-9Zm10.496 8.426a3.751 3.751 0 1 1-3.922-3.922 3.76 3.76 0 0 1 3.922 3.922Z"></path>
+    </svg>
+  </span>
+)
+export const PauseIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.75 20.25H7.5a.75.75 0 0 1-.75-.75v-15a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 .75.75v15a.75.75 0 0 1-.75.75Z"></path>
+      <path d="M16.5 20.25h-2.25a.75.75 0 0 1-.75-.75v-15a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 .75.75v15a.75.75 0 0 1-.75.75Z"></path>
+    </svg>
+  </span>
+)
 export const StopIcon: FC<IconProps> = props => (
   <span title={props.title} onClick={props.onClick} className={props.spanClass}>
     <svg
@@ -327,12 +354,18 @@ export const ExitIcon: FC<IconProps> = props => (
   <span title={props.title} onClick={props.onClick} className={props.spanClass}>
     <svg
       className={props.svgClass}
-      width="24"
-      height="24"
-      xmlns="http://www.w3.org/2000/svg"
-      fillRule="evenodd"
-      clipRule="evenodd">
-      <path d="M11 21h8v-2l1-1v4h-9v2l-10-3v-18l10-3v2h9v5l-1-1v-3h-8v18zm10.053-9l-3.293-3.293.707-.707 4.5 4.5-4.5 4.5-.707-.707 3.293-3.293h-9.053v-1h9.053z" />
+      width="46"
+      height="46"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 8.25V6.375A1.875 1.875 0 0 0 13.125 4.5h-9A1.875 1.875 0 0 0 2.25 6.375v11.25A1.875 1.875 0 0 0 4.125 19.5h9A1.875 1.875 0 0 0 15 17.625V15.75"></path>
+      <path d="M18 8.25 21.75 12 18 15.75"></path>
+      <path d="M8.953 12H21.75"></path>
     </svg>
   </span>
 )

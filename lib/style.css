@@ -44,6 +44,41 @@
   --shadow: rgb(51, 51, 51);
 }
 
+@layer base {
+  h1 {
+    @apply svyr-text-3xl svyr-text-theme-on-surface md:svyr-text-3xl lg:svyr-text-5xl;
+  }
+  h2 {
+    @apply svyr-text-2xl svyr-text-theme-on-surface md:svyr-text-2xl lg:svyr-text-4xl;
+  }
+  h3 {
+    @apply svyr-text-xl svyr-font-medium svyr-text-theme-on-surface md:svyr-text-xl lg:svyr-text-3xl;
+  }
+  h4 {
+    @apply svyr-font-medium svyr-text-theme-on-surface;
+  }
+  p {
+    @apply svyr-text-sm svyr-text-theme-on-surface md:svyr-text-base lg:svyr-text-lg;
+  }
+  span {
+    @apply svyr-flex svyr-items-center svyr-text-theme-on-surface;
+  }
+  ul {
+    @apply svyr-list-inside svyr-list-disc svyr-text-theme-on-surface;
+  }
+  svg {
+    @apply svyr-cursor-pointer;
+  }
+
+  input {
+    @apply svyr-text-sm placeholder:svyr-font-inter-medium placeholder:svyr-text-theme-grey focus:svyr-outline-none;
+  }
+
+  button {
+    @apply svyr-flex svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-medium svyr-text-sm;
+  }
+}
+
 .svyr-selected {
   @apply svyr-relative before:svyr-absolute before:svyr-h-full
   before:svyr-w-full before:svyr-border-4

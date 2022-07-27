@@ -1,6 +1,6 @@
 {
   "name": "@nadjitan/surveyor",
-  "version": "0.7.13",
+  "version": "0.7.18",
   "private": false,
   "description": "A library for a capstone project",
   "main": "dist/surveyor.umd.js",
@@ -31,7 +31,7 @@
   "author": "nadjitan",
   "homepage": "https://github.com/nadjitan/surveyor#readme",
   "scripts": {
-    "dev": "vite --port 6006",
+    "dev": "vite --port 3000",
     "pub": "npm run build && npm publish --access public",
     "build": "run-p build:*",
     "build:scripts": "vite build",

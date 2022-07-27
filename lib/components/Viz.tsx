@@ -1,6 +1,6 @@
-import { Recording } from "@/utils/types"
-import { FC } from "react"
-import clientStyle from "./Client.module.css"
+import { DashboardPage, Recording } from "@/utils/types"
+import { Dispatch, FC, SetStateAction } from "react"
+import clientStyle from "./dashboard.module.css"
 import { DeleteIcon, EditIcon, PlayIcon, SearchIcon } from "./icons"
 
 export const VizBody: FC = () => {
@@ -52,7 +52,8 @@ export const VizBody: FC = () => {
 
 export const VizNav: FC<{
   recordings: Recording[]
-}> = ({ recordings }) => {
+  setPage: Dispatch<SetStateAction<DashboardPage>>
+}> = ({ recordings, setPage }) => {
   return (
     <>
       <div className="svyr-h-24">
@@ -77,8 +78,8 @@ export const VizNav: FC<{
             Record a path to get started!
           </span> */}
         {recordings &&
-          recordings.map(r => (
-            <div className={clientStyle.rnItem}>
+          recordings.map((r, index) => (
+            <div key={index} className={clientStyle.rnItem}>
               <h5>{r.title}</h5>
               <p>{r.data[r.data.length - 1].url}</p>
             </div>
@@ -86,7 +87,9 @@ export const VizNav: FC<{
       </div>
 
       <div className="svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-justify-center">
-        <button className="svyr-w-4/5 svyr-rounded-full svyr-text-sm">
+        <button
+          onClick={() => setPage("viz")}
+          className="svyr-w-4/5 svyr-rounded-full svyr-text-sm">
           <PlayIcon
             svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
             spanClass="svyr-w-8 svyr-h-full"

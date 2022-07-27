@@ -3,6 +3,15 @@ module.exports = {
   content: ["lib/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        scale: {
+          "0%": { transform: "scale(0.9)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
+      animation: {
+        scale: "scale 200ms ease-in-out",
+      },
       colors: {
         "theme-primary": "var(--primary)",
         "theme-primary-disabled": "var(--primary-disabled)",

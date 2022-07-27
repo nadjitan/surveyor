@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react"
 import { MappedClicks, Telemetry } from "@/utils/types"
-import clientStyle from "./Client.module.css"
+import clientStyle from "./dashboard.module.css"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
 export const ReplayBody: FC<{

@@ -30,23 +30,6 @@ export function mapTelemetries(telemetries: Telemetry[]) {
   return map
 }
 
-export function initViz() {
-  // RECORDING
-  // iframeDoc.addEventListener("click", e => {
-  //   const elem = e.target! as HTMLElement
-  //   const targetClass =
-  //     elem.className &&
-  //     Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
-  //   if (targetClass) {
-  //     recordedElems.current.push({
-  //       url: iframe.src,
-  //       class: targetClass,
-  //     })
-  //     console.log(recordedElems)
-  //   }
-  // })
-}
-
 export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
@@ -86,10 +69,7 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
     const elemToFollow = iframeDoc.body.querySelector(
       `.${mappedClicks.get(telemetryIndex)?.data[dataIndex].class!}`
     ) as HTMLElement
-    elemToFollow.scrollIntoView({
-      block: "nearest",
-      inline: "nearest",
-    })
+    elemToFollow.scrollIntoView()
 
     const bcr = elemToFollow!.getBoundingClientRect()
     follower.style.transition = "all 0.2s linear, opacity 0.25s ease"

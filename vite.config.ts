@@ -2,8 +2,11 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import { resolve } from "path"
 
+const root = resolve(__dirname, "src")
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  root,
   plugins: [react()],
   resolve: {
     alias: {
@@ -19,6 +22,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ["react", "react-dom"],
+      input: {
+        main: resolve(root, "index.html"),
+        client: resolve(root, "client", "index.html"),
+      },
     },
     target: "esnext",
     sourcemap: true,
