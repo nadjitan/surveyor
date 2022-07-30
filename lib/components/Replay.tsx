@@ -81,7 +81,6 @@ export const ReplayNav: FC<{
   telemetryIndex: number
   setTelemetryIndex: Dispatch<SetStateAction<number>>
 }> = ({ mappedClicks, telemetryIndex, setTelemetryIndex }) => {
-  // const [tIndex, setTIndex] = useState(telemetryIndex)
 
   return (
     <>

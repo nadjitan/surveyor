@@ -5,37 +5,40 @@ const Debug: FC = () => {
   const [tagName, setTagName] = useState("")
   const [targetClass, seTargetClass] = useState("")
 
-  useEffect(() => {
-    document.onmousemove = ({
-      clientX,
-      clientY,
-      target,
-    }: React.MouseEvent | MouseEvent) => {
-      const t = target as HTMLElement
-      const targetClass =
-        t.className && Array.from(t.classList).find(c => c.startsWith("srvyr-"))
-      if (targetClass) {
-        setTagName(t.tagName)
-        seTargetClass("." + targetClass)
-      } else {
-        setTagName(t.tagName)
-        seTargetClass("")
-      }
-
-      let x = clientX + 15
-      let y = clientY + 15
-
-      // Prevent going past boundaries of body
-      const { offsetWidth, offsetHeight } = debugDiv.current!
-      const rEdge = document.body.offsetWidth - offsetWidth
-      const bEdge = document.body.offsetHeight - offsetHeight
-      if (x < 0) x = 0
-      if (y < 0) y = 0
-      if (x > rEdge) x = rEdge
-      if (y > bEdge) y = bEdge
-
-      debugDiv.current!.style.transform = `translate(${x}px, ${y}px)`
+  function mouseFollow({
+    clientX,
+    clientY,
+    target,
+  }: React.MouseEvent | MouseEvent) {
+    const t = target as HTMLElement
+    const targetClass =
+      t.className && Array.from(t.classList).find(c => c.startsWith("srvyr-"))
+    if (targetClass) {
+      setTagName(t.tagName)
+      seTargetClass("." + targetClass)
+    } else {
+      setTagName(t.tagName)
+      seTargetClass("")
     }
+
+    let x = clientX + 15
+    let y = clientY + 15
+
+    // Prevent going past boundaries of body
+    // Does not fully work if element is {position: "fixed"}
+    const { offsetWidth, offsetHeight } = debugDiv.current!
+    const rEdge = document.body.offsetWidth - offsetWidth
+    const bEdge = document.body.offsetHeight - offsetHeight
+    if (x < 0) x = 0
+    if (y < 0) y = 0
+    if (x > rEdge) x = rEdge
+    if (y > bEdge) y = bEdge
+
+    debugDiv.current!.style.transform = `translate(${x}px, ${y}px)`
+  }
+
+  useEffect(() => {
+    document.onmousemove = mouseFollow
 
     document.body.onmouseenter = () => (debugDiv.current!.style.opacity = "1")
     document.body.onmouseleave = () => (debugDiv.current!.style.opacity = "0")
@@ -51,7 +54,7 @@ const Debug: FC = () => {
     <div
       ref={debugDiv}
       style={{
-        position: "absolute",
+        position: "fixed",
         opacity: "0",
         top: 0,
         left: 0,

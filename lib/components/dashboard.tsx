@@ -1,12 +1,11 @@
 import { FC, useEffect, useState } from "react"
 import { DashboardPage, MappedClicks, Recording } from "@/utils/types"
-import { fetchTelemetries, initReplay, mapTelemetries } from "../utils/client"
+import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/client"
 import clientStyle from "./dashboard.module.css"
 import { StopIcon, TempIcon } from "./icons"
 import { ReplayBody, ReplayNav } from "./replay"
 import { VizBody, VizNav } from "./viz"
 import RecordingBody from "./recording"
-
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
@@ -18,22 +17,7 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
   const [url, setUrl] = useState("")
   const [page, setPage] = useState<DashboardPage>("recording")
 
-  const [recordedPaths, setRecordedPaths] = useState<Recording[]>([
-    {
-      title: "About Page",
-      data: [
-        { url: "https://localhost:3000", class: "srvyr-VEXGgXLz" },
-        { url: "http://localhost:3000/about", class: "srvyr-AYj8YOXp" },
-      ],
-    },
-    {
-      title: "Login Page",
-      data: [
-        { url: "https://localhost:3000", class: "srvyr-AYj8YOXp" },
-        { url: "http://localhost:3000/about", class: "srvyr-zpjNVjDa" },
-      ],
-    },
-  ])
+  const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
   const [mappedClicks, setMappedClicks] = useState<MappedClicks | null>(null)
@@ -70,7 +54,7 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
         <iframe id="svyr-website" src={url} className="svyr-border svyr-h-full svyr-box-border" /> */}
 
         {page === "viz" ? (
-          <VizBody />
+          <VizBody selectedRec={selectedRec} />
         ) : (
           <ReplayBody
             url={url}
@@ -81,7 +65,11 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
 
       <nav className={clientStyle.rightNav}>
         {page === "viz" ? (
-          <VizNav setPage={setPage} recordings={recordedPaths} />
+          <VizNav
+            setPage={setPage}
+            selectedRec={selectedRec}
+            setSelectedRec={setSelectedRec}
+          />
         ) : (
           <ReplayNav
             mappedClicks={mappedClicks!}

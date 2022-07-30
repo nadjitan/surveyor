@@ -6,13 +6,17 @@ const RecordingBody: FC<{
   setPage: Dispatch<SetStateAction<DashboardPage>>
 }> = ({ setPage }) => {
   useEffect(() => {
-    let iframe = document.getElementById("svyr-website") as HTMLIFrameElement
+    const iframe = document.getElementById(
+      "svyr-website-rec"
+    ) as HTMLIFrameElement
+    iframe.src = window.location.origin
     let iframeDoc: Document
+
     let path: Recording = { title: "", data: [] }
     let paths: Recording[] = []
 
-    if (localStorage.getItem("srvyr-paths")) {
-      paths = JSON.parse(sessionStorage.getItem("srvyr-paths")!)
+    if (localStorage.hasOwnProperty("srvyr-paths")) {
+      paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
     }
 
     iframe.onload = () => {
@@ -71,7 +75,11 @@ const RecordingBody: FC<{
       // ) as HTMLButtonElement
 
       btnSave.onclick = () => {
-        if (path.title !== "" && path.data.length > 0) {
+        if (
+          path.title !== "" &&
+          path.data.length > 0 &&
+          !paths.find(p => p.title === path.title)
+        ) {
           paths.push(path)
           localStorage.setItem("srvyr-paths", JSON.stringify(paths))
           setPage("viz")
@@ -82,11 +90,7 @@ const RecordingBody: FC<{
 
   return (
     <div className="svyr-grid svyr-place-items-center">
-      <iframe
-        id="svyr-website"
-        src={"http://localhost:3000"}
-        className="svyr-h-screen svyr-w-full"
-      />
+      <iframe id="svyr-website-rec" className="svyr-h-screen svyr-w-full" />
 
       <div className="svyr-absolute svyr-bottom-0 svyr-box-border svyr-flex svyr-h-20 svyr-w-3/4 svyr-items-center svyr-justify-center svyr-gap-8 svyr-rounded-t-[46px] svyr-bg-theme-background svyr-px-10">
         <div
