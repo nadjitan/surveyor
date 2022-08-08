@@ -1,4 +1,4 @@
-import { MappedClicks, Telemetry } from "./types"
+import { MappedTelemetry, Telemetry } from "./types"
 
 // function onClassChange(element: HTMLElement, callback: (node: Node) => void) {
 //   const observer = new MutationObserver(mutations => {
@@ -30,7 +30,7 @@ export function mapTelemetries(telemetries: Telemetry[]) {
   return map
 }
 
-export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
+export function initReplay(mappedTelemetry: MappedTelemetry, telemetryIndex: number) {
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
 
@@ -67,7 +67,7 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
     }
 
     const elemToFollow = iframeDoc.body.querySelector(
-      `.${mappedClicks.get(telemetryIndex)?.data[dataIndex].class!}`
+      `.${mappedTelemetry.get(telemetryIndex)?.data[dataIndex].class!}`
     ) as HTMLElement
     elemToFollow.scrollIntoView()
 
@@ -104,14 +104,14 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
 
     // LOOPING CLICKS DATA
     const clicksInterval = setInterval(() => {
-      if (dataIndex < mappedClicks.get(telemetryIndex)!.data.length) {
+      if (dataIndex < mappedTelemetry.get(telemetryIndex)!.data.length) {
         // IF IFRAME IS NOT EQUAL TO DATA URL
         if (
-          iframe.src !== mappedClicks.get(telemetryIndex)?.data[dataIndex].url
+          iframe.src !== mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
         ) {
           play = false
 
-          iframe.src = mappedClicks.get(telemetryIndex)?.data[dataIndex].url!
+          iframe.src = mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url!
           iframeLoadingElem.style.display = "flex"
 
           iframe.onload = () => {
@@ -156,9 +156,9 @@ export function initReplay(mappedClicks: MappedClicks, telemetryIndex: number) {
         dataIndex = index
 
         if (
-          iframe.src !== mappedClicks.get(telemetryIndex)?.data[dataIndex].url
+          iframe.src !== mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
         ) {
-          iframe.src = mappedClicks.get(telemetryIndex)?.data[dataIndex].url!
+          iframe.src = mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url!
           iframeLoadingElem.style.display = "flex"
 
           iframe.onload = () => {

@@ -19,6 +19,11 @@ const Surveyor: FC<
      */
     logClicks?: boolean
     /**
+     * The page/element to locate.
+     * Only shown if ```logClicks``` is enabled
+     */
+    locateMsg?: string
+    /**
      * Enable showing of class and
      * tag name of an element.
      */
@@ -37,7 +42,7 @@ const Surveyor: FC<
      */
     apiUrl: string
   }>
-> = ({ children, logClicks = true, debug, apiUrl }) => {
+> = ({ children, logClicks = true, locateMsg = "message", debug, apiUrl }) => {
   const hashids = new Hashids("srvyr", 8)
   const [url, setUrl] = useState<string>()
   let elems: HTMLElement[]
@@ -160,6 +165,20 @@ const Surveyor: FC<
           Sending...
         </div>
       </div>
+      {logClicks && (
+        <div className="svyr-pointer-events-none svyr-fixed svyr-top-0 svyr-left-0 svyr-grid svyr-rounded-br-3xl svyr-bg-theme-background svyr-px-6 svyr-py-3">
+          <div
+            id="recording-status"
+            className="svyr-flex svyr-h-max svyr-items-center svyr-gap-3 svyr-text-center">
+            <div className="svyr-mt-1 svyr-h-2 svyr-w-2 svyr-rounded-full svyr-bg-theme-primary" />
+            <p className="svyr-text-sm svyr-font-semibold svyr-text-theme-primary">
+              Recording...
+            </p>
+          </div>
+
+          <p className="svyr-mt-1 svyr-text-sm">Locate the "{locateMsg}"</p>
+        </div>
+      )}
     </>
   )
 }

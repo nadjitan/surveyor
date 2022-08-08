@@ -11,6 +11,7 @@ const RecordingBody: FC<{
     ) as HTMLIFrameElement
     iframe.src = window.location.origin
     let iframeDoc: Document
+    let url = iframe.src
 
     let path: Recording = { title: "", data: [] }
     let paths: Recording[] = []
@@ -38,16 +39,27 @@ const RecordingBody: FC<{
 
       function recordElems(e: MouseEvent) {
         const elem = e.target! as HTMLElement
+
         const targetClass =
           elem.className &&
           Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
+
         // AVOID SEQUENCES OF SAME CLASSES
         if (targetClass && path.data.at(-1)?.class !== targetClass) {
           path.data.push({
-            url: iframe.src,
+            url: url,
             class: targetClass,
           })
-          console.table(path)
+        }
+
+        // Required because SPA apps does not change the src of <iframe />
+        if (
+          elem.tagName === "A" &&
+          elem.getAttribute("href")?.startsWith("/")
+        ) {
+          url = iframe.src.slice(0, -1) + elem.getAttribute("href")
+        } else if (elem.tagName === "A") {
+          url = elem.getAttribute("href")!
         }
       }
       iframeDoc.addEventListener("click", recordElems)
@@ -95,7 +107,7 @@ const RecordingBody: FC<{
       <div className="svyr-absolute svyr-bottom-0 svyr-box-border svyr-flex svyr-h-20 svyr-w-3/4 svyr-items-center svyr-justify-center svyr-gap-8 svyr-rounded-t-[46px] svyr-bg-theme-background svyr-px-10">
         <div
           id="recording-status"
-          className="svyr-flex svyr-h-max svyr-items-center svyr-justify-center svyr-gap-4     svyr-text-center">
+          className="svyr-flex svyr-h-max svyr-items-center svyr-justify-center svyr-gap-4 svyr-text-center">
           <div className="svyr-mt-1 svyr-h-2 svyr-w-2 svyr-rounded-full svyr-bg-theme-primary" />
           <h4 className="svyr-font-semibold svyr-text-theme-primary">
             Recording...

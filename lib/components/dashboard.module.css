@@ -15,7 +15,7 @@
 }
 
 .clientContent {
-  @apply svyr-box-border svyr-flex svyr-h-full svyr-max-h-screen svyr-min-h-screen svyr-min-w-full svyr-max-w-full svyr-flex-col svyr-overflow-x-hidden svyr-bg-theme-background svyr-p-8;
+  @apply svyr-box-border svyr-flex svyr-h-full svyr-max-h-screen svyr-min-h-screen svyr-min-w-full svyr-max-w-full svyr-auto-rows-auto svyr-flex-col svyr-overflow-x-hidden svyr-bg-theme-background svyr-p-8;
   grid-area: "content";
 }
 .clientContent .ccHeader {
@@ -27,17 +27,17 @@
 .clientContent .ccHeaderR {
   @apply svyr-w-48 svyr-rounded-full svyr-text-sm;
 }
-.clientContent .ccBody {
+/* .clientContent .ccBody {
   @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
-}
+} */
 .clientContent .ccBodyTop {
-  @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
+  @apply svyr-mt-8 svyr-box-border svyr-grid svyr-h-full svyr-max-h-full svyr-max-w-full svyr-overflow-y-auto svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyBottom {
-  @apply svyr-mt-4 svyr-box-border svyr-h-96 svyr-w-full svyr-overflow-hidden svyr-bg-theme-surface svyr-p-6;
+  @apply svyr-mt-4 svyr-box-border svyr-h-80 svyr-w-full svyr-overflow-hidden svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyBottom .pathDataContainer {
-  @apply svyr-mt-2 svyr-flex svyr-flex-row svyr-items-center svyr-rounded-md svyr-bg-theme-container svyr-p-3;
+  @apply svyr-mt-2 svyr-flex svyr-cursor-pointer svyr-flex-row svyr-items-center svyr-overflow-y-auto svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected;
 }
 .clientContent .ccBodyBottom .pathDataContainer h5 {
   @apply svyr-w-14 svyr-font-inter-semibold svyr-text-theme-on-surface;

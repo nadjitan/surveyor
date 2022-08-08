@@ -75,7 +75,7 @@
   }
 
   button {
-    @apply svyr-flex svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-medium svyr-text-sm;
+    @apply svyr-flex svyr-h-max svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-medium svyr-text-sm;
   }
 }
 

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react"
-import { DashboardPage, MappedClicks, Recording } from "@/utils/types"
+import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/client"
 import clientStyle from "./dashboard.module.css"
 import { StopIcon, TempIcon } from "./icons"
@@ -15,24 +15,25 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
   loadIframe = true,
 }) => {
   const [url, setUrl] = useState("")
-  const [page, setPage] = useState<DashboardPage>("recording")
+  const [page, setPage] = useState<DashboardPage>("viz")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
-  const [mappedClicks, setMappedClicks] = useState<MappedClicks | null>(null)
+  const [mappedTelemetry, setMappedTelemetry] =
+    useState<MappedTelemetry | null>(null)
 
   useEffect(() => {
-    fetchTelemetries(apiUrl).then(d => setMappedClicks(mapTelemetries(d)))
+    fetchTelemetries(apiUrl).then(d => setMappedTelemetry(mapTelemetries(d)))
   }, [])
 
   useEffect(() => {
-    if (page === "replay" && mappedClicks) {
+    if (page === "replay" && mappedTelemetry) {
       if (loadIframe) setUrl(window.location.origin)
 
-      initReplay(mappedClicks!, telemetryIndex)
+      initReplay(mappedTelemetry!, telemetryIndex)
     }
-  }, [page, mappedClicks, telemetryIndex])
+  }, [page, mappedTelemetry, telemetryIndex])
 
   return page === "recording" ? (
     <RecordingBody setPage={setPage} />
@@ -54,11 +55,16 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
         <iframe id="svyr-website" src={url} className="svyr-border svyr-h-full svyr-box-border" /> */}
 
         {page === "viz" ? (
-          <VizBody selectedRec={selectedRec} />
+          <VizBody
+            setPage={setPage}
+            setTelemetryIndex={setTelemetryIndex}
+            selectedRec={selectedRec}
+            mappedTelemetry={mappedTelemetry}
+          />
         ) : (
           <ReplayBody
             url={url}
-            clicksData={mappedClicks?.get(telemetryIndex)!}
+            clicksData={mappedTelemetry?.get(telemetryIndex)!}
           />
         )}
       </main>
@@ -69,10 +75,11 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
             setPage={setPage}
             selectedRec={selectedRec}
             setSelectedRec={setSelectedRec}
+            mappedTelemetry={mappedTelemetry}
           />
         ) : (
           <ReplayNav
-            mappedClicks={mappedClicks!}
+            mappedTelemetry={mappedTelemetry!}
             telemetryIndex={telemetryIndex}
             setTelemetryIndex={setTelemetryIndex}
           />

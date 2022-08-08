@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react"
-import { MappedClicks, Telemetry } from "@/utils/types"
+import { MappedTelemetry, Telemetry } from "@/utils/types"
 import clientStyle from "./dashboard.module.css"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
@@ -58,14 +58,14 @@ export const ReplayBody: FC<{
               id="timeline"
               className="svyr-relative svyr-flex svyr-h-5/6 svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-x-auto svyr-overflow-y-hidden">
               <div className="svyr-flex svyr-h-[2px] svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-visible svyr-bg-theme-grey">
-                {clicksData.data.map(c => (
-                  <div className="svyr-ml-4 svyr-h-max svyr-w-max">
+                {clicksData.data.map((c, i) => (
+                  <div className="svyr-ml-4 svyr-h-max svyr-w-max" key={i}>
                     <div className="svyr-tl-node svyr-h-4 svyr-w-4 svyr-rotate-45 svyr-cursor-pointer svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface hover:svyr-bg-theme-on-surface" />
                   </div>
                 ))}
               </div>
             </div>
-          </div>{" "}
+          </div>
         </>
       ) : (
         <span className="text-theme-grey m-auto text-sm font-inter-medium">
@@ -77,12 +77,11 @@ export const ReplayBody: FC<{
 }
 
 export const ReplayNav: FC<{
-  mappedClicks: MappedClicks
+  mappedTelemetry: MappedTelemetry
   telemetryIndex: number
   setTelemetryIndex: Dispatch<SetStateAction<number>>
-}> = ({ mappedClicks, telemetryIndex, setTelemetryIndex }) => {
-
-  return (
+}> = ({ mappedTelemetry, telemetryIndex, setTelemetryIndex }) => {
+  return mappedTelemetry ? (
     <>
       <div className="svyr-h-24">
         <p className="svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
@@ -102,23 +101,21 @@ export const ReplayNav: FC<{
       </div>
 
       <div className={clientStyle.rnContainer}>
-        {mappedClicks ? (
-          [...mappedClicks].map(([num, data]) => (
-            <div
-              onClick={() => setTelemetryIndex(num)}
-              key={num}
-              className={`svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
-                num === telemetryIndex ? " svyr-bg-theme-selected" : ""
-              }`}>
-              <h5>{data.id}</h5>
-            </div>
-          ))
-        ) : (
-          <span className="text-theme-grey m-auto text-sm font-inter-medium">
-            Loading...
-          </span>
-        )}
+        {[...mappedTelemetry].map(([num, data]) => (
+          <div
+            onClick={() => setTelemetryIndex(num)}
+            key={num}
+            className={`svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
+              num === telemetryIndex ? " svyr-bg-theme-selected" : ""
+            }`}>
+            <h5>{data.id}</h5>
+          </div>
+        ))}
       </div>
     </>
+  ) : (
+    <div className="svyr-flex svyr-items-center svyr-gap-3 svyr-place-self-center">
+      <LoadingIcon /> Fetching...
+    </div>
   )
 }

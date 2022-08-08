@@ -15,6 +15,7 @@ const styles = (color: string): CSSProperties => ({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Surveyor
     logClicks={false}
+    locateMsg={"Login page"}
     debug={true}
     apiUrl={"https://capstone-api-theta.vercel.app/api/surveyor"}>
     <div style={styles("green")}>Hello</div>
