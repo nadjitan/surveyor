@@ -1,11 +1,12 @@
-import { FC, useEffect, useState } from "react"
+import clientStyle from "./dashboard.module.css"
 import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/client"
-import clientStyle from "./dashboard.module.css"
-import { StopIcon, TempIcon } from "./icons"
-import { ReplayBody, ReplayNav } from "./replay"
-import { VizBody, VizNav } from "./viz"
+import { TempIcon } from "./icons"
+import { ReplayBody } from "./replay"
+import { VizBody } from "./viz"
 import RecordingBody from "./recording"
+
+import { FC, useEffect, useState } from "react"
 
 /**
  * Import to a dedicated page for ```<iframe />``` to work
@@ -15,13 +16,15 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
   loadIframe = true,
 }) => {
   const [url, setUrl] = useState("")
-  const [page, setPage] = useState<DashboardPage>("viz")
+  const [page, setPage] = useState<DashboardPage>("replay")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
   const [mappedTelemetry, setMappedTelemetry] =
     useState<MappedTelemetry | null>(null)
+
+  const [recordedPaths, setRecordedPaths] = useState<Recording[]>([])
 
   useEffect(() => {
     fetchTelemetries(apiUrl).then(d => setMappedTelemetry(mapTelemetries(d)))
@@ -50,41 +53,26 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
         </div>
       </nav>
 
-      <main className={clientStyle.clientContent}>
-        {/* <input type="text" onChange={e => setUrl(e.target.value)} value={url} />
-        <iframe id="svyr-website" src={url} className="svyr-border svyr-h-full svyr-box-border" /> */}
-
-        {page === "viz" ? (
-          <VizBody
-            setPage={setPage}
-            setTelemetryIndex={setTelemetryIndex}
-            selectedRec={selectedRec}
-            mappedTelemetry={mappedTelemetry}
-          />
-        ) : (
-          <ReplayBody
-            url={url}
-            clicksData={mappedTelemetry?.get(telemetryIndex)!}
-          />
-        )}
-      </main>
-
-      <nav className={clientStyle.rightNav}>
-        {page === "viz" ? (
-          <VizNav
-            setPage={setPage}
-            selectedRec={selectedRec}
-            setSelectedRec={setSelectedRec}
-            mappedTelemetry={mappedTelemetry}
-          />
-        ) : (
-          <ReplayNav
-            mappedTelemetry={mappedTelemetry!}
-            telemetryIndex={telemetryIndex}
-            setTelemetryIndex={setTelemetryIndex}
-          />
-        )}
-      </nav>
+      {page === "viz" ? (
+        <VizBody
+          setPage={setPage}
+          setTelemetryIndex={setTelemetryIndex}
+          selectedRec={selectedRec}
+          mappedTelemetry={mappedTelemetry}
+          setRecordedPaths={setRecordedPaths}
+          setSelectedRec={setSelectedRec}
+          recordedPaths={recordedPaths}
+        />
+      ) : (
+        <ReplayBody
+          url={url}
+          clicksData={mappedTelemetry?.get(telemetryIndex)!}
+          mappedTelemetry={mappedTelemetry!}
+          setMappedTelemetry={setMappedTelemetry}
+          telemetryIndex={telemetryIndex}
+          setTelemetryIndex={setTelemetryIndex}
+        />
+      )}
     </div>
   )
 }

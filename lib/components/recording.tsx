@@ -1,6 +1,7 @@
 import { DashboardPage, Recording } from "@/utils/types"
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { ExitIcon, PauseIcon, PlayIcon, SaveIcon } from "./icons"
+
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 
 const RecordingBody: FC<{
   setPage: Dispatch<SetStateAction<DashboardPage>>

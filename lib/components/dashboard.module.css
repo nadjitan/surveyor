@@ -40,7 +40,7 @@
   @apply svyr-mt-2 svyr-flex svyr-cursor-pointer svyr-flex-row svyr-items-center svyr-overflow-y-auto svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected;
 }
 .clientContent .ccBodyBottom .pathDataContainer h5 {
-  @apply svyr-w-14 svyr-font-inter-semibold svyr-text-theme-on-surface;
+  @apply svyr-w-16 svyr-font-inter-semibold svyr-text-theme-on-surface;
 }
 .clientContent .ccBodyBottom .pathDataContainer p {
   @apply svyr-text-sm svyr-text-theme-on-surface;
