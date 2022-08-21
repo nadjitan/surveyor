@@ -20,7 +20,6 @@ export const ReplayBody: FC<{
 }) => {
   const [filteredTelemetries, setFilteredTelemetries] =
     useState<MappedTelemetry | null>(null)
-  const [telemetryFound, setTelemetryFound] = useState(true)
 
   useEffect(() => {
     if (mappedTelemetry) {
@@ -37,11 +36,8 @@ export const ReplayBody: FC<{
           )
         )
       )
-      if (filteredTelemetries!.size > 0) setTelemetryFound(true)
-      else setTelemetryFound(false)
     } else {
       setFilteredTelemetries(mappedTelemetry)
-      setTelemetryFound(true)
     }
   }
 
@@ -54,7 +50,7 @@ export const ReplayBody: FC<{
               <div className="svyr-flex svyr-flex-row svyr-items-center svyr-justify-center">
                 <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
                 <h4 className="svyr-ml-3 svyr-font-inter-semibold">
-                  37aed957-bcbd-4ecd-9eec-fb1d9933ee20
+                  {mappedTelemetry.get(telemetryIndex)?.id}
                 </h4>
               </div>
 
@@ -77,6 +73,7 @@ export const ReplayBody: FC<{
                 <span>Stop</span>
               </button>
             </div>
+
             <div className="svyr-relative svyr-mt-8 svyr-grid svyr-h-full svyr-w-full svyr-border svyr-border-theme-surface">
               <iframe
                 id="svyr-website"
@@ -89,10 +86,12 @@ export const ReplayBody: FC<{
                 <LoadingIcon svgClass="svyr-fill-theme-grey" />
               </div>
             </div>
+
             <div className="svyr-relative svyr-mt-4 svyr-box-border svyr-h-40 svyr-w-full svyr-min-w-full svyr-overflow-y-hidden svyr-bg-theme-surface svyr-p-6">
               <h5 className="svyr-font-inter-semibold svyr-text-theme-grey">
                 Timeline
               </h5>
+
               <div
                 id="timeline"
                 className="svyr-relative svyr-flex svyr-h-5/6 svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-x-auto svyr-overflow-y-hidden">

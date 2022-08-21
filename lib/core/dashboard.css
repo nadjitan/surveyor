@@ -1,0 +1,320 @@
+@font-face {
+  font-family: "Inter Regular";
+  src: url(../fonts/Inter-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Inter Medium";
+  src: url(../fonts/Inter-Medium.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Inter SemiBold";
+  src: url(../fonts/Inter-SemiBold.ttf) format("truetype");
+}
+
+.svyr-selected {
+  position: relative;
+}
+.svyr-selected::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-color: rgb(0 128 0 / 1);
+  background-color: rgb(0 128 0 / 0.5);
+}
+.svyr-node-selected {
+  background-color: var(--on-surface);
+}
+
+:root {
+  --primary: rgb(92, 56, 255);
+  --primary-disabled: rgb(64, 41, 166);
+  --secondary: rgb(51, 171, 160);
+  --tertiary: rgb(108, 105, 120);
+  --background: rgb(19, 21, 23);
+  --surface: rgb(31, 35, 37);
+  --selected: rgba(255, 255, 255, 0.261);
+  --grey: rgb(108, 105, 120);
+  --container: rgb(38, 43, 46);
+  --error: rgb(176, 0, 32);
+  --on-primary: rgb(255, 255, 255);
+  --on-secondary: rgb(255, 255, 255);
+  --on-background: rgb(255, 255, 255);
+  --on-surface: rgb(255, 255, 255);
+  --on-error: rgb(255, 255, 255);
+  --shadow: rgba(0, 0, 0, 0.205);
+  --scrollbar-width: 8px;
+}
+
+body {
+  font-family: Inter Regular, sans-serif;
+}
+.search-container {
+  margin-top: 1rem;
+  display: flex;
+  height: 3rem;
+  width: 100%;
+  flex-direction: row;
+  overflow: hidden;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-color: var(--grey);
+}
+.search-container:focus-within {
+  border-color: var(--on-surface);
+}
+.search-container:focus-within > svg {
+  fill: var(--on-surface);
+}
+.search-container span {
+  width: 3rem;
+  height: 100%;
+}
+button {
+  display: flex;
+  height: max-content;
+  flex-direction: row;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--primary);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-family: "Inter Medium", sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  color: var(--on-surface);
+}
+h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: var(--on-surface);
+}
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  color: var(--on-surface);
+}
+h4 {
+  font-weight: 500;
+  color: var(--on-surface);
+}
+p {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--on-surface);
+}
+span {
+  display: flex;
+  align-items: center;
+  color: var(--on-surface);
+}
+ul {
+  list-style-position: inside;
+  list-style-type: disc;
+  color: var(--on-surface);
+}
+svg {
+  cursor: pointer;
+}
+input {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--surface);
+  padding: 1rem;
+  color: var(--on-surface);
+}
+input::placeholder {
+  font-family: "Inter Medium", sans-serif;
+  color: var(--grey);
+}
+input:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  p {
+    font-size: 1rem /* 16px */;
+    line-height: 1.5rem /* 24px */;
+  }
+}
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3rem;
+    line-height: 1;
+  }
+  h2 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  h3 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  p {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+}
+
+.dark {
+  --background: rgb(48, 54, 47);
+  --surface: rgb(255, 251, 219);
+  --on-background: rgb(255, 251, 219);
+  --on-surface: rgb(48, 54, 47);
+  --shadow: rgb(51, 51, 51);
+}
+
+.viz-modal {
+  display: none;
+}
+
+.client-body {
+  display: grid;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--on-background);
+  grid-template-areas:
+    "lnav content rnav"
+    "lnav content rnav";
+  grid-template-columns: 80px 1fr 350px;
+}
+.client-body .left-nav {
+  grid-area: "lnav";
+  display: flex;
+  max-height: 100vh;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: var(--surface);
+}
+.client-body .left-nav .left-item {
+  margin-top: 1rem;
+  display: flex;
+  height: 4rem;
+  width: 100%;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.client-content {
+  grid-area: "content";
+  display: flex;
+  height: 100%;
+  max-height: 100vh;
+  min-height: 100vh;
+  min-width: 100%;
+  max-width: 100%;
+  grid-auto-rows: auto;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-color: var(--background);
+  padding: 2rem;
+}
+.client-content .cc-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.client-content .cc-header-l {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.client-content .cc-header-r {
+  width: 12rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.client-content .cc-body-top {
+  margin-top: 2rem;
+  box-sizing: border-box;
+  display: grid;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow-y: auto;
+  background-color: var(--surface);
+  padding: 1.5rem;
+}
+.client-content .cc-body-bottom {
+  margin-top: 1rem;
+  box-sizing: border-box;
+  height: 20rem;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--surface);
+  padding: 1.5rem;
+}
+.client-content .cc-body-bottom .path-data-container {
+  margin-top: 0.5rem;
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: auto;
+  border-radius: 0.375rem;
+  background-color: var(--container);
+  padding: 0.75rem;
+}
+.client-content .cc-body-bottom .path-data-container:hover {
+  background-color: var(--selected);
+}
+.client-content .cc-body-bottom .path-data-container h5 {
+  width: 4rem;
+  font-family: Inter SemiBold, sans-serif;
+  color: var(--on-surface);
+}
+.client-content .cc-body-bottom .path-data-container p {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--on-surface);
+}
+
+.right-nav {
+  grid-area: "rnav";
+  box-sizing: border-box;
+  display: flex;
+  max-height: 100vh;
+  min-height: 100vh;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--surface);
+  padding: 2rem;
+}
+.right-nav .rn-container {
+  margin-top: 0.5rem;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -1,4 +1,7 @@
+import { fetchTelemetries, mapTelemetries } from "@/utils/client"
+import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import Hashids from "hashids"
+import { dashboard, viz } from "./dashboard"
 
 interface Telemetry {
   id?: string
@@ -23,7 +26,7 @@ interface Telemetry {
  * }
  * ```
  */
-function initSurveyor(apiUrl: string) {
+export function initSurveyor(apiUrl: string) {
   let sendingParentDiv = document.createElement("div")
   sendingParentDiv.id = "srvyr-notif-send"
   sendingParentDiv.style.display = "none"
@@ -151,5 +154,3 @@ function initSurveyor(apiUrl: string) {
     addListeners()
   }
 }
-
-export default initSurveyor

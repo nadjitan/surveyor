@@ -18,10 +18,7 @@ import {
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import Chart from "chart.js/auto"
 import { Levenshtein } from "set-distance"
-
-const GREY = "rgba(108, 105, 120, 1)"
-const PRIMARY = "rgba(92, 56, 255, 1)"
-const SURFACE = "rgb(31, 35, 37)"
+import { GREY, PRIMARY, SURFACE } from "@/utils/client"
 
 const initAS = new Map<AggregatedScore, number[]>([
   ["100%", []],
@@ -51,7 +48,6 @@ export const VizBody: FC<{
   const [userScores, setUserScores] = useState<UserPerformance[]>([])
 
   const [filteredRecPaths, setfilteredRecPaths] = useState<Recording[]>([])
-  const [recPathFound, setRecPathFound] = useState(true)
 
   const [aggregatedScores, setAggregatedScores] = useState(initAS)
   const [dnChartText, setDnChartText] = useState({ prercent: 0, text: "" })
@@ -123,11 +119,8 @@ export const VizBody: FC<{
       setfilteredRecPaths(
         recordedPaths!.filter(rp => rp.title.toLowerCase().includes(value))
       )
-      if (filteredRecPaths.length > 0) setRecPathFound(true)
-      else setRecPathFound(false)
     } else {
       setfilteredRecPaths(recordedPaths)
-      setRecPathFound(true)
     }
   }
 
@@ -195,24 +188,21 @@ export const VizBody: FC<{
       if (aggregatedScores.get("75% - 99%")!.length > 0) {
         const p = (aggregatedScores.get("75% - 99%")!.length * 100) / dataLength
         percentage = p
-        setDnChartText(prev => {
-          prev.text = "had minor issues when navigating the website."
-          prev.prercent = p
-          return prev
+        setDnChartText({
+          text: "had minor issues when navigating the website.",
+          prercent: p,
         })
       } else if (aggregatedScores.get("100%")!.length > 0) {
         const p = (aggregatedScores.get("100%")!.length * 100) / dataLength
         percentage = p
-        setDnChartText(prev => {
-          prev.text = "have successfully navigated through the desired path."
-          prev.prercent = p
-          return prev
+        setDnChartText({
+          text: "have successfully navigated through the desired path.",
+          prercent: p,
         })
       } else {
-        setDnChartText(prev => {
-          prev.text = "Everyone had a hard time navigating the website."
-          prev.prercent = 0
-          return prev
+        setDnChartText({
+          text: "Everyone had a hard time navigating the website.",
+          prercent: 0,
         })
       }
 
@@ -358,6 +348,7 @@ export const VizBody: FC<{
                 </div>
               </div>
             </div>
+
             <div className={clientStyle.ccHeader}>
               <div className={clientStyle.ccHeaderL}>
                 <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
@@ -409,6 +400,7 @@ export const VizBody: FC<{
                 <span>Play a Recording</span>
               </button>
             </div>
+
             <div className={clientStyle.ccBodyTop}>
               <h5 className="svyr-font-inter-semibold svyr-text-theme-grey">
                 User Performance Chart

@@ -15,6 +15,44 @@ import { MappedTelemetry, Telemetry } from "./types"
 //   return observer.disconnect
 // }
 
+export const GREY = "rgba(108, 105, 120, 1)"
+export const PRIMARY = "rgba(92, 56, 255, 1)"
+export const SURFACE = "rgb(31, 35, 37)"
+export const ON_SURFACE = "rgb(255, 255, 255)"
+
+/** Source: https://stackoverflow.com/a/63116134 */
+const camelToKebabCase = (str: string) => {
+  return str
+    .split("")
+    .map((letter, idx) => {
+      return letter.toUpperCase() === letter
+        ? `${idx !== 0 ? "-" : ""}${letter.toLowerCase()}`
+        : letter
+    })
+    .join("")
+}
+
+export function stylesToString(cssStyles: Partial<CSSStyleDeclaration>) {
+  let string = ""
+  for (const [key, val] of Object.entries(cssStyles)) {
+    string = string + `${camelToKebabCase(key)}: ${val}; `
+  }
+
+  return string
+}
+
+/**
+ * Must only have a single parent
+ *
+ * @param str
+ * @returns Element
+ */
+export function stringToHTML(str: string) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(str, "text/html")
+  return doc.body.firstElementChild!
+}
+
 export async function fetchTelemetries(apiUrl: string): Promise<Telemetry[]> {
   const res = await fetch(apiUrl, { method: "GET" })
   return await res.json()
@@ -30,7 +68,10 @@ export function mapTelemetries(telemetries: Telemetry[]) {
   return map
 }
 
-export function initReplay(mappedTelemetry: MappedTelemetry, telemetryIndex: number) {
+export function initReplay(
+  mappedTelemetry: MappedTelemetry,
+  telemetryIndex: number
+) {
   let iframe: HTMLIFrameElement
   let iframeDoc: Document
 
@@ -107,7 +148,8 @@ export function initReplay(mappedTelemetry: MappedTelemetry, telemetryIndex: num
       if (dataIndex < mappedTelemetry.get(telemetryIndex)!.data.length) {
         // IF IFRAME IS NOT EQUAL TO DATA URL
         if (
-          iframe.src !== mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
+          iframe.src !==
+          mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
         ) {
           play = false
 
@@ -156,7 +198,8 @@ export function initReplay(mappedTelemetry: MappedTelemetry, telemetryIndex: num
         dataIndex = index
 
         if (
-          iframe.src !== mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
+          iframe.src !==
+          mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
         ) {
           iframe.src = mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url!
           iframeLoadingElem.style.display = "flex"
