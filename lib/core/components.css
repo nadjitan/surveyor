@@ -46,6 +46,11 @@
   --scrollbar-width: 8px;
 }
 
+/**
+ * ----------------------------------------
+ *            DEFAULT STYLES
+ * ----------------------------------------
+ */
 body {
   font-family: Inter Regular, sans-serif;
 }
@@ -190,6 +195,11 @@ input:focus {
   display: none;
 }
 
+/**
+ * ----------------------------------------
+ *           DASHBOARD STYLES
+ * ----------------------------------------
+ */
 .client-body {
   display: grid;
   min-height: 100vh;
@@ -308,6 +318,15 @@ input:focus {
   background-color: var(--surface);
   padding: 2rem;
 }
+.right-nav > div {
+  height: 6rem;
+}
+.right-nav > div > p {
+  font-family: Inter SemiBold, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--grey);
+}
 .right-nav .rn-container {
   margin-top: 0.5rem;
   display: flex;
@@ -317,4 +336,242 @@ input:focus {
   overflow: hidden;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.right-nav .empty-prompt {
+  margin: auto;
+  font-family: Inter Medium, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--grey);
+}
+.right-nav .btn-record {
+  margin-top: 1rem;
+  display: flex;
+  height: 4rem;
+  width: 100%;
+  justify-content: center;
+}
+.right-nav .btn-record > button {
+  width: 80%;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+/**
+ * ----------------------------------------
+ *            REPLAY COMPONENT
+ * ----------------------------------------
+ */
+.replay-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.replay-header .replay-header-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.replay-header .replay-header-title > div {
+  height: 24px;
+  width: 0.25rem;
+  background-color: var(--primary);
+}
+.replay-header .replay-header-title > h4 {
+  margin-left: 0.75rem;
+  font-family: Inter SemiBold, sans-serif;
+}
+.replay-header #btn-replay {
+  width: max-content;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.replay-header #btn-stop {
+  display: none;
+  width: max-content;
+  border-radius: 9999px;
+  background-color: var(--primary-disabled);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.replay-rn-header > p {
+  font-family: Inter SemiBold, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--grey);
+}
+
+.replay-rn-item {
+  margin-top: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0.375rem;
+  background-color: var(--container);
+  padding: 0.75rem;
+}
+.replay-rn-item:hover {
+  background-color: var(--selected);
+}
+.replay-rn-item:nth-child(2):hover {
+  color: var(--on-surface);
+}
+.replay-timeline-container {
+  position: relative;
+  margin-top: 1rem;
+  box-sizing: border-box;
+  height: 10rem;
+  width: 100%;
+  min-width: 100%;
+  overflow-y: hidden;
+  background-color: var(--surface);
+  padding: 1.5rem;
+}
+.replay-timeline-container > h5 {
+  font-family: Inter SemiBold, sans-serif;
+  color: var(--grey);
+}
+.replay-iframe-container {
+  position: relative;
+  margin-top: 2rem;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  border-width: 1px;
+  border-color: var(--surface);
+}
+#svyr-website {
+  height: 100%;
+  width: 100%;
+}
+#timeline {
+  position: relative;
+  display: flex;
+  height: 83.333333%;
+  min-width: 100%;
+  max-width: max-content;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+#timeline:first-child {
+  display: flex;
+  height: 2px;
+  min-width: 100%;
+  max-width: max-content;
+  flex-direction: row;
+  align-items: center;
+  overflow: visible;
+  background-color: var(--grey);
+}
+#timeline .tl-node {
+  margin-left: 1rem;
+  height: max-content;
+  width: max-content;
+}
+#timeline .tl-node:first-child {
+  height: 1rem;
+  width: 1rem;
+  transform: rotate(45deg);
+  cursor: pointer;
+  border-width: 2px;
+  border-color: var(--grey);
+  background-color: var(--surface);
+}
+#timeline .tl-node:first-child:hover {
+  background-color: var(--on-surface);
+}
+
+/**
+ * ----------------------------------------
+ *           RECORDING COMPONENT
+ * ----------------------------------------
+ */
+#recording-body {
+  display: grid;
+  place-items: center;
+}
+#recording-body > iframe {
+  height: 100vh;
+  width: 100%;
+}
+#recording-body > div {
+  position: absolute;
+  bottom: 0px;
+  box-sizing: border-box;
+  display: flex;
+  height: 5rem;
+  width: 75%;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border-top-left-radius: 46px;
+  border-top-right-radius: 46px;
+  background-color: var(--background);
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+#recording-body #recording-status {
+  display: flex;
+  height: max-content;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+#recording-body #recording-status > div {
+  margin-top: 0.25rem;
+  height: 0.5rem;
+  width: 0.5rem /* 8px */;
+  border-radius: 9999px;
+  background-color: var(--primary);
+}
+#recording-body #recording-status > h4 {
+  font-weight: 600;
+  color: var(--primary);
+}
+#recording-body #input-recording-title {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-color: var(--surface);
+  background-color: transparent;
+  padding: 1rem;
+  padding-left: 1.25rem;
+  color: var(--on-surface);
+}
+#recording-body #input-recording-title:focus {
+  border-color: var(--on-surface);
+}
+#recording-body #recording-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+#recording-body #btn-record-pause {
+  width: max-content;
+  border-radius: 9999px;
+  background-color: var(--primary-disabled);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+#recording-body #btn-record-play {
+  display: none;
+  width: max-content;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+#recording-body #btn-save {
+  display: none;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }

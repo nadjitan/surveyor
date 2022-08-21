@@ -488,6 +488,7 @@ export const VizBody: FC<{
                 />
               </div>
             </div>
+
             <div className={clientStyle.rnContainer}>
               {filteredRecPaths.length > 0 ? (
                 filteredRecPaths.map((r, index) => (
@@ -526,6 +527,7 @@ export const VizBody: FC<{
                 </span>
               )}
             </div>
+            
             <div className="svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-justify-center">
               <button
                 onClick={() => setPage("recording")}

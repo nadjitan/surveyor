@@ -1,6 +1,6 @@
 import { fetchTelemetries, mapTelemetries } from "../utils/client"
 import { DashboardPage, MappedTelemetry, Recording } from "../utils/types"
-import { dashboard, replay, viz } from "./dashboard"
+import { dashboard, replay, viz } from "./components"
 
 export class SurveyorDashboard {
   apiUrl: string
@@ -26,12 +26,44 @@ export class SurveyorDashboard {
     root.appendChild(dashboard(el))
   }
 
-  run() {
+  #vizComponent() {
     this.#render(viz().innerHTML)
+  }
 
-    // fetchTelemetries(this.apiUrl).then(d => {
-    //   this.mappedTelemetry = mapTelemetries(d)
-    //   console.table(this.mappedTelemetry)
-    // })
+  #replayComponent() {
+    let filteredTelemetries = this.mappedTelemetry
+
+    this.#render(
+      replay(this.mappedTelemetry!, filteredTelemetries!, this.telemetryIndex!)
+        .innerHTML
+    )
+
+    const searchTelemetries = (value: string) => {
+      if (value !== "") {
+        filteredTelemetries = new Map(
+          [...this.mappedTelemetry!].filter(([k, tel]) =>
+            tel.id.toLowerCase().includes(value)
+          )
+        )
+        this.#render(
+          replay(
+            this.mappedTelemetry!,
+            filteredTelemetries!,
+            this.telemetryIndex!
+          ).innerHTML
+        )
+      } else {
+        filteredTelemetries = this.mappedTelemetry
+      }
+    }
+  }
+
+  run() {
+    fetchTelemetries(this.apiUrl).then(d => {
+      this.mappedTelemetry = mapTelemetries(d)
+      console.table(this.mappedTelemetry)
+
+      this.#replayComponent()
+    })
   }
 }

@@ -1,5 +1,5 @@
 import "./style.css"
-import "./core/dashboard.css"
+import "./core/components.css"
 import Surveyor from "@/components/surveyor"
 import Client from "@/components/dashboard"
 import { initSurveyor } from "@/core/init-surveyor"
