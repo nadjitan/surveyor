@@ -18,7 +18,7 @@ import {
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import Chart from "chart.js/auto"
 import { Levenshtein } from "set-distance"
-import { GREY, PRIMARY, SURFACE } from "@/utils/client"
+import { GREY, PRIMARY, SURFACE } from "@/utils/dashboard"
 
 const initAS = new Map<AggregatedScore, number[]>([
   ["100%", []],
@@ -47,7 +47,7 @@ export const VizBody: FC<{
   // Calculated using Levenshtein Distance
   const [userScores, setUserScores] = useState<UserPerformance[]>([])
 
-  const [filteredRecPaths, setfilteredRecPaths] = useState<Recording[]>([])
+  const [filteredRecPaths, setFilteredRecPaths] = useState<Recording[]>([])
 
   const [aggregatedScores, setAggregatedScores] = useState(initAS)
   const [dnChartText, setDnChartText] = useState({ prercent: 0, text: "" })
@@ -58,7 +58,7 @@ export const VizBody: FC<{
   function getRecordedPaths() {
     if (localStorage.hasOwnProperty("srvyr-paths")) {
       setRecordedPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
-      setfilteredRecPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
+      setFilteredRecPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
     }
   }
   function addToAggregatedScores(num: number) {
@@ -116,11 +116,11 @@ export const VizBody: FC<{
   }
   function searchRecordedPaths(value: string) {
     if (value !== "") {
-      setfilteredRecPaths(
+      setFilteredRecPaths(
         recordedPaths!.filter(rp => rp.title.toLowerCase().includes(value))
       )
     } else {
-      setfilteredRecPaths(recordedPaths)
+      setFilteredRecPaths(recordedPaths)
     }
   }
 

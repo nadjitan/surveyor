@@ -1,6 +1,6 @@
 import clientStyle from "./dashboard.module.css"
 import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
-import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/client"
+import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/dashboard"
 import { TempIcon } from "./icons"
 import { ReplayBody } from "./replay"
 import { VizBody } from "./viz"

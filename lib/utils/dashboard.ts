@@ -53,6 +53,14 @@ export function stringToHTML(str: string) {
   return doc.body.firstElementChild!
 }
 
+export function onClickElem(
+  elemId: string,
+  callback: (me?: MouseEvent) => void
+) {
+  const elem = document.getElementById(elemId)!
+  if (elem) elem.onclick = callback
+}
+
 export async function fetchTelemetries(apiUrl: string): Promise<Telemetry[]> {
   const res = await fetch(apiUrl, { method: "GET" })
   return await res.json()

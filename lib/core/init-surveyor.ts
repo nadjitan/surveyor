@@ -1,4 +1,4 @@
-import { fetchTelemetries, mapTelemetries } from "@/utils/client"
+import { fetchTelemetries, mapTelemetries } from "@/utils/dashboard"
 import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import Hashids from "hashids"
 import { dashboard, viz } from "./components"

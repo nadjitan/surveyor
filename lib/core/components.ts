@@ -1,6 +1,6 @@
 // <surveyor-client apiUrl="https://capstone-api-theta.vercel.app/api/surveyor"></surveyor-client>
 
-import { GREY, ON_SURFACE, stringToHTML } from "@/utils/client"
+import { GREY, ON_SURFACE, stringToHTML } from "@/utils/dashboard"
 import {
   DeleteIcon,
   EditIcon,
@@ -13,47 +13,70 @@ import {
   StopIcon,
   TempIcon,
 } from "@/utils/icons"
-import { MappedTelemetry } from "@/utils/types"
+import { MappedTelemetry, Recording } from "@/utils/types"
 
-export const dashboard = (el: string) =>
+export const dashboard = (child: string) =>
   stringToHTML(`
 <div class="client-body">
   <nav class="left-nav">
-    <div class="left-item">
+    <div class="left-item" id="viz-page">
       ${TempIcon({ fill: GREY, width: "32px", height: "32px" })}
       <span>Data</span>
     </div>
 
-    <div class="left-item">
+    <div class="left-item" id="replay-page">
       ${TempIcon({ fill: GREY, width: "32px", height: "32px" })}
       <span>Replay</span>
     </div>
   </nav>
-  ${el}
+  ${child}
 </div>`)
 
-export const viz = () =>
-  stringToHTML(`
+export const viz = (
+  recordedPaths: Recording[],
+  filteredRecPaths: Recording[],
+  selectedRec: Recording | null
+) => {
+  const recPathsDiv = document.createElement("div")
+
+  recordedPaths.forEach((rp, _) => {
+    const rpItem = `
+    <div class="rec-path-item ${
+      selectedRec && rp.title === selectedRec?.title
+        ? "rec-path-selected-item"
+        : ""
+    }">
+      <h5>${rp.title}</h5>
+      <p>${rp.data[rp.data.length - 1].url}</p>
+    </div>
+`
+
+    recPathsDiv.appendChild(stringToHTML(rpItem))
+  })
+
+  return stringToHTML(`
 <div>
   <main class="client-content">
-    <div
+    ${
+      selectedRec
+        ? `<div
       class="viz-modal"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true">
 
-      <div id="modal-bg" class=""></div>
+      <div id="modal-bg"></div>
 
-      <div class="">
-        <div class="">
-          <div class="">
-            <div class="">
-              <h4 class="">Are you sure you want to delete?</h4>
+      <div>
+        <div>
+          <div>
+            <div>
+              <h4>Are you sure you want to delete?</h4>
 
-              <div class="">
-                <button class="">Delete</button>
+              <div>
+                <button>Delete</button>
 
-                <button class="">Cancel</button>
+                <button>Cancel</button>
               </div>
             </div>
           </div>
@@ -63,9 +86,9 @@ export const viz = () =>
 
     <div class="cc-header">
       <div class="cc-header-l">
-        <div class=""></div>
+        <div></div>
 
-        <span id="titleInput" class="">{selectedRec.title}</span>
+        <span id="titleInput">{selectedRec.title}</span>
 
         ${SaveIcon(
           { fill: GREY, width: "20px", height: "20px" },
@@ -91,18 +114,18 @@ export const viz = () =>
     </div>
     
     <div class="cc-body-top>
-      <h5 class="">User Performance Chart</h5>
+      <h5>User Performance Chart</h5>
 
-      <div class="">
-        <div class="">
-          <canvas id="barChart" />
+      <div>
+        <div>
+          <canvas id="barChart"></canvas>
         </div>
 
-        <div class="">
-          <canvas id="dnChart" />
+        <div>
+          <canvas id="dnChart"></canvas>
 
-          <div class="">
-            <span class="">{dnChartText.prercent}% users</span>{" "}
+          <div>
+            <span>{dnChartText.prercent}% users</span>{" "}
             {dnChartText.text}
           </div>
         </div>
@@ -115,7 +138,9 @@ export const viz = () =>
       <div class="">
         map...
       </div>
-    </div>
+    </div>`
+        : ""
+    }
   </main>
 
   <nav class="right-nav">
@@ -136,11 +161,15 @@ export const viz = () =>
     </div>
 
     <div class="rn-container">
-      <span class="empty-prompt">Record a path to get started!</span>
+    ${
+      recordedPaths
+        ? recPathsDiv.innerHTML
+        : '<span class="empty-prompt">Record a path to get started!</span>'
+    }
     </div>
 
     <div class="btn-record">
-      <button>
+      <button id="record-btn">
         ${PlayIcon(
           { fill: ON_SURFACE, width: "20px", height: "20px" },
           { width: "32px", height: "full" }
@@ -151,6 +180,7 @@ export const viz = () =>
   </nav>
 </div>
 `)
+}
 
 export const replay = (
   mappedTelemetry: MappedTelemetry,
@@ -206,15 +236,13 @@ export const replay = (
     </div>
     
     <div class="replay-iframe-container">
-      <iframe src="http://localhost:3000" id="svyr-website" />
+      <iframe src="http://localhost:3000" id="svyr-website"></iframe>
     </div>
 
     <div class="replay-timeline-container">
       <h5>Timeline</h5>
 
-      <div id="timeline">
-        <div>${timelineParentDiv.innerHTML}</div>
-      </div>
+      <div id="timeline"><div>${timelineParentDiv.innerHTML}</div></div>
     </div>
   </main>
 
@@ -249,23 +277,22 @@ export const recording = () =>
   stringToHTML(`
 <div>
 <div id="recording-body">
-  <iframe id="svyr-website-rec" class="" />
+  <iframe id="svyr-website-rec" src="http://localhost:3000"></iframe>
 
-  <div class="">
-    <div id="recording-status" class="">
-      <div class=""></div>
-      <h4 class="">Recording...</h4>
+  <div>
+    <div id="recording-status">
+      <div></div>
+      <h4>Recording...</h4>
     </div>
 
     <input
       id="input-recording-title"
       type="text"
       placeholder="Enter name of path..."
-      class=""
     />
 
-    <div class="recording-buttons">
-      <button id="btn-record-pause" class="">
+    <div id="recording-buttons">
+      <button id="btn-record-pause">
         ${PauseIcon(
           {
             fill: ON_SURFACE,
@@ -274,10 +301,10 @@ export const recording = () =>
           },
           { width: "28px", height: "full" }
         )}
-        <span class="">Pause</span>
+        <span>Pause</span>
       </button>
 
-      <button id="btn-record-play" class="">
+      <button id="btn-record-play">
         ${PlayIcon(
           {
             fill: ON_SURFACE,
@@ -289,7 +316,7 @@ export const recording = () =>
         <span>Record</span>
       </button>
 
-      <button id="btn-save" class="">
+      <button id="btn-save">
         ${SaveIcon(
           {
             fill: ON_SURFACE,
@@ -301,7 +328,10 @@ export const recording = () =>
         <span>Save</span>
       </button>
 
-      ${ExitIcon({}, { width: "32px", height: "32px" })}
+      <div id="btn-record-exit">${ExitIcon(
+        {},
+        { width: "32px", height: "32px" }
+      )}</div>
     </div>
   </div>
 </div>

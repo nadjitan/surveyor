@@ -1,6 +1,10 @@
-import { fetchTelemetries, mapTelemetries } from "../utils/client"
+import {
+  fetchTelemetries,
+  mapTelemetries,
+  onClickElem,
+} from "../utils/dashboard"
 import { DashboardPage, MappedTelemetry, Recording } from "../utils/types"
-import { dashboard, replay, viz } from "./components"
+import { dashboard, recording, replay, viz } from "./components"
 
 export class SurveyorDashboard {
   apiUrl: string
@@ -21,13 +25,27 @@ export class SurveyorDashboard {
     this.recordedPaths = []
   }
 
-  #render(el: string) {
-    const root = document.getElementsByTagName("body")[0]
-    root.appendChild(dashboard(el))
+  #render(child: string) {
+    const root = document.getElementById("root")!
+    root.replaceChildren(dashboard(child))
+
+    onClickElem("viz-page", () => this.#vizComponent())
+    onClickElem("replay-page", () => this.#replayComponent())
   }
 
   #vizComponent() {
-    this.#render(viz().innerHTML)
+    let filteredRecPaths = this.recordedPaths
+    let selectedRec: Recording | null = null
+
+    if (localStorage.hasOwnProperty("srvyr-paths")) {
+      this.recordedPaths = JSON.parse(localStorage.getItem("srvyr-paths")!)
+      filteredRecPaths = JSON.parse(localStorage.getItem("srvyr-paths")!)
+    }
+
+    this.#render(
+      viz(this.recordedPaths!, filteredRecPaths, selectedRec).innerHTML
+    )
+    onClickElem("record-btn", () => this.#recordingComponent())
   }
 
   #replayComponent() {
@@ -45,25 +63,33 @@ export class SurveyorDashboard {
             tel.id.toLowerCase().includes(value)
           )
         )
-        this.#render(
-          replay(
-            this.mappedTelemetry!,
-            filteredTelemetries!,
-            this.telemetryIndex!
-          ).innerHTML
-        )
       } else {
         filteredTelemetries = this.mappedTelemetry
       }
+
+      this.#render(
+        replay(
+          this.mappedTelemetry!,
+          filteredTelemetries!,
+          this.telemetryIndex!
+        ).innerHTML
+      )
     }
+  }
+
+  #recordingComponent() {
+    const root = document.getElementById("root")!
+    root.replaceChildren(recording())
+
+    onClickElem("btn-save", () => this.#vizComponent())
+    onClickElem("btn-record-exit", () => this.#vizComponent())
   }
 
   run() {
     fetchTelemetries(this.apiUrl).then(d => {
       this.mappedTelemetry = mapTelemetries(d)
-      console.table(this.mappedTelemetry)
-
-      this.#replayComponent()
+      // STARTING PAGE
+      this.#vizComponent()
     })
   }
 }

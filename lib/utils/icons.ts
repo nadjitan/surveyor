@@ -1,4 +1,4 @@
-import { stylesToString } from "./client"
+import { stylesToString } from "./dashboard"
 
 interface IconString {
   fill?: string

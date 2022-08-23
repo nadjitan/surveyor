@@ -360,6 +360,46 @@ input:focus {
 
 /**
  * ----------------------------------------
+ *             VIZ COMPONENT
+ * ----------------------------------------
+ */
+.rec-path-item {
+  margin-top: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0.375rem;
+  background-color: var(--container);
+  padding: 0.75rem;
+}
+.rec-path-item:hover {
+  background-color: var(--selected);
+}
+.rec-path-item:hover > p {
+  color: var(--on-surface);
+}
+.rec-path-selected-item {
+  background-color: var(--selected);
+}
+.rec-path-item.rec-path-selected-item > p {
+  color: var(--on-surface);
+}
+.rec-path-item > h5 {
+  overflow-wrap: break-word;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-family: Inter Medium, sans-serif;
+  color: var(--on-surface);
+}
+.rec-path-item > p {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--grey);
+}
+
+/**
+ * ----------------------------------------
  *            REPLAY COMPONENT
  * ----------------------------------------
  */
@@ -460,7 +500,7 @@ input:focus {
   overflow-x: auto;
   overflow-y: hidden;
 }
-#timeline:first-child {
+#timeline > div {
   display: flex;
   height: 2px;
   min-width: 100%;
@@ -475,7 +515,7 @@ input:focus {
   height: max-content;
   width: max-content;
 }
-#timeline .tl-node:first-child {
+#timeline .tl-node > div {
   height: 1rem;
   width: 1rem;
   transform: rotate(45deg);
@@ -517,7 +557,7 @@ input:focus {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
 }
-#recording-body #recording-status {
+#recording-status {
   display: flex;
   height: max-content;
   align-items: center;
@@ -525,18 +565,18 @@ input:focus {
   gap: 1rem;
   text-align: center;
 }
-#recording-body #recording-status > div {
+#recording-status > div {
   margin-top: 0.25rem;
   height: 0.5rem;
   width: 0.5rem /* 8px */;
   border-radius: 9999px;
   background-color: var(--primary);
 }
-#recording-body #recording-status > h4 {
+#recording-status > h4 {
   font-weight: 600;
   color: var(--primary);
 }
-#recording-body #input-recording-title {
+#input-recording-title {
   box-sizing: border-box;
   width: 100%;
   border-radius: 9999px;
@@ -547,30 +587,29 @@ input:focus {
   padding-left: 1.25rem;
   color: var(--on-surface);
 }
-#recording-body #input-recording-title:focus {
+#input-recording-title:focus {
   border-color: var(--on-surface);
 }
-#recording-body #recording-buttons {
+#recording-buttons {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-#recording-body #btn-record-pause {
+#btn-record-pause {
   width: max-content;
   border-radius: 9999px;
   background-color: var(--primary-disabled);
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-#recording-body #btn-record-play {
+#btn-record-play {
   display: none;
   width: max-content;
   border-radius: 9999px;
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-#recording-body #btn-save {
-  display: none;
+#btn-save {
   border-radius: 9999px;
   font-size: 0.875rem;
   line-height: 1.25rem;

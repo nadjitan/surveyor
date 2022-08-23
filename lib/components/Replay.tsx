@@ -96,7 +96,7 @@ export const ReplayBody: FC<{
                 id="timeline"
                 className="svyr-relative svyr-flex svyr-h-5/6 svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-x-auto svyr-overflow-y-hidden">
                 <div className="svyr-flex svyr-h-[2px] svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-visible svyr-bg-theme-grey">
-                  {clicksData.data.map((c, i) => (
+                  {clicksData.data.map((_, i) => (
                     <div className="svyr-ml-4 svyr-h-max svyr-w-max" key={i}>
                       <div className="svyr-tl-node svyr-h-4 svyr-w-4 svyr-rotate-45 svyr-cursor-pointer svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface hover:svyr-bg-theme-on-surface" />
                     </div>
