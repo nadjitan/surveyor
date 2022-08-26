@@ -8,7 +8,7 @@ interface IconProps {
 }
 
 // SVGs from https://iconer.app
-export const TempIcon: FC<IconProps> = props => (
+export const CancelIcon: FC<IconProps> = props => (
   <span title={props.title} onClick={props.onClick} className={props.spanClass}>
     <svg
       className={props.svgClass}
@@ -18,6 +18,67 @@ export const TempIcon: FC<IconProps> = props => (
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg">
       <path d="M19.424 4.573a10.501 10.501 0 1 0-14.85 14.849 10.5 10.5 0 1 0 14.85-14.849Zm.825 7.425a8.207 8.207 0 0 1-1.678 4.98L7.018 5.426A8.207 8.207 0 0 1 12 3.747c4.55 0 8.25 3.704 8.25 8.25Zm-16.5 0a8.207 8.207 0 0 1 1.679-4.981L16.98 18.569A8.208 8.208 0 0 1 12 20.247c-4.547 0-8.25-3.7-8.25-8.25Z"></path>
+    </svg>
+  </span>
+)
+export const DatabaseIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2a9 3 0 1 0 0 6 9 3 0 1 0 0-6z"></path>
+      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+    </svg>
+  </span>
+)
+export const PieChartIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+      <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+    </svg>
+  </span>
+)
+export const FilmIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18"></rect>
+      <path d="M7 2v20"></path>
+      <path d="M17 2v20"></path>
+      <path d="M2 12h20"></path>
+      <path d="M2 7h5"></path>
+      <path d="M2 17h5"></path>
+      <path d="M17 17h5"></path>
+      <path d="M17 7h5"></path>
     </svg>
   </span>
 )

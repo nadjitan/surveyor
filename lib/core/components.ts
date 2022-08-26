@@ -20,12 +20,12 @@ export const dashboard = (child: string) =>
 <div class="client-body">
   <nav class="left-nav">
     <div class="left-item" id="viz-page">
-      ${TempIcon({ fill: GREY, width: "32px", height: "32px" })}
+      ${TempIcon({ svgStyles: { fill: GREY, width: "32px", height: "32px" } })}
       <span>Data</span>
     </div>
 
     <div class="left-item" id="replay-page">
-      ${TempIcon({ fill: GREY, width: "32px", height: "32px" })}
+      ${TempIcon({ svgStyles: { fill: GREY, width: "32px", height: "32px" } })}
       <span>Replay</span>
     </div>
   </nav>
@@ -38,7 +38,6 @@ export const viz = (
   selectedRec: Recording | null
 ) => {
   const recPathsDiv = document.createElement("div")
-
   recordedPaths.forEach((rp, _) => {
     const rpItem = `
     <div class="rec-path-item ${
@@ -56,88 +55,83 @@ export const viz = (
 
   return stringToHTML(`
 <div>
+  <div
+    id="viz-modal"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true">
+
+    <div>
+      <h4>Are you sure you want to delete?</h4>
+
+      <div>
+        <button>DELETE</button>
+
+        <button>CANCEL</button>
+      </div>
+    </div>
+  </div>
+
   <main class="client-content">
     ${
       selectedRec
-        ? `<div
-      class="viz-modal"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true">
-
-      <div id="modal-bg"></div>
-
-      <div>
-        <div>
-          <div>
-            <div>
-              <h4>Are you sure you want to delete?</h4>
-
-              <div>
-                <button>Delete</button>
-
-                <button>Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+        ? `
     <div class="cc-header">
       <div class="cc-header-l">
         <div></div>
 
-        <span id="titleInput">{selectedRec.title}</span>
+        <span id="title-input">${selectedRec.title}</span>
 
-        ${SaveIcon(
-          { fill: GREY, width: "20px", height: "20px" },
-          { width: "32px", height: "full", marginLeft: "24px" }
-        )}
-        ${EditIcon(
-          { stroke: GREY, width: "20px", height: "20px" },
-          { width: "32px", height: "full", marginLeft: "24px" }
-        )}
-        ${DeleteIcon(
-          { stroke: GREY, width: "20px", height: "20px" },
-          { width: "32px", height: "full" }
-        )}
+        ${SaveIcon({
+          id: "btn-save-selected-rec",
+          title: "Save",
+          spanStyles: { width: "32px", height: "full", marginLeft: "24px" },
+          svgStyles: { fill: GREY, width: "20px", height: "20px" },
+        })}
+        ${EditIcon({
+          id: "btn-edit-selected-rec",
+          title: "Edit",
+          spanStyles: { width: "32px", height: "full", marginLeft: "24px" },
+          svgStyles: { stroke: GREY, width: "20px", height: "20px" },
+        })}
+        ${DeleteIcon({
+          id: "btn-delete-selected-rec",
+          title: "Delete",
+          spanStyles: { width: "32px", height: "full" },
+          svgStyles: { stroke: GREY, width: "20px", height: "20px" },
+        })}
       </div>
 
       <button class="cc-header-r">
-        ${PlayIcon(
-          { fill: ON_SURFACE, width: "20px", height: "20px" },
-          { width: "28px", height: "full" }
-        )}
+        ${PlayIcon({
+          id: "btn-play-selected-recording",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: { fill: ON_SURFACE, width: "20px", height: "20px" },
+        })}
         <span>Play a Recording</span>
       </button>
     </div>
     
-    <div class="cc-body-top>
+    <div class="cc-body-top">
       <h5>User Performance Chart</h5>
 
-      <div>
-        <div>
-          <canvas id="barChart"></canvas>
+      <div id="charts-container">
+        <div id="bar-chart">
+          <canvas id="bar-canvas"></canvas>
         </div>
 
-        <div>
-          <canvas id="dnChart"></canvas>
+        <div id="doughnut-chart">
+          <canvas id="doughnut-canvas"></canvas>
 
-          <div>
-            <span>{dnChartText.prercent}% users</span>{" "}
-            {dnChartText.text}
-          </div>
+          <div id="dn-chart-text"></div>
         </div>
       </div>
     </div>
     
     <div class="cc-body-bottom">
-      <h5 class="">Recorded User Performance</h5>
+      <h5>Recorded User Performance</h5>
 
-      <div class="">
-        map...
-      </div>
+      <div id="rec-path-datas"></div>
     </div>`
         : ""
     }
@@ -149,14 +143,14 @@ export const viz = (
 
       <div class="search-container">
         <input type="text" placeholder="Search a pathing..."/>
-        ${SearchIcon(
-          {
+        ${SearchIcon({
+          spanStyles: { width: "48px", height: "full" },
+          svgStyles: {
             fill: GREY,
             width: "24px",
             height: "24px",
           },
-          { width: "48px", height: "full" }
-        )}
+        })}
       </div>
     </div>
 
@@ -170,10 +164,11 @@ export const viz = (
 
     <div class="btn-record">
       <button id="record-btn">
-        ${PlayIcon(
-          { fill: ON_SURFACE, width: "20px", height: "20px" },
-          { width: "32px", height: "full" }
-        )}
+        ${PlayIcon({
+          id: "btn-new-recording",
+          spanStyles: { width: "32px", height: "full" },
+          svgStyles: { fill: ON_SURFACE, width: "20px", height: "20px" },
+        })}
         <span>Record a new path</span>
       </button>
     </div>
@@ -192,7 +187,11 @@ export const replay = (
   const fts = [...filteredTelemetries]
 
   fts.forEach(([_, data]) => {
-    const rnItem = `<div class="replay-rn-item"><h5>${data.id}</h5></div>`
+    const rnItem = `<div class="replay-rn-item ${
+      mappedTelemetry.get(telemetryIndex)?.id === data.id
+        ? "replay-rn-item-selected"
+        : ""
+    }"><h5>${data.id}</h5></div>`
     rnParentDiv.appendChild(stringToHTML(rnItem))
   })
 
@@ -211,26 +210,28 @@ export const replay = (
       </div>
 
       <button id="btn-replay">
-        ${PlayIcon(
-          {
+        ${PlayIcon({
+          id: "btn-play-replay",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: {
             fill: ON_SURFACE,
             width: "20px",
             height: "20px",
           },
-          { width: "28px", height: "full" }
-        )}
+        })}
         <span>Play</span>
       </button>
 
       <button id="btn-stop">
-        ${StopIcon(
-          {
+        ${StopIcon({
+          id: "btn-stop-replay",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: {
             fill: ON_SURFACE,
             width: "20px",
             height: "20px",
           },
-          { width: "28px", height: "full" }
-        )}
+        })}
         <span>Stop</span>
       </button>
     </div>
@@ -252,14 +253,14 @@ export const replay = (
 
       <div class="search-container">
         <input type="text" placeholder="Search by ID..."/>
-        ${SearchIcon(
-          {
+        ${SearchIcon({
+          spanStyles: { width: "48px", height: "full" },
+          svgStyles: {
             fill: GREY,
             width: "24px",
             height: "24px",
           },
-          { width: "48px", height: "full" }
-        )}
+        })}
       </div>
     </div>
 
@@ -293,45 +294,52 @@ export const recording = () =>
 
     <div id="recording-buttons">
       <button id="btn-record-pause">
-        ${PauseIcon(
-          {
+        ${PauseIcon({
+          id: "btn-pause-recording",
+          title: "Pause",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: {
             fill: ON_SURFACE,
             width: "20px",
             height: "20px",
           },
-          { width: "28px", height: "full" }
-        )}
+        })}
         <span>Pause</span>
       </button>
 
       <button id="btn-record-play">
-        ${PlayIcon(
-          {
+        ${PlayIcon({
+          id: "btn-start-recording",
+          title: "Start",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: {
             fill: ON_SURFACE,
             width: "20px",
             height: "20px",
           },
-          { width: "28px", height: "full" }
-        )}
+        })}
         <span>Record</span>
       </button>
 
       <button id="btn-save">
-        ${SaveIcon(
-          {
+        ${SaveIcon({
+          id: "btn-save-recording",
+          title: "Save",
+          spanStyles: { width: "28px", height: "full" },
+          svgStyles: {
             fill: ON_SURFACE,
             width: "20px",
             height: "20px",
           },
-          { width: "28px", height: "full" }
-        )}
+        })}
         <span>Save</span>
       </button>
 
-      <div id="btn-record-exit">${ExitIcon(
-        {},
-        { width: "32px", height: "32px" }
-      )}</div>
+      <div id="btn-record-exit">${ExitIcon({
+        id: "btn-exit-recording",
+        title: "Exit",
+        spanStyles: { width: "32px", height: "32px" },
+      })}</div>
     </div>
   </div>
 </div>

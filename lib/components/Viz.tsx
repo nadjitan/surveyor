@@ -160,8 +160,12 @@ export const VizBody: FC<{
 
   useEffect(() => {
     if (userScores.length > 0) {
-      const barChart = document.getElementById("barChart") as HTMLCanvasElement
-      const dnChart = document.getElementById("dnChart") as HTMLCanvasElement
+      const barCanvas = document.getElementById(
+        "bar-canvas"
+      ) as HTMLCanvasElement
+      const doughnutCanvas = document.getElementById(
+        "doughnut-canvas"
+      ) as HTMLCanvasElement
 
       Chart.defaults.font.family = "Inter Regular"
       Chart.defaults.color = GREY
@@ -206,7 +210,7 @@ export const VizBody: FC<{
         })
       }
 
-      const bc = new Chart(barChart, {
+      const bc = new Chart(barCanvas, {
         type: "bar",
         data: {
           labels: chartLabels,
@@ -248,7 +252,7 @@ export const VizBody: FC<{
           },
         },
       })
-      const dc = new Chart(dnChart, {
+      const dc = new Chart(doughnutCanvas, {
         type: "doughnut",
         data: {
           labels: chartLabels,
@@ -409,11 +413,11 @@ export const VizBody: FC<{
               {userScores.length > 0 && (
                 <div className="svyr-flex svyr-h-full svyr-w-[95%] svyr-flex-row svyr-items-center svyr-gap-36 svyr-place-self-center">
                   <div className="svyr-relative svyr-w-[80%]">
-                    <canvas id="barChart" />
+                    <canvas id="bar-canvas" />
                   </div>
 
                   <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-4">
-                    <canvas id="dnChart" />
+                    <canvas id="doughnut-canvas" />
 
                     <div className="svyr-w-full svyr-bg-theme-container svyr-p-4 svyr-text-center svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface">
                       <span className="svyr-inline svyr-text-theme-primary">
@@ -425,6 +429,7 @@ export const VizBody: FC<{
                 </div>
               )}
             </div>
+
             <div className={clientStyle.ccBodyBottom}>
               <h5 className="svyr-font-inter-semibold svyr-text-theme-grey">
                 Recorded User Performance
@@ -473,6 +478,7 @@ export const VizBody: FC<{
               <p className="svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recorded Paths
               </p>
+
               <div className="svyr-mt-4 svyr-flex svyr-h-12 svyr-w-full svyr-flex-row svyr-overflow-hidden svyr-rounded-full svyr-border-[2px] svyr-border-theme-grey focus-within:svyr-border-theme-on-surface [&>*:nth-child(2)>*:nth-child(1)]:focus-within:svyr-fill-theme-on-surface">
                 <input
                   type="text"
@@ -527,7 +533,7 @@ export const VizBody: FC<{
                 </span>
               )}
             </div>
-            
+
             <div className="svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-justify-center">
               <button
                 onClick={() => setPage("recording")}

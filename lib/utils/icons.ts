@@ -1,16 +1,22 @@
 import { stylesToString } from "./dashboard"
 
-interface IconString {
-  fill?: string
-  stroke?: string
-  width?: number
-  height?: number
+interface Props {
+  id?: string
+  className?: string
+  title?: string
+  svgStyles?: Partial<CSSStyleDeclaration>
+  spanStyles?: Partial<CSSStyleDeclaration>
 }
 
-export const TempIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const TempIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
@@ -22,10 +28,97 @@ xmlns="http://www.w3.org/2000/svg">
 </svg>
 </span>`
 
-export const SaveIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const DatabaseIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+<svg
+  ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
+  width="46"
+  height="46"
+  fill="none"
+  stroke="currentColor"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  strokeWidth="2"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2a9 3 0 1 0 0 6 9 3 0 1 0 0-6z"></path>
+  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+</svg>
+</span>`
+
+export const PieChartIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+<svg
+  ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
+  width="46"
+  height="46"
+  fill="none"
+  stroke="currentColor"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  strokeWidth="2"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg">
+  <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+  <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+</svg>
+</span>`
+
+export const FilmIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+<svg
+  ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
+  width="46"
+  height="46"
+  fill="none"
+  stroke="currentColor"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  strokeWidth="2"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg">
+  <rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18"></rect>
+  <path d="M7 2v20"></path>
+  <path d="M17 2v20"></path>
+  <path d="M2 12h20"></path>
+  <path d="M2 7h5"></path>
+  <path d="M2 17h5"></path>
+  <path d="M17 17h5"></path>
+  <path d="M17 7h5"></path>
+</svg>
+</span>`
+
+export const SaveIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
     width="46"
@@ -37,10 +130,15 @@ export const SaveIcon = (
   </svg>
 </span>`
 
-export const PauseIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const PauseIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
     width="46"
@@ -53,10 +151,15 @@ export const PauseIcon = (
   </svg>
 </span>`
 
-export const StopIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const StopIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
     width="46"
@@ -68,10 +171,15 @@ export const StopIcon = (
   </svg>
 </span>`
 
-export const PlayIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const PlayIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
     width="46"
@@ -83,10 +191,15 @@ export const PlayIcon = (
   </svg>
 </span>`
 
-export const SearchIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
+export const SearchIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
   ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
   width="46"
@@ -98,10 +211,15 @@ export const SearchIcon = (
 </svg>
 </span>`
 
-export const DeleteIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
+export const DeleteIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
 height="46"
@@ -118,10 +236,15 @@ xmlns="http://www.w3.org/2000/svg">
   <path d="M14 11v6"></path>
 </svg></span>`
 
-export const EditIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
+export const EditIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
 height="46"
@@ -136,10 +259,15 @@ xmlns="http://www.w3.org/2000/svg">
   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
 </svg></span>`
 
-export const ExitIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
+export const ExitIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
 height="46"
@@ -155,10 +283,15 @@ xmlns="http://www.w3.org/2000/svg">
   <path d="M8.953 12H21.75"></path>
 </svg></span>`
 
-export const LoadingIcon = (
-  svgStyles?: Partial<CSSStyleDeclaration>,
-  spanStyles?: Partial<CSSStyleDeclaration>
-) => `<span ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
+export const LoadingIcon = ({
+  id,
+  className,
+  spanStyles,
+  svgStyles,
+  title,
+}: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
+  className && `class="${className}"`
+} ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="44"
 height="44"

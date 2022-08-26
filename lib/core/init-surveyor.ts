@@ -1,4 +1,8 @@
-import { fetchTelemetries, mapTelemetries } from "@/utils/dashboard"
+import {
+  fetchTelemetries,
+  mapTelemetries,
+  stringToHTML,
+} from "@/utils/dashboard"
 import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import Hashids from "hashids"
 import { dashboard, viz } from "./components"
@@ -7,8 +11,10 @@ interface Telemetry {
   id?: string
   data: {
     url: string
-    action: string
+    class: string
   }[]
+  startTime: string
+  endTime: string
 }
 
 /**
@@ -26,35 +32,42 @@ interface Telemetry {
  * }
  * ```
  */
-export function initSurveyor(apiUrl: string) {
-  let sendingParentDiv = document.createElement("div")
-  sendingParentDiv.id = "srvyr-notif-send"
-  sendingParentDiv.style.display = "none"
-  sendingParentDiv.style.position = "fixed"
-  sendingParentDiv.style.width = "100vw"
-  sendingParentDiv.style.height = "100vh"
-  sendingParentDiv.style.backgroundColor = "transparent"
-  sendingParentDiv.style.pointerEvents = "none"
-  sendingParentDiv.style.placeItems = "end"
-  let sendingDiv = document.createElement("div")
-  sendingDiv.style.display = "grid"
-  sendingDiv.style.border = "2px solid black"
-  sendingDiv.style.padding = "1.5rem 2.5rem 1.5rem 2.5rem"
-  sendingDiv.style.borderRadius = "2rem"
-  sendingDiv.style.marginRight = "40px"
-  sendingDiv.style.marginBottom = "50px"
-  let sendingChild = document.createElement("div")
-  sendingChild.style.fontSize = "2rem"
-  sendingChild.style.fontFamily = "Helvetica"
-  sendingChild.innerText = "Sending..."
-  sendingDiv.appendChild(sendingChild)
-  sendingParentDiv.appendChild(sendingDiv)
-  if (!document.getElementById("srvyr-notif-send")) {
-    document.body.prepend(sendingParentDiv)
-  }
+export function initSurveyor({
+  apiUrl,
+  logClicks,
+  debug,
+  locateMsg,
+  lastData,
+}: {
+  apiUrl: string
+  logClicks: boolean
+  debug: boolean
+  locateMsg: string
+  lastData: { url: string; class: string }
+}) {
+  let dataFound = false
+  const dataFoundDiv = `
+  <div style="position: fixed; z-index: 50; display: grid; height: 100%; width: 100%; place-items: center; background-color: rgb(0 0 0 / 0.5); ">
+    <div style="display: grid; place-items: center;">
+      <h1 style="font-size: 3.75rem; line-height: 1; font-weight: 700; color: rgb(255 255 255 / 1); ">
+        Congratulations!
+      </h1>
+      <p style="margin-top: 0.5rem;">You may now close this window.</p>
+    </div>
+  </div>`
+  const sendingParentDiv = `
+  <div id="srvyr-recording-status" style="pointer-events: none; position: fixed; top: 0px; left: 0px; display: grid; border-bottom-right-radius: 1.5rem; background-color: rgb(19, 21, 23); padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 0.75rem; padding-bottom: 0.75rem;">
+    <div style="display: flex; height: max-content; align-items: center; gap: 0.75rem;">
+      <div style="margin-top: 0.1rem; height: 0.5rem; width: 0.5rem; border-radius: 9999px; background-color: rgb(92, 56, 255);"></div>
+      <p style="font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: rgb(92, 56, 255);">
+        Recording...
+      </p>
+    </div>
+    <p style="margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.25rem;">Locate the "${locateMsg}"</p>
+  </div>`
 
-  function addListeners() {
-    document.body.onclick = (e: MouseEvent | FocusEvent) => {
+  function clickEvent(e: MouseEvent | FocusEvent) {
+    if (!dataFound) {
       e.stopPropagation()
       const target = e.target as HTMLElement
       const targetClass =
@@ -64,67 +77,109 @@ export function initSurveyor(apiUrl: string) {
       if (telemetry.data.length === 0) {
         telemetry = {
           ...telemetry,
-          data: [{ url: url!, action: targetClass! }],
+          data: [{ url: url!, class: targetClass! }],
         }
       }
       // Update telemetry data array
       if (
         // Avoid duplicating latest click
-        telemetry.data[telemetry.data.length - 1].action !== targetClass
+        telemetry.data[telemetry.data.length - 1].class !== targetClass
       ) {
         telemetry = {
           ...telemetry,
-          data: [...telemetry.data, { url: url!, action: targetClass! }],
+          data: [...telemetry.data, { url: url!, class: targetClass! }],
         }
       }
 
-      // if (debug !== undefined && debug === true) {
-      //   console.table(telemetry)
-      // }
+      if (debug !== undefined && debug === true) {
+        console.table(telemetry)
+      }
       sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
+
+      const lastTelemetry = telemetry.data[telemetry.data.length - 1]
+
+      if (
+        lastTelemetry.url === lastData.url &&
+        lastTelemetry.class === lastData.class
+      ) {
+        dataFound = true
+        document.body.prepend(stringToHTML(dataFoundDiv))
+      }
     }
+  }
 
-    const unload = (e: BeforeUnloadEvent) => {
-      document.body.onclick = null
-      if (telemetry.data.length !== 0) {
-        sendingParentDiv.style.display = "grid"
-        putTemplate(telemetry)
+  function addListeners() {
+    // const unload = (e: BeforeUnloadEvent) => {
+    //   document.body.onclick = null
+    //   if (telemetry.data.length !== 0) {
+    //     sendingParentDiv.style.display = "grid"
+    //     putTemplate(telemetry)
 
-        // Delay because Firefox is unreliable with unload listener
-        if (navigator.userAgent.indexOf("Firefox") != -1) {
+    //     // Delay because Firefox is unreliable with unload listener
+    //     if (navigator.userAgent.indexOf("Firefox") != -1) {
+    //       const time = Date.now()
+    //       while (Date.now() - time < 800) {
+    //         console.log("waiting...")
+    //       }
+    //     }
+
+    //     return null
+    //   }
+    // }
+
+    // window.onbeforeunload = unload
+
+    if (logClicks) {
+      document.body.prepend(stringToHTML(sendingParentDiv))
+      document.body.onclick = clickEvent
+
+      window.onbeforeunload = (e: BeforeUnloadEvent) => {
+        document.body.onclick = null
+        if (telemetry.data.length > 0) {
+          putTemplate(telemetry)
+          document.getElementById(
+            "srvyr-recording-status"
+          )!.innerHTML = `<p style="font-size: 0.875rem; line-height: 1.25rem;">Sending data...</p>`
+
+          // Delay because Firefox is unreliable with unload listener
           const time = Date.now()
           while (Date.now() - time < 800) {
             console.log("waiting...")
           }
-        }
 
-        return null
+          return null
+        }
       }
     }
-
-    window.onbeforeunload = unload
   }
 
   const hashids = new Hashids("srvyr", 8)
   let url: string
   let elems: HTMLElement[]
-  let telemetry: Telemetry = { data: [] }
-  let gApiUrl: string
+  let telemetry: Telemetry = {
+    data: [],
+    startTime: new Date().toISOString(),
+    endTime: "",
+  }
 
-  const putTemplate = (tel: Telemetry) =>
-    fetch(gApiUrl, {
+  function putTemplate(tel: Telemetry) {
+    fetch(apiUrl, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        telemetry: { data: JSON.stringify(tel.data) },
+        telemetry: {
+          data: JSON.stringify(tel.data),
+          startTime: tel.startTime,
+          endTime: new Date().toISOString(),
+        },
       }),
       keepalive: true,
     })
+  }
 
   function addClasses() {
-    gApiUrl = apiUrl
     url = window.location.href
     // When page load always check if there is a telemetry in sessionStorage
     if (sessionStorage.getItem("srvyr") === null) {

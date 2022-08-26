@@ -136,7 +136,7 @@ export const ReplayBody: FC<{
                 <div
                   onClick={() => setTelemetryIndex(num)}
                   key={num}
-                  className={`svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
+                  className={`svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-break-words svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
                     num === telemetryIndex ? " svyr-bg-theme-selected" : ""
                   }`}>
                   <h5>{data.id}</h5>
