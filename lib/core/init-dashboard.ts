@@ -19,6 +19,7 @@ import { dashboard, recording, replay, viz } from "./components"
 import Chart from "chart.js/auto"
 
 export class SurveyorDashboard {
+  rootDiv: string
   apiUrl: string
   url: string
   page: DashboardPage
@@ -28,7 +29,8 @@ export class SurveyorDashboard {
   recordedPaths: Recording[]
   prevTimelineNode: HTMLElement | null
 
-  constructor(apiUrl: string) {
+  constructor(rootDiv: string, apiUrl: string) {
+    this.rootDiv = rootDiv
     this.apiUrl = apiUrl
     this.url = ""
     this.page = "viz"
@@ -40,12 +42,14 @@ export class SurveyorDashboard {
   }
 
   #render(child: string) {
-    this.prevTimelineNode = null
-    const root = document.getElementById("root")!
-    root.replaceChildren(dashboard(child))
+    if (typeof window !== undefined) {
+      this.prevTimelineNode = null
+      const root = document.getElementById(this.rootDiv)!
+      root.replaceChildren(dashboard(child))
 
-    onClickElem("viz-page", () => this.#vizComponent())
-    onClickElem("replay-page", () => this.#replayComponent())
+      onClickElem("viz-page", () => this.#vizComponent())
+      onClickElem("replay-page", () => this.#replayComponent())
+    }
   }
 
   #vizComponent() {
@@ -373,7 +377,7 @@ export class SurveyorDashboard {
   }
 
   #recordingComponent() {
-    const root = document.getElementById("root")!
+    const root = document.getElementById(this.rootDiv)!
     root.replaceChildren(recording())
 
     onClickElem("btn-save", () => this.#vizComponent())
@@ -384,7 +388,7 @@ export class SurveyorDashboard {
     fetchTelemetries(this.apiUrl).then(d => {
       this.mappedTelemetry = mapTelemetries(d)
       // STARTING PAGE
-      this.#replayComponent()
+      this.#vizComponent()
     })
   }
 }

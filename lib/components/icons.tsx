@@ -369,6 +369,23 @@ export const DownArrowIcon: FC<IconProps> = props => (
     </svg>
   </span>
 )
+export const ChevronDownIcon: FC<IconProps> = props => (
+  <span title={props.title} onClick={props.onClick} className={props.spanClass}>
+    <svg
+      className={props.svgClass}
+      width="46"
+      height="46"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </span>
+)
 export const SunIcon: FC<IconProps> = props => (
   <span title={props.title} onClick={props.onClick} className={props.spanClass}>
     <svg

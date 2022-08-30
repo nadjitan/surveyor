@@ -15,7 +15,14 @@ import {
   SearchIcon,
 } from "./icons"
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import Chart from "chart.js/auto"
 import { Levenshtein } from "set-distance"
 import { GREY, PRIMARY, SURFACE } from "@/utils/dashboard"
@@ -44,13 +51,14 @@ export const VizBody: FC<{
   setRecordedPaths,
   recordedPaths,
 }) => {
-  // Calculated using Levenshtein Distance
-  const [userScores, setUserScores] = useState<UserPerformance[]>([])
-
   const [filteredRecPaths, setFilteredRecPaths] = useState<Recording[]>([])
 
-  const [aggregatedScores, setAggregatedScores] = useState(initAS)
-  const [dnChartText, setDnChartText] = useState({ prercent: 0, text: "" })
+  // Calculated using Levenshtein Distance
+  const [userScores, setUserScores] = useState<UserPerformance[]>([])
+  const aggregatedScores = useRef(initAS)
+
+  const bcContainer = useRef(null)
+  const dcContainer = useRef(null)
 
   const [showModal, setShowModal] = useState(false)
   const [editTitle, setEditTitle] = useState(false)
@@ -59,29 +67,6 @@ export const VizBody: FC<{
     if (localStorage.hasOwnProperty("srvyr-paths")) {
       setRecordedPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
       setFilteredRecPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
-    }
-  }
-  function addToAggregatedScores(num: number) {
-    if (num === 100) {
-      setAggregatedScores(prev => {
-        prev.get("100%")!.push(num)
-        return prev
-      })
-    } else if (num >= 75 && num <= 99) {
-      setAggregatedScores(prev => {
-        prev.get("75% - 99%")!.push(num)
-        return prev
-      })
-    } else if (num >= 50 && num <= 74) {
-      setAggregatedScores(prev => {
-        prev.get("50% - 74%")!.push(num)
-        return prev
-      })
-    } else if (num >= 1 && num <= 49) {
-      setAggregatedScores(prev => {
-        prev.get("1% - 49%")!.push(num)
-        return prev
-      })
     }
   }
   function deleteRecording(recTitle: string) {
@@ -129,43 +114,60 @@ export const VizBody: FC<{
   useEffect(() => {
     if (selectedRec && mappedTelemetry) {
       const designerSteps: string[] = []
-
       selectedRec.data.map(t => designerSteps.push(t.url + ":" + t.class))
 
+      // Required to always reset the arrays of 'aggregatedScores' on rerender
+      // because the data of charts keeps incrementing if not implemented
+      const hundred = []
+      const seventy = []
+      const fifty = []
+      const one = []
+
       for (const [_, telemetry] of mappedTelemetry) {
-        const userSteps: string[] = []
-        telemetry.data.map(t => userSteps.push(t.url + ":" + t.class))
-        const lastStep = `${telemetry.data.slice(-1)[0].url}:${
-          telemetry.data.slice(-1)[0].class
-        }`
+        if (telemetry.data.length > 0) {
+          const userSteps: string[] = []
+          telemetry.data.map(t => userSteps.push(t.url + ":" + t.class))
+          const lastStep = `${telemetry.data.slice(-1)[0].url}:${
+            telemetry.data.slice(-1)[0].class
+          }`
 
-        const st = new Levenshtein(
-          // Needs to be put into a new array
-          // because it adds 0 for some reason
-          [...designerSteps],
-          [...userSteps]
-        ).getCoefficient()
-        const percentage = Math.max(0, (1 - st / designerSteps.length) * 100)
+          const levenshteinScore = new Levenshtein(
+            // Needs to be put into a new array
+            // because it adds 0 for some reason
+            [...designerSteps],
+            [...userSteps]
+          ).getCoefficient()
+          // Source: https://stackoverflow.com/a/45866740
+          const percentage = Math.round(
+            (1 -
+              levenshteinScore /
+                Math.max(designerSteps.length, userSteps.length)) *
+              100
+          )
 
-        if (percentage > 0 && lastStep === designerSteps.slice(-1)[0]) {
-          setUserScores(prev => [
-            ...prev,
-            { score: percentage, telemetry: telemetry },
-          ])
-          addToAggregatedScores(percentage)
+          if (lastStep === designerSteps.slice(-1)[0]) {
+            const p = percentage
+
+            setUserScores(prev => [...prev, { score: p, telemetry: telemetry }])
+
+            if (p === 100) hundred.push(p)
+            else if (p >= 75 && p <= 99) seventy.push(p)
+            else if (p >= 50 && p <= 74) fifty.push(p)
+            else if (p >= 1 && p <= 49) one.push(p)
+          }
         }
       }
+
+      aggregatedScores.current.set("100%", hundred)
+      aggregatedScores.current.set("75% - 99%", seventy)
+      aggregatedScores.current.set("50% - 74%", fifty)
+      aggregatedScores.current.set("1% - 49%", one)
     }
   }, [selectedRec, mappedTelemetry])
 
   useEffect(() => {
     if (userScores.length > 0) {
-      const barCanvas = document.getElementById(
-        "bar-canvas"
-      ) as HTMLCanvasElement
-      const doughnutCanvas = document.getElementById(
-        "doughnut-canvas"
-      ) as HTMLCanvasElement
+      let dnChartText = { percent: 0, text: "" }
 
       Chart.defaults.font.family = "Inter Regular"
       Chart.defaults.color = GREY
@@ -176,8 +178,11 @@ export const VizBody: FC<{
       let chartColors: string[] = []
       let dataLength = 0
       let percentage = 0
-      for (const [key, arr] of aggregatedScores) {
+      let index = 0
+      for (const [key, arr] of aggregatedScores.current) {
         if (arr.length > 0) {
+          const length = arr.length
+          console.log(length)
           chartLabels.push(key)
           chartData.push(arr.length)
           dataLength += arr.length
@@ -189,28 +194,29 @@ export const VizBody: FC<{
         }
       }
 
-      if (aggregatedScores.get("75% - 99%")!.length > 0) {
-        const p = (aggregatedScores.get("75% - 99%")!.length * 100) / dataLength
+      const as = aggregatedScores.current
+      if (as.get("75% - 99%")!.length > 0) {
+        const p = (as.get("75% - 99%")!.length * 100) / dataLength
         percentage = p
-        setDnChartText({
+        dnChartText = {
           text: "had minor issues when navigating the website.",
-          prercent: p,
-        })
-      } else if (aggregatedScores.get("100%")!.length > 0) {
-        const p = (aggregatedScores.get("100%")!.length * 100) / dataLength
+          percent: p,
+        }
+      } else if (as.get("100%")!.length > 0) {
+        const p = (as.get("100%")!.length * 100) / dataLength
         percentage = p
-        setDnChartText({
+        dnChartText = {
           text: "have successfully navigated through the desired path.",
-          prercent: p,
-        })
+          percent: p,
+        }
       } else {
-        setDnChartText({
+        dnChartText = {
           text: "Everyone had a hard time navigating the website.",
-          prercent: 0,
-        })
+          percent: 0,
+        }
       }
 
-      const bc = new Chart(barCanvas, {
+      const bc = new Chart(bcContainer.current!, {
         type: "bar",
         data: {
           labels: chartLabels,
@@ -252,7 +258,7 @@ export const VizBody: FC<{
           },
         },
       })
-      const dc = new Chart(doughnutCanvas, {
+      const dc = new Chart(dcContainer.current!, {
         type: "doughnut",
         data: {
           labels: chartLabels,
@@ -291,7 +297,7 @@ export const VizBody: FC<{
               ctx.textAlign = "center"
 
               ctx.fillText(
-                percentage > 0 ? `${percentage}%` : "",
+                percentage > 0 ? `${Math.round(percentage)}%` : "",
                 width / 2,
                 height / 2 + top + 15
               )
@@ -300,10 +306,15 @@ export const VizBody: FC<{
         ],
       })
 
+      const dcTextColored = document.getElementById("dc-colored-text")
+      const dcText = document.getElementById("dc-text")
+      dcTextColored!.textContent = `${Math.round(dnChartText.percent)}% users`
+      dcText!.textContent = dnChartText.text
+
       return () => {
         bc.destroy()
         dc.destroy()
-        setAggregatedScores(initAS)
+        aggregatedScores.current = initAS
         setUserScores([])
       }
     }
@@ -413,17 +424,17 @@ export const VizBody: FC<{
               {userScores.length > 0 && (
                 <div className="svyr-flex svyr-h-full svyr-w-[95%] svyr-flex-row svyr-items-center svyr-gap-36 svyr-place-self-center">
                   <div className="svyr-relative svyr-w-[80%]">
-                    <canvas id="bar-canvas" />
+                    <canvas ref={bcContainer} id="bar-canvas" />
                   </div>
 
                   <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-4">
-                    <canvas id="doughnut-canvas" />
+                    <canvas ref={dcContainer} id="doughnut-canvas" />
 
                     <div className="svyr-w-full svyr-bg-theme-container svyr-p-4 svyr-text-center svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface">
-                      <span className="svyr-inline svyr-text-theme-primary">
-                        {dnChartText.prercent}% users
-                      </span>{" "}
-                      {dnChartText.text}
+                      <span
+                        id="dc-colored-text"
+                        className="svyr-inline svyr-text-theme-primary"></span>{" "}
+                      <span id="dc-text" className="svyr-inline"></span>
                     </div>
                   </div>
                 </div>

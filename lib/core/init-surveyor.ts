@@ -204,7 +204,7 @@ export function initSurveyor({
     })
   }
 
-  if (typeof window !== undefined && typeof document !== undefined) {
+  if (typeof window !== undefined) {
     addClasses()
     addListeners()
   }

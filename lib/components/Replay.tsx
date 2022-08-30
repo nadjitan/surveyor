@@ -49,7 +49,7 @@ export const ReplayBody: FC<{
             <div className="svyr-flex svyr-w-full svyr-justify-between">
               <div className="svyr-flex svyr-flex-row svyr-items-center svyr-justify-center">
                 <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
-                <h4 className="svyr-ml-3 svyr-font-inter-semibold">
+                <h4 className="svyr-text-md svyr-ml-3 svyr-font-inter-semibold">
                   {mappedTelemetry.get(telemetryIndex)?.id}
                 </h4>
               </div>

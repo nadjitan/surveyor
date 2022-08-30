@@ -17,7 +17,7 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
   loadIframe = true,
 }) => {
   const [url, setUrl] = useState("")
-  const [page, setPage] = useState<DashboardPage>("data")
+  const [page, setPage] = useState<DashboardPage>("viz")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
@@ -104,7 +104,9 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
           setTelemetryIndex={setTelemetryIndex}
         />
       )}
-      {page === "data" && <DataBody mappedTelemetry={mappedTelemetry!} />}
+      {page === "data" && (
+        <DataBody apiUrl={apiUrl} mappedTelemetry={mappedTelemetry!} />
+      )}
     </div>
   )
 }

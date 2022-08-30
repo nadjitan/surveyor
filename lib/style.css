@@ -75,7 +75,7 @@
   }
 
   button {
-    @apply svyr-flex svyr-h-max svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-medium svyr-text-sm;
+    @apply svyr-flex svyr-h-max svyr-min-w-max svyr-flex-row svyr-justify-center svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-text-sm;
   }
 }
 
@@ -87,4 +87,15 @@
 }
 .svyr-node-selected {
   @apply svyr-bg-theme-on-surface;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#telemetry-data-viewer .key-value .key {
+  @apply svyr-text-theme-grey;
 }

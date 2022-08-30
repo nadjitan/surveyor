@@ -1,7 +1,7 @@
 import Debug from "./debug"
 
 import Hashids from "hashids"
-import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
+import { FC, PropsWithChildren, useEffect, useState } from "react"
 
 interface Telemetry {
   id?: string
@@ -71,9 +71,7 @@ const Surveyor: FC<
   const putTemplate = (tel: Telemetry) =>
     fetch(apiUrl, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         telemetry: {
           data: JSON.stringify(tel.data),
@@ -83,40 +81,6 @@ const Surveyor: FC<
       }),
       keepalive: true,
     })
-
-  function clickEvent(e: MouseEvent | FocusEvent) {
-    if (!dataFound) {
-      e.stopPropagation()
-      const target = e.target as HTMLElement
-      const targetClass =
-        target.className &&
-        Array.from(target.classList).find(c => c.startsWith("srvyr-"))
-
-      if (telemetry.data.length === 0) {
-        telemetry = {
-          ...telemetry,
-          data: [{ url: url!, class: targetClass! }],
-        }
-      }
-      // Update telemetry data array
-      if (
-        // Avoid duplicating latest click
-        telemetry.data[telemetry.data.length - 1].class !== targetClass
-      ) {
-        telemetry = {
-          ...telemetry,
-          data: [...telemetry.data, { url: url!, class: targetClass! }],
-        }
-      }
-
-      if (debug !== undefined && debug === true) {
-        console.table(telemetry)
-      }
-      sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
-
-      dataReached()
-    }
-  }
 
   function dataReached() {
     const lastTelemetry = telemetry.data[telemetry.data.length - 1]
@@ -154,7 +118,39 @@ const Surveyor: FC<
     })
 
     if (logClicks) {
-      document.body.onclick = clickEvent
+      document.body.onclick = e => {
+        if (!dataFound) {
+          e.stopPropagation()
+          const target = e.target as HTMLElement
+          const targetClass =
+            target.className &&
+            Array.from(target.classList).find(c => c.startsWith("srvyr-"))
+
+          if (telemetry.data.length === 0) {
+            telemetry = {
+              ...telemetry,
+              data: [{ url: url!, class: targetClass! }],
+            }
+          }
+          // Update telemetry data array
+          if (
+            // Avoid duplicating latest click
+            telemetry.data[telemetry.data.length - 1].class !== targetClass
+          ) {
+            telemetry = {
+              ...telemetry,
+              data: [...telemetry.data, { url: url!, class: targetClass! }],
+            }
+          }
+
+          if (debug !== undefined && debug === true) {
+            console.table(telemetry)
+          }
+          sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
+
+          dataReached()
+        }
+      }
 
       window.onbeforeunload = (e: BeforeUnloadEvent) => {
         document.body.onclick = null
@@ -177,7 +173,7 @@ const Surveyor: FC<
         window.onbeforeunload = null
       }
     }
-  })
+  }, [])
 
   return (
     <>
@@ -191,9 +187,7 @@ const Surveyor: FC<
           </div>
         </div>
       )}
-      
       {debug && <Debug />} {children}
-
       {logClicks && (
         <div className="svyr-pointer-events-none svyr-fixed svyr-top-0 svyr-left-0 svyr-grid svyr-rounded-br-3xl svyr-bg-theme-background svyr-px-6 svyr-py-3">
           {!sendData ? (
