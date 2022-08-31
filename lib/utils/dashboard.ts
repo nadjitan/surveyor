@@ -1,4 +1,4 @@
-import { MappedTelemetry, Telemetry } from "./types"
+import { Telemetry } from "./types"
 
 // function onClassChange(element: HTMLElement, callback: (node: Node) => void) {
 //   const observer = new MutationObserver(mutations => {
@@ -76,152 +76,157 @@ export function mapTelemetries(telemetries: Telemetry[]) {
   return map
 }
 
-export function initReplay(
-  mappedTelemetry: MappedTelemetry,
-  telemetryIndex: number
-) {
-  let iframe: HTMLIFrameElement
-  let iframeDoc: Document
+// export function initReplay(telemetry: Telemetry) {
+//   const replayBtn = document.getElementById("btn-replay")!
+//   const replayStop = document.getElementById("btn-stop")!
 
-  let dataIndex = 0
-  let play = false
-  const delay = 1000
+//   let iframe: HTMLIFrameElement
+//   let iframeDoc: Document
 
-  let timelineNode: HTMLCollectionOf<Element>
-  let prevTimelineNode: HTMLElement | null = null
+//   let dataIndex = 0
+//   let play = false
+//   const delay = 1000
 
-  function createFollower() {
-    const divFollower = iframeDoc.createElement("div")
-    divFollower.id = "svyr-follower"
-    divFollower.style.display = "none"
-    divFollower.style.position = "absolute"
-    divFollower.style.left = "0px"
-    divFollower.style.top = "0px"
-    divFollower.style.width = "50px"
-    divFollower.style.height = "50px"
-    divFollower.style.border = "2px solid green"
-    divFollower.style.background = "rgb(0 128 0 / 0.5)"
-    iframeDoc.body.style.position = "relative"
-    iframeDoc.body.appendChild(divFollower)
+//   let timelineNodes: HTMLCollectionOf<Element>
+//   let prevTimelineNode: HTMLElement | null = null
 
-    return divFollower
-  }
+//   const divFollower = stringToHTML(`
+//   <div id="svyr-follower"
+//     style="${stylesToString({
+//       display: "none",
+//       position: "absolute",
+//       left: "0px",
+//       top: "0px",
+//       width: "50px",
+//       height: "50px",
+//       border: "2px solid green",
+//       background: "rgb(0 128 0 / 0.5)",
+//       transition: "all 0.2s linear, opacity 0.25s ease",
+//     })}"></div>
+//   `) as HTMLElement
 
-  function moveFollower(clickElem = true) {
-    let follower = iframeDoc.getElementById("svyr-follower")!
-    if (!follower) {
-      const divFollower = createFollower()
-      iframeDoc.body.appendChild(divFollower)
-      follower = divFollower
-    }
+//   function moveFollower(clickElem = true) {
+//     let follower = iframeDoc.getElementById("svyr-follower")!
+//     if (!follower) {
+//       iframeDoc.body.style.position = "relative"
+//       iframeDoc.body.appendChild(divFollower)
+//       follower = divFollower
+//     }
 
-    const elemToFollow = iframeDoc.body.querySelector(
-      `.${mappedTelemetry.get(telemetryIndex)?.data[dataIndex].class!}`
-    ) as HTMLElement
-    elemToFollow.scrollIntoView()
+//     const elemToFollow = iframeDoc.body.querySelector(
+//       `.${telemetry.data[dataIndex].class!}`
+//     ) as HTMLElement
 
-    const bcr = elemToFollow!.getBoundingClientRect()
-    follower.style.transition = "all 0.2s linear, opacity 0.25s ease"
-    follower.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
-    follower.style.width = `${bcr.width}px`
-    follower.style.height = `${bcr.height}px`
-    follower.style.display = "grid"
-    follower.style.pointerEvents = "none"
-    if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
-    // ACTIVATE TIMELINE NODE
-    if (prevTimelineNode)
-      prevTimelineNode.classList.remove("svyr-node-selected")
-    timelineNode[dataIndex].classList.add("svyr-node-selected")
-    prevTimelineNode = timelineNode[dataIndex] as HTMLElement
-  }
+//     if (elemToFollow) {
+//       elemToFollow.scrollIntoView()
 
-  const replayBtn = document.getElementById("btn-replay")!
-  const replayStop = document.getElementById("btn-stop")!
+//       const bcr = elemToFollow!.getBoundingClientRect()
+//       follower.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
+//       follower.style.width = `${bcr.width}px`
+//       follower.style.height = `${bcr.height}px`
+//       follower.style.display = "grid"
+//       follower.style.pointerEvents = "none"
 
-  const iframeLoadingElem = document.getElementById("svyr-iframe-loading")!
-  iframe = document.getElementById("svyr-website") as HTMLIFrameElement
+//       if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
 
-  /**
-   * REPLAY SYSTEM
-   */
-  function replay() {
-    play = true
-    replayBtn.style.display = "none"
-    replayStop.style.display = "flex"
-    // ALWAYS RESET ON CLICK
-    dataIndex = 0
+//       // ACTIVATE TIMELINE NODE
+//       if (prevTimelineNode) {
+//         prevTimelineNode.classList.remove("svyr-node-selected")
+//       }
 
-    // LOOPING CLICKS DATA
-    const clicksInterval = setInterval(() => {
-      if (dataIndex < mappedTelemetry.get(telemetryIndex)!.data.length) {
-        // IF IFRAME IS NOT EQUAL TO DATA URL
-        if (
-          iframe.src !==
-          mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
-        ) {
-          play = false
+//       if (timelineNodes.length > 0) {
+//         timelineNodes[dataIndex].classList.add("svyr-node-selected")
+//         prevTimelineNode = timelineNodes[dataIndex] as HTMLElement
+//       }
+//     }
+//   }
 
-          iframe.src = mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url!
-          iframeLoadingElem.style.display = "flex"
+//   const iframeLoadingElem = document.getElementById("svyr-iframe-loading")!
+//   iframe = document.getElementById("svyr-website") as HTMLIFrameElement
 
-          iframe.onload = () => {
-            iframeLoadingElem.style.display = "none"
-            iframeDoc = iframe.contentDocument!
-            play = true
-          }
-        }
-        if (play === true) {
-          moveFollower()
-          dataIndex++
-        }
-      } else {
-        play = false
-        clearInterval(clicksInterval)
-        replayBtn.style.display = "flex"
-        replayStop.style.display = "none"
-      }
-    }, delay)
+//   /**
+//    * REPLAY SYSTEM
+//    */
+//   function replay() {
+//     if (telemetry.data.length === 0 || !telemetry.data) {
+//       console.log(`Data of "${telemetry.id}" is empty`)
 
-    replayStop.onclick = () => {
-      play = false
-      clearInterval(clicksInterval)
-      replayBtn.style.display = "flex"
-      replayStop.style.display = "none"
-    }
-  }
+//       return
+//     }
 
-  iframe.onload = () => {
-    iframeDoc = iframe.contentDocument!
-    iframeLoadingElem.style.display = "none"
+//     play = true
+//     replayBtn.style.display = "none"
+//     replayStop.style.display = "flex"
+//     // ALWAYS RESET ON CLICK
+//     dataIndex = 0
 
-    replayBtn.onclick = replay
+//     // LOOPING CLICKS DATA
+//     const clicksInterval = setInterval(() => {
+//       if (dataIndex < telemetry.data.length) {
+//         // IF IFRAME IS NOT EQUAL TO DATA URL
+//         if (iframe.src !== telemetry.data[dataIndex].url) {
+//           play = false
 
-    // TIMELINE NODES
-    timelineNode = document.getElementsByClassName("svyr-tl-node")
-    Array.from(timelineNode).map((elem, index) => {
-      elem.addEventListener("click", () => {
-        play = false
-        replayBtn.style.display = "flex"
-        replayStop.style.display = "none"
-        dataIndex = index
+//           iframe.src = telemetry.data[dataIndex].url!
+//           iframeLoadingElem.style.display = "flex"
 
-        if (
-          iframe.src !==
-          mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url
-        ) {
-          iframe.src = mappedTelemetry.get(telemetryIndex)?.data[dataIndex].url!
-          iframeLoadingElem.style.display = "flex"
+//           iframe.onload = () => {
+//             iframeLoadingElem.style.display = "none"
+//             iframeDoc = iframe.contentDocument!
+//             play = true
+//           }
+//         }
+//         if (play === true) {
+//           moveFollower()
+//           dataIndex++
+//         }
+//       } else {
+//         play = false
+//         clearInterval(clicksInterval)
+//         replayBtn.style.display = "flex"
+//         replayStop.style.display = "none"
+//       }
+//     }, delay)
 
-          iframe.onload = () => {
-            iframeLoadingElem.style.display = "none"
-            iframeDoc = iframe.contentDocument!
-            // replayBtn.onclick = replay
-            setTimeout(() => moveFollower(false), 100)
-          }
-        } else {
-          moveFollower(false)
-        }
-      })
-    })
-  }
-}
+//     replayStop.onclick = () => {
+//       clearInterval(clicksInterval)
+//       play = false
+//       replayBtn.style.display = "flex"
+//       replayStop.style.display = "none"
+//     }
+//   }
+
+//   iframe.onload = () => {
+//     iframeDoc = iframe.contentDocument!
+//     iframeLoadingElem.style.display = "none"
+
+//     // TIMELINE NODES
+//     timelineNodes = document.getElementsByClassName("svyr-tl-node")
+//     if (timelineNodes.length > 0) {
+//       Array.from(timelineNodes).map((elem, index) => {
+//         elem.addEventListener("click", () => {
+//           play = false
+//           replayBtn.style.display = "flex"
+//           replayStop.style.display = "none"
+//           dataIndex = index
+
+//           if (iframe.src !== telemetry.data[dataIndex].url) {
+//             iframe.src = telemetry.data[dataIndex].url!
+//             iframeLoadingElem.style.display = "flex"
+
+//             iframe.onload = () => {
+//               iframeLoadingElem.style.display = "none"
+//               iframeDoc = iframe.contentDocument!
+//               // replayBtn.onclick = replay
+//               setTimeout(() => moveFollower(false), 100)
+//             }
+//           } else {
+//             moveFollower(false)
+//           }
+//         })
+//       })
+
+//       replayBtn.onclick = replay
+//     }
+//   }
+// }

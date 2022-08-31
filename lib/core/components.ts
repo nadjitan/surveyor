@@ -13,7 +13,7 @@ import {
   StopIcon,
   TempIcon,
 } from "@/utils/icons"
-import { MappedTelemetry, Recording } from "@/utils/types"
+import { MappedTelemetries, Recording } from "@/utils/types"
 
 export const dashboard = (child: string) =>
   stringToHTML(`
@@ -178,8 +178,8 @@ export const viz = (
 }
 
 export const replay = (
-  mappedTelemetry: MappedTelemetry,
-  filteredTelemetries: MappedTelemetry,
+  mappedTelemetries: MappedTelemetries,
+  filteredTelemetries: MappedTelemetries,
   telemetryIndex: number
 ) => {
   const rnParentDiv = document.createElement("div")
@@ -188,14 +188,14 @@ export const replay = (
 
   fts.forEach(([_, data]) => {
     const rnItem = `<div class="replay-rn-item ${
-      mappedTelemetry.get(telemetryIndex)?.id === data.id
+      mappedTelemetries.get(telemetryIndex)?.id === data.id
         ? "replay-rn-item-selected"
         : ""
     }"><h5>${data.id}</h5></div>`
     rnParentDiv.appendChild(stringToHTML(rnItem))
   })
 
-  mappedTelemetry.get(telemetryIndex)?.data.map(() => {
+  mappedTelemetries.get(telemetryIndex)?.data.map(() => {
     const tlNode = `<div class="tl-node"><div></div></div>`
     timelineParentDiv.appendChild(stringToHTML(tlNode))
   })
@@ -206,7 +206,7 @@ export const replay = (
     <div class="replay-header">
       <div class="replay-header-title">
         <div></div>
-        <h4>${mappedTelemetry.get(telemetryIndex)?.id}</h4>
+        <h4>${mappedTelemetries.get(telemetryIndex)?.id}</h4>
       </div>
 
       <button id="btn-replay">

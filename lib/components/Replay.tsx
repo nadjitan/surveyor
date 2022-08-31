@@ -1,56 +1,210 @@
 import clientStyle from "./dashboard.module.css"
-import { MappedTelemetry, Telemetry } from "@/utils/types"
+import { MappedTelemetries, Telemetry } from "@/utils/types"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
+import { stringToHTML, stylesToString } from "@/utils/dashboard"
+
+const divFollower = stringToHTML(`
+<div id="svyr-follower" 
+  style="${stylesToString({
+    display: "none",
+    position: "absolute",
+    left: "0px",
+    top: "0px",
+    width: "50px",
+    height: "50px",
+    border: "2px solid green",
+    background: "rgb(0 128 0 / 0.5)",
+    transition: "all 0.2s linear, opacity 0.25s ease",
+  })}"></div>
+`) as HTMLElement
 
 export const ReplayBody: FC<{
-  clicksData: Telemetry
-  url: string
-  mappedTelemetry: MappedTelemetry
-  setMappedTelemetry: Dispatch<SetStateAction<MappedTelemetry | null>>
+  mappedTelemetries: MappedTelemetries
   telemetryIndex: number
-  setTelemetryIndex: Dispatch<SetStateAction<number>>
-}> = ({
-  clicksData,
-  url,
-  mappedTelemetry,
-  telemetryIndex,
-  setTelemetryIndex,
-}) => {
+}> = ({ mappedTelemetries, telemetryIndex }) => {
   const [filteredTelemetries, setFilteredTelemetries] =
-    useState<MappedTelemetry | null>(null)
+    useState<MappedTelemetries | null>(null)
+
+  const [telemetry, setTelemetry] = useState<Telemetry>()
+  const [allowChange, setAllowChange] = useState(true)
 
   useEffect(() => {
-    if (mappedTelemetry) {
-      setFilteredTelemetries(mappedTelemetry)
+    if (mappedTelemetries) {
+      setFilteredTelemetries(mappedTelemetries)
+      setTelemetry(mappedTelemetries.get(telemetryIndex))
     }
-  }, [mappedTelemetry])
+  }, [mappedTelemetries])
+
+  useEffect(() => {
+    if (telemetry) {
+      const replayBtn = document.getElementById("btn-replay")!
+      const replayStop = document.getElementById("btn-stop")!
+
+      const iframe = document.getElementById(
+        "svyr-website"
+      ) as HTMLIFrameElement
+      let iframeDoc: Document
+      const iframeLoadingElem = document.getElementById("svyr-iframe-loading")!
+
+      let dataIndex = 0
+      let play = false
+      const delay = 1000
+
+      let timelineNodes: HTMLCollectionOf<Element>
+      let prevTimelineNode: HTMLElement | null = null
+
+      function moveFollower(clickElem = true) {
+        let follower = iframeDoc.getElementById("svyr-follower")!
+        if (!follower) {
+          iframeDoc.body.style.position = "relative"
+          iframeDoc.body.appendChild(divFollower)
+          follower = divFollower
+        }
+
+        const elemToFollow = iframeDoc.body.querySelector(
+          `.${telemetry!.data[dataIndex].class!}`
+        ) as HTMLElement
+
+        if (elemToFollow) {
+          elemToFollow.scrollIntoView()
+
+          const bcr = elemToFollow!.getBoundingClientRect()
+          follower.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
+          follower.style.width = `${bcr.width}px`
+          follower.style.height = `${bcr.height}px`
+          follower.style.display = "grid"
+          follower.style.pointerEvents = "none"
+
+          if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
+
+          // ACTIVATE TIMELINE NODE
+          if (prevTimelineNode) {
+            prevTimelineNode.classList.remove("svyr-node-selected")
+          }
+
+          if (timelineNodes.length > 0) {
+            timelineNodes[dataIndex].classList.add("svyr-node-selected")
+            prevTimelineNode = timelineNodes[dataIndex] as HTMLElement
+          }
+        }
+      }
+
+      /**
+       * REPLAY SYSTEM
+       */
+      function replay() {
+        play = true
+        replayBtn.style.display = "none"
+        replayStop.style.display = "flex"
+        // ALWAYS RESET ON CLICK
+        dataIndex = 0
+
+        // LOOPING CLICKS DATA
+        const clicksInterval = setInterval(() => {
+          if (dataIndex < telemetry!.data.length) {
+            setAllowChange(false)
+            // IF IFRAME IS NOT EQUAL TO DATA URL
+            if (iframe.src !== telemetry!.data[dataIndex].url) {
+              play = false
+
+              iframe.src = telemetry!.data[dataIndex].url!
+              iframeLoadingElem.style.display = "flex"
+
+              iframe.onload = () => {
+                iframeLoadingElem.style.display = "none"
+                iframeDoc = iframe.contentDocument!
+                play = true
+              }
+            }
+            if (play === true) {
+              moveFollower()
+              dataIndex++
+            }
+          } else {
+            play = false
+            clearInterval(clicksInterval)
+            replayBtn.style.display = "flex"
+            replayStop.style.display = "none"
+            setAllowChange(true)
+          }
+        }, delay)
+
+        replayStop.onclick = () => {
+          clearInterval(clicksInterval)
+          play = false
+          replayBtn.style.display = "flex"
+          replayStop.style.display = "none"
+          setAllowChange(true)
+        }
+      }
+
+      iframe.src = window.location.origin
+      iframe.onload = () => {
+        iframeDoc = iframe.contentDocument!
+        iframeLoadingElem.style.display = "none"
+
+        // TIMELINE NODES
+        timelineNodes = document.getElementsByClassName("svyr-tl-node")
+        if (timelineNodes.length > 0 && telemetry.data.length > 0) {
+          Array.from(timelineNodes).map((elem, index) => {
+            elem.addEventListener("click", () => {
+              play = false
+              replayBtn.style.display = "flex"
+              replayStop.style.display = "none"
+              dataIndex = index
+
+              if (iframe.src !== telemetry.data[dataIndex].url) {
+                iframe.src = telemetry.data[dataIndex].url!
+                iframeLoadingElem.style.display = "flex"
+
+                iframe.onload = () => {
+                  iframeLoadingElem.style.display = "none"
+                  iframeDoc = iframe.contentDocument!
+                  // replayBtn.onclick = replay
+                  setTimeout(() => moveFollower(false), 100)
+                }
+              } else {
+                moveFollower(false)
+              }
+            })
+          })
+
+          replayBtn.onclick = replay
+        }
+      }
+
+      return () => {
+        replayBtn.onclick = null
+        replayStop.onclick = null
+        iframe.onload = null
+      }
+    }
+  }, [telemetry])
 
   function searchTelemetries(value: string) {
-    if (value !== "") {
+    if (value !== "")
       setFilteredTelemetries(
         new Map(
-          [...mappedTelemetry].filter(([k, tel]) =>
+          [...mappedTelemetries].filter(([k, tel]) =>
             tel.id.toLowerCase().includes(value)
           )
         )
       )
-    } else {
-      setFilteredTelemetries(mappedTelemetry)
-    }
+    else setFilteredTelemetries(mappedTelemetries)
   }
 
   return (
     <>
       <main className={clientStyle.clientContent}>
-        {clicksData && (
+        {telemetry && (
           <>
             <div className="svyr-flex svyr-w-full svyr-justify-between">
               <div className="svyr-flex svyr-flex-row svyr-items-center svyr-justify-center">
                 <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
                 <h4 className="svyr-text-md svyr-ml-3 svyr-font-inter-semibold">
-                  {mappedTelemetry.get(telemetryIndex)?.id}
+                  {telemetry.id}
                 </h4>
               </div>
 
@@ -75,11 +229,7 @@ export const ReplayBody: FC<{
             </div>
 
             <div className="svyr-relative svyr-mt-8 svyr-grid svyr-h-full svyr-w-full svyr-border svyr-border-theme-surface">
-              <iframe
-                id="svyr-website"
-                src={url}
-                className="svyr-h-full svyr-w-full"
-              />
+              <iframe id="svyr-website" className="svyr-h-full svyr-w-full" />
               <div
                 id="svyr-iframe-loading"
                 className="svyr-absolute svyr-right-5 svyr-bottom-5 svyr-flex svyr-flex-row svyr-items-center">
@@ -96,7 +246,7 @@ export const ReplayBody: FC<{
                 id="timeline"
                 className="svyr-relative svyr-flex svyr-h-5/6 svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-x-auto svyr-overflow-y-hidden">
                 <div className="svyr-flex svyr-h-[2px] svyr-min-w-full svyr-max-w-max svyr-flex-row svyr-items-center svyr-overflow-visible svyr-bg-theme-grey">
-                  {clicksData.data.map((_, i) => (
+                  {telemetry.data.map((_, i) => (
                     <div className="svyr-ml-4 svyr-h-max svyr-w-max" key={i}>
                       <div className="svyr-tl-node svyr-h-4 svyr-w-4 svyr-rotate-45 svyr-cursor-pointer svyr-border-[2px] svyr-border-theme-grey svyr-bg-theme-surface hover:svyr-bg-theme-on-surface" />
                     </div>
@@ -134,10 +284,12 @@ export const ReplayBody: FC<{
             <div className={clientStyle.rnContainer}>
               {[...filteredTelemetries].map(([num, data]) => (
                 <div
-                  onClick={() => setTelemetryIndex(num)}
+                  onClick={() =>
+                    allowChange && setTelemetry(mappedTelemetries.get(num))
+                  }
                   key={num}
-                  className={`svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-break-words svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
-                    num === telemetryIndex ? " svyr-bg-theme-selected" : ""
+                  className={`replay-item svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-break-words svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
+                    data.id === telemetry?.id ? " svyr-bg-theme-selected" : ""
                   }`}>
                   <h5>{data.id}</h5>
                 </div>

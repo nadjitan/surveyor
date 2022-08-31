@@ -1,6 +1,6 @@
 import clientStyle from "./dashboard.module.css"
-import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
-import { fetchTelemetries, initReplay, mapTelemetries } from "@/utils/dashboard"
+import { DashboardPage, MappedTelemetries, Recording } from "@/utils/types"
+import { fetchTelemetries, mapTelemetries } from "@/utils/dashboard"
 import { DatabaseIcon, FilmIcon, PieChartIcon } from "./icons"
 import { ReplayBody } from "./replay"
 import { VizBody } from "./viz"
@@ -12,32 +12,20 @@ import DataBody from "./data"
 /**
  * Import to a dedicated page for ```<iframe />``` to work
  */
-const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
-  apiUrl,
-  loadIframe = true,
-}) => {
-  const [url, setUrl] = useState("")
-  const [page, setPage] = useState<DashboardPage>("viz")
+const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
+  const [page, setPage] = useState<DashboardPage>("replay")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
   const [telemetryIndex, setTelemetryIndex] = useState(0)
-  const [mappedTelemetry, setMappedTelemetry] =
-    useState<MappedTelemetry | null>(null)
+  const [mappedTelemetries, setMappedTelemetries] =
+    useState<MappedTelemetries | null>(null)
 
   const [recordedPaths, setRecordedPaths] = useState<Recording[]>([])
 
   useEffect(() => {
-    fetchTelemetries(apiUrl).then(d => setMappedTelemetry(mapTelemetries(d)))
+    fetchTelemetries(apiUrl).then(d => setMappedTelemetries(mapTelemetries(d)))
   }, [])
-
-  useEffect(() => {
-    if (page === "replay" && mappedTelemetry) {
-      if (loadIframe) setUrl(window.location.origin)
-
-      initReplay(mappedTelemetry!, telemetryIndex)
-    }
-  }, [page, mappedTelemetry, telemetryIndex])
 
   return page === "recording" ? (
     <RecordingBody setPage={setPage} />
@@ -88,7 +76,7 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
           setPage={setPage}
           setTelemetryIndex={setTelemetryIndex}
           selectedRec={selectedRec}
-          mappedTelemetry={mappedTelemetry}
+          mappedTelemetries={mappedTelemetries}
           setRecordedPaths={setRecordedPaths}
           setSelectedRec={setSelectedRec}
           recordedPaths={recordedPaths}
@@ -96,16 +84,12 @@ const Client: FC<{ apiUrl: string; loadIframe?: boolean }> = ({
       )}
       {page === "replay" && (
         <ReplayBody
-          url={url}
-          clicksData={mappedTelemetry?.get(telemetryIndex)!}
-          mappedTelemetry={mappedTelemetry!}
-          setMappedTelemetry={setMappedTelemetry}
+          mappedTelemetries={mappedTelemetries!}
           telemetryIndex={telemetryIndex}
-          setTelemetryIndex={setTelemetryIndex}
         />
       )}
       {page === "data" && (
-        <DataBody apiUrl={apiUrl} mappedTelemetry={mappedTelemetry!} />
+        <DataBody apiUrl={apiUrl} mappedTelemetries={mappedTelemetries!} />
       )}
     </div>
   )

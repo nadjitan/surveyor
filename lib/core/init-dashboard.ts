@@ -10,7 +10,7 @@ import {
 import {
   AggregatedScore,
   DashboardPage,
-  MappedTelemetry,
+  MappedTelemetries,
   Recording,
   UserPerformance,
 } from "../utils/types"
@@ -25,7 +25,7 @@ export class SurveyorDashboard {
   page: DashboardPage
   selectedRec: Recording | null
   telemetryIndex: number
-  mappedTelemetry: MappedTelemetry | null
+  mappedTelemetries: MappedTelemetries | null
   recordedPaths: Recording[]
   prevTimelineNode: HTMLElement | null
 
@@ -36,7 +36,7 @@ export class SurveyorDashboard {
     this.page = "viz"
     this.selectedRec = null
     this.telemetryIndex = 0
-    this.mappedTelemetry = null
+    this.mappedTelemetries = null
     this.recordedPaths = []
     this.prevTimelineNode = null
   }
@@ -74,17 +74,6 @@ export class SurveyorDashboard {
       filteredRecPaths = JSON.parse(localStorage.getItem("srvyr-paths")!)
     }
 
-    const addToAggregatedScores = (num: number) => {
-      if (num === 100) {
-        aggregatedScores.get("100%")!.push(num)
-      } else if (num >= 75 && num <= 99) {
-        aggregatedScores.get("75% - 99%")!.push(num)
-      } else if (num >= 50 && num <= 74) {
-        aggregatedScores.get("50% - 74%")!.push(num)
-      } else if (num >= 1 && num <= 49) {
-        aggregatedScores.get("1% - 49%")!.push(num)
-      }
-    }
     const deleteRecording = (recTitle: string) => {
       let recordings: Recording[] = []
 
@@ -139,7 +128,7 @@ export class SurveyorDashboard {
 
         this.#vizComponent()
 
-        for (const [_, telemetry] of this.mappedTelemetry!) {
+        for (const [_, telemetry] of this.mappedTelemetries!) {
           const userSteps: string[] = []
           telemetry.data.map(t => userSteps.push(t.url + ":" + t.class))
           const lastStep = `${telemetry.data.slice(-1)[0].url}:${
@@ -155,11 +144,20 @@ export class SurveyorDashboard {
           const percentage = Math.max(0, (1 - st / designerSteps.length) * 100)
 
           if (percentage > 0 && lastStep === designerSteps.slice(-1)[0]) {
+            const p = percentage
+
             userScores.push({
-              score: percentage,
+              score: p,
               telemetry: telemetry,
             })
-            addToAggregatedScores(percentage)
+
+            if (p === 100) aggregatedScores.get("100%")!.push(p)
+            else if (p >= 75 && p <= 99)
+              aggregatedScores.get("75% - 99%")!.push(p)
+            else if (p >= 50 && p <= 74)
+              aggregatedScores.get("50% - 74%")!.push(p)
+            else if (p >= 1 && p <= 49)
+              aggregatedScores.get("1% - 49%")!.push(p)
           }
         }
 
@@ -198,11 +196,9 @@ export class SurveyorDashboard {
             chartLabels.push(key)
             chartData.push(arr.length)
             dataLength += arr.length
-            if (key === "75% - 99%" || key === "100%") {
-              chartColors.push(PRIMARY)
-            } else {
-              chartColors.push(GREY)
-            }
+
+            if (key === "75% - 99%" || key === "100%") chartColors.push(PRIMARY)
+            else chartColors.push(GREY)
           }
         }
 
@@ -319,27 +315,30 @@ export class SurveyorDashboard {
   }
 
   #replayComponent() {
-    let filteredTelemetries = this.mappedTelemetry
+    let filteredTelemetries = this.mappedTelemetries
 
     this.#render(
-      replay(this.mappedTelemetry!, filteredTelemetries!, this.telemetryIndex!)
-        .innerHTML
+      replay(
+        this.mappedTelemetries!,
+        filteredTelemetries!,
+        this.telemetryIndex!
+      ).innerHTML
     )
 
     const searchTelemetries = (value: string) => {
       if (value !== "") {
         filteredTelemetries = new Map(
-          [...this.mappedTelemetry!].filter(([k, tel]) =>
+          [...this.mappedTelemetries!].filter(([k, tel]) =>
             tel.id.toLowerCase().includes(value)
           )
         )
       } else {
-        filteredTelemetries = this.mappedTelemetry
+        filteredTelemetries = this.mappedTelemetries
       }
 
       this.#render(
         replay(
-          this.mappedTelemetry!,
+          this.mappedTelemetries!,
           filteredTelemetries!,
           this.telemetryIndex!
         ).innerHTML
@@ -367,7 +366,7 @@ export class SurveyorDashboard {
 
         const nodeEl = node.target as HTMLElement
         nodeEl.classList.add("tl-node-selected")
-        iframe.src = this.mappedTelemetry!.get(this.telemetryIndex)?.data[
+        iframe.src = this.mappedTelemetries!.get(this.telemetryIndex)?.data[
           index
         ].url!
 
@@ -386,7 +385,7 @@ export class SurveyorDashboard {
 
   run() {
     fetchTelemetries(this.apiUrl).then(d => {
-      this.mappedTelemetry = mapTelemetries(d)
+      this.mappedTelemetries = mapTelemetries(d)
       // STARTING PAGE
       this.#vizComponent()
     })

@@ -112,8 +112,7 @@ const Surveyor: FC<
         if (!document.body.classList.contains(newClass))
           document.body.classList.add(newClass)
       } else {
-        if (!elem.classList.contains(newClass))
-          elem.classList.add(`srvyr-${hashids.encode(index)}`)
+        if (!elem.classList.contains(newClass)) elem.classList.add(newClass)
       }
     })
 
@@ -173,7 +172,7 @@ const Surveyor: FC<
         window.onbeforeunload = null
       }
     }
-  }, [])
+  }, [children])
 
   return (
     <>

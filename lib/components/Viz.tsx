@@ -2,7 +2,7 @@ import clientStyle from "./dashboard.module.css"
 import {
   AggregatedScore,
   DashboardPage,
-  MappedTelemetry,
+  MappedTelemetries,
   Recording,
   UserPerformance,
 } from "@/utils/types"
@@ -36,7 +36,7 @@ const initAS = new Map<AggregatedScore, number[]>([
 
 export const VizBody: FC<{
   setPage: Dispatch<SetStateAction<DashboardPage>>
-  mappedTelemetry: MappedTelemetry | null
+  mappedTelemetries: MappedTelemetries | null
   setTelemetryIndex: Dispatch<SetStateAction<number>>
   selectedRec: Recording | null
   setSelectedRec: Dispatch<SetStateAction<Recording | null>>
@@ -44,7 +44,7 @@ export const VizBody: FC<{
   recordedPaths: Recording[]
 }> = ({
   setPage,
-  mappedTelemetry,
+  mappedTelemetries,
   setTelemetryIndex,
   selectedRec,
   setSelectedRec,
@@ -56,7 +56,7 @@ export const VizBody: FC<{
   // Calculated using Levenshtein Distance
   const [userScores, setUserScores] = useState<UserPerformance[]>([])
   const aggregatedScores = useRef(initAS)
-
+  // Canvas
   const bcContainer = useRef(null)
   const dcContainer = useRef(null)
 
@@ -100,19 +100,17 @@ export const VizBody: FC<{
     }
   }
   function searchRecordedPaths(value: string) {
-    if (value !== "") {
+    if (value !== "")
       setFilteredRecPaths(
         recordedPaths!.filter(rp => rp.title.toLowerCase().includes(value))
       )
-    } else {
-      setFilteredRecPaths(recordedPaths)
-    }
+    else setFilteredRecPaths(recordedPaths)
   }
 
   useEffect(() => getRecordedPaths(), [])
 
   useEffect(() => {
-    if (selectedRec && mappedTelemetry) {
+    if (selectedRec && mappedTelemetries) {
       const designerSteps: string[] = []
       selectedRec.data.map(t => designerSteps.push(t.url + ":" + t.class))
 
@@ -123,7 +121,7 @@ export const VizBody: FC<{
       const fifty = []
       const one = []
 
-      for (const [_, telemetry] of mappedTelemetry) {
+      for (const [_, telemetry] of mappedTelemetries) {
         if (telemetry.data.length > 0) {
           const userSteps: string[] = []
           telemetry.data.map(t => userSteps.push(t.url + ":" + t.class))
@@ -131,7 +129,7 @@ export const VizBody: FC<{
             telemetry.data.slice(-1)[0].class
           }`
 
-          const levenshteinScore = new Levenshtein(
+          const lScore = new Levenshtein(
             // Needs to be put into a new array
             // because it adds 0 for some reason
             [...designerSteps],
@@ -139,9 +137,7 @@ export const VizBody: FC<{
           ).getCoefficient()
           // Source: https://stackoverflow.com/a/45866740
           const percentage = Math.round(
-            (1 -
-              levenshteinScore /
-                Math.max(designerSteps.length, userSteps.length)) *
+            (1 - lScore / Math.max(designerSteps.length, userSteps.length)) *
               100
           )
 
@@ -163,7 +159,7 @@ export const VizBody: FC<{
       aggregatedScores.current.set("50% - 74%", fifty)
       aggregatedScores.current.set("1% - 49%", one)
     }
-  }, [selectedRec, mappedTelemetry])
+  }, [selectedRec, mappedTelemetries])
 
   useEffect(() => {
     if (userScores.length > 0) {
@@ -178,19 +174,14 @@ export const VizBody: FC<{
       let chartColors: string[] = []
       let dataLength = 0
       let percentage = 0
-      let index = 0
       for (const [key, arr] of aggregatedScores.current) {
         if (arr.length > 0) {
-          const length = arr.length
-          console.log(length)
           chartLabels.push(key)
           chartData.push(arr.length)
           dataLength += arr.length
-          if (key === "75% - 99%" || key === "100%") {
-            chartColors.push(PRIMARY)
-          } else {
-            chartColors.push(GREY)
-          }
+
+          if (key === "75% - 99%" || key === "100%") chartColors.push(PRIMARY)
+          else chartColors.push(GREY)
         }
       }
 
@@ -417,7 +408,7 @@ export const VizBody: FC<{
             </div>
 
             <div className={clientStyle.ccBodyTop}>
-              <h5 className="svyr-font-inter-semibold svyr-text-theme-grey">
+              <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
                 User Performance Chart
               </h5>
 
@@ -442,7 +433,7 @@ export const VizBody: FC<{
             </div>
 
             <div className={clientStyle.ccBodyBottom}>
-              <h5 className="svyr-font-inter-semibold svyr-text-theme-grey">
+              <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
                 Recorded User Performance
               </h5>
 
@@ -454,10 +445,9 @@ export const VizBody: FC<{
                       className={clientStyle.pathDataContainer}
                       onClick={() => {
                         let key = 0
-                        mappedTelemetry?.forEach(
+                        mappedTelemetries?.forEach(
                           (v, k) => v.id === up.telemetry.id && (key = k)
                         )
-                        console.log(key)
 
                         setTelemetryIndex(key)
                         setPage("replay")
@@ -483,10 +473,10 @@ export const VizBody: FC<{
       </main>
 
       <nav className={clientStyle.rightNav}>
-        {mappedTelemetry ? (
+        {mappedTelemetries ? (
           <>
             <div className="svyr-h-24">
-              <p className="svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
+              <p className="svyr-select-none svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recorded Paths
               </p>
 

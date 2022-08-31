@@ -1,13 +1,13 @@
-import { MappedTelemetry, Telemetry } from "@/utils/types"
+import { MappedTelemetries, Telemetry } from "@/utils/types"
 import { FC, useEffect, useState } from "react"
 import { ChevronDownIcon, DeleteIcon, DownArrowIcon } from "./icons"
 import clientStyle from "./dashboard.module.css"
 
 import LazyObjectView from "lazy-object-view"
 
-const DataBody: FC<{ apiUrl: string; mappedTelemetry: MappedTelemetry }> = ({
+const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = ({
   apiUrl,
-  mappedTelemetry,
+  mappedTelemetries,
 }) => {
   const [telemetry, setTelemetry] = useState<Telemetry>()
   const [orderedList, setOrderedList] = useState<[number, Telemetry][]>([])
@@ -33,9 +33,9 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetry: MappedTelemetry }> = ({
   }, [telemetry])
 
   useEffect(() => {
-    if (mappedTelemetry) {
+    if (mappedTelemetries) {
       setOrderedList(
-        [...mappedTelemetry.entries()].sort(([numA, telA], [numB, telB]) => {
+        [...mappedTelemetries.entries()].sort(([numA, telA], [numB, telB]) => {
           const dateA = new Date(telA.startTime)
           const dateB = new Date(telB.startTime)
           if (dateA > dateB) return -1
@@ -44,7 +44,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetry: MappedTelemetry }> = ({
         })
       )
     }
-  }, [mappedTelemetry])
+  }, [mappedTelemetries])
 
   useEffect(() => {
     if (orderedList) {
@@ -92,7 +92,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetry: MappedTelemetry }> = ({
   }, [orderedList])
 
   const arrangeTelemetries = (value: string) => {
-    const tels = [...mappedTelemetry.entries()]
+    const tels = [...mappedTelemetries.entries()]
     if (value === "Latest") {
       setOrderedList(
         tels.sort(([numA, telA], [numB, telB]) => {
@@ -304,8 +304,8 @@ export default DataBody
         </tr>
       </thead>
       <tbody class="">
-        {mappedTelemetry &&
-          [...mappedTelemetry].map(([num, data]) => {
+        {mappedTelemetries &&
+          [...mappedTelemetries].map(([num, data]) => {
             const startTime = new Date(data.startTime)
             const endTime = new Date(data.endTime)
             return (

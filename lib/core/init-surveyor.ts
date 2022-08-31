@@ -1,11 +1,7 @@
 import {
-  fetchTelemetries,
-  mapTelemetries,
   stringToHTML,
 } from "@/utils/dashboard"
-import { DashboardPage, MappedTelemetry, Recording } from "@/utils/types"
 import Hashids from "hashids"
-import { dashboard, viz } from "./components"
 
 interface Telemetry {
   id?: string
