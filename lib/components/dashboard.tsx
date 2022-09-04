@@ -5,6 +5,7 @@ import { DatabaseIcon, FilmIcon, PieChartIcon } from "./icons"
 import { ReplayBody } from "./replay"
 import { VizBody } from "./viz"
 import RecordingBody from "./recording"
+import "toastify-js/src/toastify.css"
 
 import { FC, useEffect, useState } from "react"
 import DataBody from "./data"
@@ -21,14 +22,35 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
   const [mappedTelemetries, setMappedTelemetries] =
     useState<MappedTelemetries | null>(null)
 
-  const [recordedPaths, setRecordedPaths] = useState<Recording[]>([])
+  const [recordedPaths, setRecordedPaths] = useState<Recording[]>([
+    {
+      title: "Login",
+      data: [
+        { url: "http://localhost:3000/", class: "srvyr-zpjNVjDa" },
+        { url: "http://localhost:3000/login", class: "srvyr-ZpPZbdPx" },
+        { url: "http://localhost:3000/login", class: "srvyr-kq3Vd6jR" },
+        { url: "http://localhost:3000/login", class: "srvyr-JvPMMKP4" },
+      ],
+    },
+    {
+      title: "Some Other Path",
+      data: [
+        { url: "http://localhost:3000/", class: "srvyr-gaPlpPVK" },
+        { url: "http://localhost:3000/signup", class: "srvyr-YnXm23N7" },
+      ],
+    },
+  ])
 
   useEffect(() => {
     fetchTelemetries(apiUrl).then(d => setMappedTelemetries(mapTelemetries(d)))
   }, [])
 
   return page === "recording" ? (
-    <RecordingBody setPage={setPage} />
+    <RecordingBody
+      recordedPaths={recordedPaths}
+      setRecordedPaths={setRecordedPaths}
+      setPage={setPage}
+    />
   ) : (
     <div className={clientStyle.clientBody}>
       <nav className={clientStyle.leftNav}>
@@ -89,7 +111,11 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
         />
       )}
       {page === "data" && (
-        <DataBody apiUrl={apiUrl} mappedTelemetries={mappedTelemetries!} />
+        <DataBody
+          apiUrl={apiUrl}
+          setMappedTelemetries={setMappedTelemetries}
+          mappedTelemetries={mappedTelemetries!}
+        />
       )}
     </div>
   )

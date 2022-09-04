@@ -25,7 +25,7 @@ import {
 } from "react"
 import Chart from "chart.js/auto"
 import { Levenshtein } from "set-distance"
-import { GREY, PRIMARY, SURFACE } from "@/utils/dashboard"
+import { GREY, PRIMARY, showToast, SURFACE } from "@/utils/dashboard"
 
 const initAS = new Map<AggregatedScore, number[]>([
   ["100%", []],
@@ -52,6 +52,13 @@ export const VizBody: FC<{
   recordedPaths,
 }) => {
   const [filteredRecPaths, setFilteredRecPaths] = useState<Recording[]>([])
+  useEffect(() => {
+    // if (localStorage.hasOwnProperty("srvyr-paths")) {
+    //   setRecordedPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
+    //   setFilteredRecPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
+    // }
+    setFilteredRecPaths(recordedPaths)
+  }, [])
 
   // Calculated using Levenshtein Distance
   const [userScores, setUserScores] = useState<UserPerformance[]>([])
@@ -63,41 +70,66 @@ export const VizBody: FC<{
   const [showModal, setShowModal] = useState(false)
   const [editTitle, setEditTitle] = useState(false)
 
-  function getRecordedPaths() {
-    if (localStorage.hasOwnProperty("srvyr-paths")) {
-      setRecordedPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
-      setFilteredRecPaths(JSON.parse(localStorage.getItem("srvyr-paths")!))
-    }
-  }
   function deleteRecording(recTitle: string) {
-    let recordings: Recording[] = []
+    // let recordings: Recordings[] = []
+    let recordings = filteredRecPaths
 
-    if (localStorage.hasOwnProperty("srvyr-paths")) {
-      recordings = JSON.parse(localStorage.getItem("srvyr-paths")!)
-      const newRecordings = recordings.filter(({ title }) => title !== recTitle)
+    // if (localStorage.hasOwnProperty("srvyr-paths")) {
+    //   recordings = JSON.parse(localStorage.getItem("srvyr-paths")!)
+    const newRecordings = recordings.filter(({ title }) => title !== recTitle)
 
-      localStorage.setItem("srvyr-paths", JSON.stringify(newRecordings))
-      setRecordedPaths(newRecordings)
-      setShowModal(false)
-      setSelectedRec(null)
-    }
+    //   localStorage.setItem("srvyr-paths", JSON.stringify(newRecordings))
+    //   setRecordedPaths(newRecordings)
+    //   setShowModal(false)
+    //   setSelectedRec(null)
+    // }
+
+    setRecordedPaths(newRecordings)
+    setFilteredRecPaths(newRecordings)
+    setShowModal(false)
+
+    showToast(
+      3000,
+      `${recTitle} path have been deleted`,
+      "left",
+      "right",
+      "bottom",
+      { x: "350px", y: 0 }
+    )
+    setSelectedRec(null)
   }
   function editRecName() {
     const titleInput = document.getElementById("titleInput") as HTMLSpanElement
-    let recordings: Recording[] = []
+    // let recordings: Recording[] = []
+    let recordings = filteredRecPaths
 
-    if (localStorage.hasOwnProperty("srvyr-paths")) {
-      recordings = JSON.parse(localStorage.getItem("srvyr-paths")!)
-      const newRecordings = recordings.map(({ title, data }) => {
-        if (title === selectedRec?.title)
-          return { title: titleInput.innerText, data }
+    // if (localStorage.hasOwnProperty("srvyr-paths")) {
+    //   recordings = JSON.parse(localStorage.getItem("srvyr-paths")!)
+    const newRecordings = recordings.map(({ title, data }) => {
+      if (title === selectedRec?.title)
+        return { title: titleInput.innerText, data }
 
-        return { title, data }
-      })
+      return { title, data }
+    })
 
-      localStorage.setItem("srvyr-paths", JSON.stringify(newRecordings))
-      setRecordedPaths(newRecordings)
-    }
+    //   localStorage.setItem("srvyr-paths", JSON.stringify(newRecordings))
+    //   setRecordedPaths(newRecordings)
+    // }
+
+    setRecordedPaths(newRecordings)
+    setFilteredRecPaths(newRecordings)
+    showToast(
+      4000,
+      `${selectedRec?.title} is now ${titleInput.innerText}`,
+      "left",
+      "right",
+      "bottom",
+      { x: "350px", y: 0 }
+    )
+    setSelectedRec(prev => {
+      prev!.title = titleInput.innerText
+      return prev
+    })
   }
   function searchRecordedPaths(value: string) {
     if (value !== "")
@@ -106,8 +138,6 @@ export const VizBody: FC<{
       )
     else setFilteredRecPaths(recordedPaths)
   }
-
-  useEffect(() => getRecordedPaths(), [])
 
   useEffect(() => {
     if (selectedRec && mappedTelemetries) {
@@ -339,12 +369,12 @@ export const VizBody: FC<{
 
                       <div className="svyr-flex svyr-flex-row svyr-gap-4">
                         <button
-                          className="svyr-font-poppins-medium svyr-col-span-6 svyr-mt-4 svyr-block svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-theme-background svyr-p-2.5 svyr-text-sm svyr-text-theme-primary hover:svyr-bg-theme-primary hover:svyr-text-theme-surface"
+                          className="srvyr-button svyr-font-poppins-medium svyr-col-span-6 svyr-mt-4 svyr-block svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-theme-background svyr-p-2.5 svyr-text-sm svyr-text-theme-primary hover:svyr-bg-theme-primary hover:svyr-text-theme-surface"
                           onClick={() => deleteRecording(selectedRec.title)}>
                           Delete
                         </button>
                         <button
-                          className="svyr-col-span-6 svyr-mt-4 svyr-block svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-theme-primary svyr-p-2.5 svyr-font-inter-medium svyr-text-sm svyr-text-theme-surface"
+                          className="srvyr-button svyr-col-span-6 svyr-mt-4 svyr-block svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-theme-primary svyr-p-2.5 svyr-font-inter-medium svyr-text-sm svyr-text-theme-surface"
                           onClick={() => setShowModal(false)}>
                           Cancel
                         </button>
@@ -397,7 +427,7 @@ export const VizBody: FC<{
               </div>
 
               <button
-                className={clientStyle.ccHeaderR}
+                className="srvyr-button svyr-bg-theme-primary"
                 onClick={() => setPage("replay")}>
                 <PlayIcon
                   spanClass="svyr-w-7 svyr-h-full"
@@ -408,65 +438,74 @@ export const VizBody: FC<{
             </div>
 
             <div className={clientStyle.ccBodyTop}>
-              <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
-                User Performance Chart
-              </h5>
+              {userScores.length > 0 ? (
+                <>
+                  <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
+                    User Performance Chart
+                  </h5>
 
-              {userScores.length > 0 && (
-                <div className="svyr-flex svyr-h-full svyr-w-[95%] svyr-flex-row svyr-items-center svyr-gap-36 svyr-place-self-center">
-                  <div className="svyr-relative svyr-w-[80%]">
-                    <canvas ref={bcContainer} id="bar-canvas" />
-                  </div>
+                  <div className="svyr-flex svyr-h-full svyr-w-[95%] svyr-flex-row svyr-items-center svyr-gap-36 svyr-place-self-center">
+                    <div className="svyr-relative svyr-w-[80%]">
+                      <canvas ref={bcContainer} id="bar-canvas" />
+                    </div>
 
-                  <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-4">
-                    <canvas ref={dcContainer} id="doughnut-canvas" />
+                    <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-4">
+                      <canvas ref={dcContainer} id="doughnut-canvas" />
 
-                    <div className="svyr-w-full svyr-bg-theme-container svyr-p-4 svyr-text-center svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface">
-                      <span
-                        id="dc-colored-text"
-                        className="svyr-inline svyr-text-theme-primary"></span>{" "}
-                      <span id="dc-text" className="svyr-inline"></span>
+                      <div className="svyr-w-full svyr-bg-theme-container svyr-p-4 svyr-text-center svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface">
+                        <span
+                          id="dc-colored-text"
+                          className="svyr-inline svyr-text-theme-primary"></span>{" "}
+                        <span id="dc-text" className="svyr-inline"></span>
+                      </div>
                     </div>
                   </div>
+                </>
+              ) : (
+                <div className="svyr-self-center svyr-justify-self-center">
+                  There is no matching data to calculate...
                 </div>
               )}
             </div>
 
             <div className={clientStyle.ccBodyBottom}>
-              <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
-                Recorded User Performance
-              </h5>
+              {userScores.length > 0 && (
+                <>
+                  <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
+                    Recorded User Performance
+                  </h5>
 
-              <div className="svyr-h-5/6 svyr-w-full svyr-overflow-y-auto svyr-overflow-x-hidden">
-                {userScores &&
-                  userScores.map((up, i) => (
-                    <div
-                      key={i}
-                      className={clientStyle.pathDataContainer}
-                      onClick={() => {
-                        let key = 0
-                        mappedTelemetries?.forEach(
-                          (v, k) => v.id === up.telemetry.id && (key = k)
-                        )
+                  <div className="svyr-h-5/6 svyr-w-full svyr-overflow-y-auto svyr-overflow-x-hidden">
+                    {userScores.map((up, i) => (
+                      <div
+                        key={i}
+                        className={clientStyle.pathDataContainer}
+                        onClick={() => {
+                          let key = 0
+                          mappedTelemetries?.forEach(
+                            (v, k) => v.id === up.telemetry.id && (key = k)
+                          )
 
-                        setTelemetryIndex(key)
-                        setPage("replay")
-                      }}>
-                      <h5>{up.score}%</h5>
+                          setTelemetryIndex(key)
+                          setPage("replay")
+                        }}>
+                        <h5>{up.score}%</h5>
 
-                      {up.telemetry.data.map((d, i) => {
-                        const page = d.url.split("/").pop()
-                          ? d.url.split("/").pop()
-                          : "/ "
-                        return i === 0 ? (
-                          <p key={i}>{page}</p>
-                        ) : (
-                          <p key={i}>&nbsp; &gt; {page} </p>
-                        )
-                      })}
-                    </div>
-                  ))}
-              </div>
+                        {up.telemetry.data.map((d, i) => {
+                          const page = d.url.split("/").pop()
+                            ? d.url.split("/").pop()
+                            : "/ "
+                          return i === 0 ? (
+                            <p key={i}>{page}</p>
+                          ) : (
+                            <p key={i}>&nbsp; &gt; {page} </p>
+                          )
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </>
         )}
@@ -528,9 +567,13 @@ export const VizBody: FC<{
                     </p>
                   </div>
                 ))
-              ) : (
+              ) : recordedPaths.length === 0 ? (
                 <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
                   Record a path to get started!
+                </span>
+              ) : (
+                <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
+                  No results...
                 </span>
               )}
             </div>
@@ -538,7 +581,7 @@ export const VizBody: FC<{
             <div className="svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-justify-center">
               <button
                 onClick={() => setPage("recording")}
-                className="svyr-w-4/5 svyr-rounded-full svyr-text-sm">
+                className="srvyr-button svyr-w-4/5 svyr-rounded-full svyr-bg-theme-primary svyr-text-sm">
                 <PlayIcon
                   svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
                   spanClass="svyr-w-8 svyr-h-full"

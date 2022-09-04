@@ -24,9 +24,6 @@
 .clientContent .ccHeaderL {
   @apply svyr-flex svyr-flex-row svyr-items-center svyr-justify-center;
 }
-.clientContent .ccHeaderR {
-  @apply svyr-w-48 svyr-rounded-full svyr-text-sm;
-}
 /* .clientContent .ccBody {
   @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
 } */

@@ -65,9 +65,9 @@ export const viz = (
       <h4>Are you sure you want to delete?</h4>
 
       <div>
-        <button>DELETE</button>
+        <button class"srvyr-button">DELETE</button>
 
-        <button>CANCEL</button>
+        <button class"srvyr-button">CANCEL</button>
       </div>
     </div>
   </div>
@@ -102,7 +102,7 @@ export const viz = (
         })}
       </div>
 
-      <button class="cc-header-r">
+      <button class"srvyr-button" class="cc-header-r">
         ${PlayIcon({
           id: "btn-play-selected-recording",
           spanStyles: { width: "28px", height: "full" },
@@ -163,7 +163,7 @@ export const viz = (
     </div>
 
     <div class="btn-record">
-      <button id="record-btn">
+      <button class="srvyr-button" ="record-btn">
         ${PlayIcon({
           id: "btn-new-recording",
           spanStyles: { width: "32px", height: "full" },
@@ -209,7 +209,7 @@ export const replay = (
         <h4>${mappedTelemetries.get(telemetryIndex)?.id}</h4>
       </div>
 
-      <button id="btn-replay">
+      <button class="srvyr-button" id="btn-replay">
         ${PlayIcon({
           id: "btn-play-replay",
           spanStyles: { width: "28px", height: "full" },
@@ -222,7 +222,7 @@ export const replay = (
         <span>Play</span>
       </button>
 
-      <button id="btn-stop">
+      <button class="srvyr-button" id="btn-stop">
         ${StopIcon({
           id: "btn-stop-replay",
           spanStyles: { width: "28px", height: "full" },
@@ -293,7 +293,7 @@ export const recording = () =>
     />
 
     <div id="recording-buttons">
-      <button id="btn-record-pause">
+      <button class="srvyr-button" id="btn-record-pause">
         ${PauseIcon({
           id: "btn-pause-recording",
           title: "Pause",
@@ -307,7 +307,7 @@ export const recording = () =>
         <span>Pause</span>
       </button>
 
-      <button id="btn-record-play">
+      <button class="srvyr-button" id="btn-record-play">
         ${PlayIcon({
           id: "btn-start-recording",
           title: "Start",
@@ -321,7 +321,7 @@ export const recording = () =>
         <span>Record</span>
       </button>
 
-      <button id="btn-save">
+      <button class="srvyr-button" id="btn-save">
         ${SaveIcon({
           id: "btn-save-recording",
           title: "Save",

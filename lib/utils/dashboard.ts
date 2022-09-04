@@ -1,4 +1,5 @@
 import { Telemetry } from "./types"
+import Toastify from "toastify-js"
 
 // function onClassChange(element: HTMLElement, callback: (node: Node) => void) {
 //   const observer = new MutationObserver(mutations => {
@@ -19,6 +20,33 @@ export const GREY = "rgba(108, 105, 120, 1)"
 export const PRIMARY = "rgba(92, 56, 255, 1)"
 export const SURFACE = "rgb(31, 35, 37)"
 export const ON_SURFACE = "rgb(255, 255, 255)"
+
+export function showToast(
+  duration: number = 1000,
+  msg: string,
+  borderPlace: "top" | "right" | "bottom" | "left" = "bottom",
+  pos: "left" | "center" | "right" = "right",
+  grav: "top" | "bottom" = "top",
+  offset: Toastify.Offset = { x: 0, y: 0 }
+) {
+  Toastify({
+    text: msg,
+    duration: duration,
+    position: pos,
+    gravity: grav,
+    offset: offset,
+    style: {
+      background: "rgb(19, 21, 23)",
+      gap: "10px",
+      width: "max-content",
+      display: "flex",
+      borderRadius: "0.5rem",
+      [`border-${borderPlace}`]: `4px solid ${PRIMARY}`,
+      boxSizing: "border-box",
+    },
+    close: true,
+  }).showToast()
+}
 
 /** Source: https://stackoverflow.com/a/63116134 */
 const camelToKebabCase = (str: string) => {

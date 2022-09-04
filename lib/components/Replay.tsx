@@ -12,8 +12,6 @@ const divFollower = stringToHTML(`
     position: "absolute",
     left: "0px",
     top: "0px",
-    width: "50px",
-    height: "50px",
     border: "2px solid green",
     background: "rgb(0 128 0 / 0.5)",
     transition: "all 0.2s linear, opacity 0.25s ease",
@@ -56,28 +54,38 @@ export const ReplayBody: FC<{
       let prevTimelineNode: HTMLElement | null = null
 
       function moveFollower(clickElem = true) {
-        let follower = iframeDoc.getElementById("svyr-follower")!
-        if (!follower) {
-          iframeDoc.body.style.position = "relative"
-          iframeDoc.body.appendChild(divFollower)
-          follower = divFollower
-        }
-
         const elemToFollow = iframeDoc.body.querySelector(
           `.${telemetry!.data[dataIndex].class!}`
         ) as HTMLElement
 
         if (elemToFollow) {
+          // let scrollTimeout: NodeJS.Timeout
+          // iframeDoc.body.onscroll = () => {
+          //   clearTimeout(scrollTimeout)
+          //   scrollTimeout = setTimeout(() => {
+
+          //   }, 100)
+          // }
+
           elemToFollow.scrollIntoView()
 
-          const bcr = elemToFollow!.getBoundingClientRect()
-          follower.style.transform = `translate(${bcr.left}px, ${bcr.top}px)`
+          let follower = iframeDoc.getElementById("svyr-follower")
+          if (!follower) {
+            iframeDoc.body.style.position = "relative"
+            iframeDoc.body.appendChild(divFollower)
+            follower = divFollower
+          }
+
+          const bcr = elemToFollow.getBoundingClientRect()
+          follower.style.transform = `translate(${bcr.left}px, ${
+            bcr.top + iframe.contentWindow!.scrollY
+          }px)`
           follower.style.width = `${bcr.width}px`
           follower.style.height = `${bcr.height}px`
           follower.style.display = "grid"
           follower.style.pointerEvents = "none"
 
-          if (elemToFollow!.tagName !== "A" && clickElem) elemToFollow!.click()
+          if (elemToFollow.tagName !== "A" && clickElem) elemToFollow.click()
 
           // ACTIVATE TIMELINE NODE
           if (prevTimelineNode) {
@@ -100,39 +108,46 @@ export const ReplayBody: FC<{
         replayStop.style.display = "flex"
         // ALWAYS RESET ON CLICK
         dataIndex = 0
+        let clicksTimer: NodeJS.Timer
+
+        function startTimer() {
+          clicksTimer = setInterval(() => {
+            if (dataIndex < telemetry!.data.length) {
+              setAllowChange(false)
+              // IF IFRAME IS NOT EQUAL TO DATA URL
+              if (iframe.src !== telemetry!.data[dataIndex].url) {
+                play = false
+                clearInterval(clicksTimer)
+
+                iframe.src = telemetry!.data[dataIndex].url!
+                iframeLoadingElem.style.display = "flex"
+
+                iframe.onload = () => {
+                  startTimer()
+                  iframeLoadingElem.style.display = "none"
+                  iframeDoc = iframe.contentDocument!
+                  play = true
+                }
+              }
+              if (play === true) {
+                moveFollower()
+                dataIndex++
+              }
+            } else {
+              play = false
+              clearInterval(clicksTimer)
+              replayBtn.style.display = "flex"
+              replayStop.style.display = "none"
+              setAllowChange(true)
+            }
+          }, delay)
+        }
 
         // LOOPING CLICKS DATA
-        const clicksInterval = setInterval(() => {
-          if (dataIndex < telemetry!.data.length) {
-            setAllowChange(false)
-            // IF IFRAME IS NOT EQUAL TO DATA URL
-            if (iframe.src !== telemetry!.data[dataIndex].url) {
-              play = false
-
-              iframe.src = telemetry!.data[dataIndex].url!
-              iframeLoadingElem.style.display = "flex"
-
-              iframe.onload = () => {
-                iframeLoadingElem.style.display = "none"
-                iframeDoc = iframe.contentDocument!
-                play = true
-              }
-            }
-            if (play === true) {
-              moveFollower()
-              dataIndex++
-            }
-          } else {
-            play = false
-            clearInterval(clicksInterval)
-            replayBtn.style.display = "flex"
-            replayStop.style.display = "none"
-            setAllowChange(true)
-          }
-        }, delay)
+        startTimer()
 
         replayStop.onclick = () => {
-          clearInterval(clicksInterval)
+          clearInterval(clicksTimer)
           play = false
           replayBtn.style.display = "flex"
           replayStop.style.display = "none"
@@ -163,7 +178,7 @@ export const ReplayBody: FC<{
                   iframeLoadingElem.style.display = "none"
                   iframeDoc = iframe.contentDocument!
                   // replayBtn.onclick = replay
-                  setTimeout(() => moveFollower(false), 100)
+                  setTimeout(() => moveFollower(false), 800)
                 }
               } else {
                 moveFollower(false)
@@ -179,6 +194,8 @@ export const ReplayBody: FC<{
         replayBtn.onclick = null
         replayStop.onclick = null
         iframe.onload = null
+
+        // iframeDoc.body.onscroll = null
       }
     }
   }, [telemetry])
@@ -210,7 +227,7 @@ export const ReplayBody: FC<{
 
               <button
                 id="btn-replay"
-                className="svyr-w-max svyr-rounded-full svyr-text-sm">
+                className="svyr-flex svyr-w-max svyr-flex-row svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-semibold svyr-text-sm">
                 <PlayIcon
                   spanClass="svyr-w-7 svyr-h-full"
                   svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
@@ -219,7 +236,7 @@ export const ReplayBody: FC<{
               </button>
               <button
                 id="btn-stop"
-                className="svyr-hidden svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm">
+                className="svyr-hidden svyr-w-max svyr-flex-row svyr-rounded-full svyr-bg-theme-primary-disabled svyr-py-4 svyr-px-6 svyr-font-inter-semibold svyr-text-sm">
                 <StopIcon
                   spanClass="svyr-w-7 svyr-h-full"
                   svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"

@@ -1,24 +1,19 @@
 import { MappedTelemetries, Telemetry } from "@/utils/types"
-import { FC, useEffect, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { ChevronDownIcon, DeleteIcon, DownArrowIcon } from "./icons"
 import clientStyle from "./dashboard.module.css"
 
 import LazyObjectView from "lazy-object-view"
+import { showToast } from "@/utils/dashboard"
 
-const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = ({
-  apiUrl,
-  mappedTelemetries,
-}) => {
+const DataBody: FC<{
+  apiUrl: string
+  mappedTelemetries: MappedTelemetries
+  setMappedTelemetries: Dispatch<SetStateAction<MappedTelemetries | null>>
+}> = ({ apiUrl, mappedTelemetries, setMappedTelemetries }) => {
   const [telemetry, setTelemetry] = useState<Telemetry>()
   const [orderedList, setOrderedList] = useState<[number, Telemetry][]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-
-  const deleteTemplate = () =>
-    fetch(apiUrl, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ telemetries: selectedIds }),
-    })
 
   useEffect(() => {
     if (telemetry) {
@@ -35,7 +30,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
   useEffect(() => {
     if (mappedTelemetries) {
       setOrderedList(
-        [...mappedTelemetries.entries()].sort(([numA, telA], [numB, telB]) => {
+        [...mappedTelemetries.entries()].sort(([, telA], [, telB]) => {
           const dateA = new Date(telA.startTime)
           const dateB = new Date(telB.startTime)
           if (dateA > dateB) return -1
@@ -48,45 +43,46 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
 
   useEffect(() => {
     if (orderedList) {
-      const telIdInputs = document.getElementsByClassName("telemetry-id")
-      let lastclicked = 0
+      const telIdInputs = Array.from(
+        document.getElementsByClassName("telemetry-id")
+      )
+
+      let lastClicked: HTMLInputElement
       let shiftHeld = false
 
-      window.onkeydown = event => {
-        if (event.key === "Shift") shiftHeld = true
-      }
-      window.onkeyup = event => {
-        if (event.key === "Shift") shiftHeld = false
-      }
+      window.onkeydown = event => event.key === "Shift" && (shiftHeld = true)
+      window.onkeyup = event => event.key === "Shift" && (shiftHeld = false)
 
-      Array.from(telIdInputs).map((el, index) => {
-        el.addEventListener("click", elem => {
-          const inputEl = elem.target as HTMLInputElement
-          const elemId = inputEl.getAttribute("data-telemetry-id")!
+      function checkbox(elem: Event) {
+        const inputEl = elem.target as HTMLInputElement
+        const elemId = inputEl.getAttribute("data-telemetry-id")!
 
-          if (inputEl.checked) {
-            if (shiftHeld) {
-            } else {
-              setSelectedIds(prev => [...prev, elemId])
-            }
+        // const check = () => {
 
-            lastclicked = index
+        // }
+
+        if (inputEl.checked) {
+          if (shiftHeld) {
           } else {
-            if (shiftHeld) {
-            } else {
-              setSelectedIds(prev =>
-                prev.filter(id => {
-                  if (id !== elemId) return id
-                })
-              )
-            }
+            setSelectedIds(prev => [...prev, elemId])
           }
-        })
-      })
+
+          lastClicked = inputEl
+        } else {
+          if (shiftHeld) {
+          } else {
+            setSelectedIds(prev => prev.filter(id => id !== elemId && id))
+          }
+        }
+      }
+
+      telIdInputs.map(el => el.addEventListener("click", checkbox))
 
       return () => {
         window.onkeydown = null
         window.onkeyup = null
+
+        telIdInputs.map(el => el.removeEventListener("click", checkbox))
       }
     }
   }, [orderedList])
@@ -95,7 +91,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
     const tels = [...mappedTelemetries.entries()]
     if (value === "Latest") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           const dateA = new Date(telA.startTime)
           const dateB = new Date(telB.startTime)
           if (dateA > dateB) return -1
@@ -105,7 +101,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
       )
     } else if (value === "Oldest") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           const dateA = new Date(telA.startTime)
           const dateB = new Date(telB.startTime)
           if (dateA > dateB) return 1
@@ -115,7 +111,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
       )
     } else if (value === "IdAscending") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           if (telA.id > telB.id) return 1
           if (telA.id < telB.id) return -1
           return 0
@@ -123,7 +119,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
       )
     } else if (value === "IdDescending") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           if (telA.id > telB.id) return -1
           if (telA.id < telB.id) return 1
           return 0
@@ -131,7 +127,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
       )
     } else if (value === "LongestData") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           if (telA.data.length > telB.data.length) return -1
           if (telA.data.length < telB.data.length) return 1
           return 0
@@ -139,7 +135,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
       )
     } else if (value === "ShortestData") {
       setOrderedList(
-        tels.sort(([numA, telA], [numB, telB]) => {
+        tels.sort(([, telA], [, telB]) => {
           if (telA.data.length > telB.data.length) return 1
           if (telA.data.length < telB.data.length) return -1
           return 0
@@ -159,7 +155,7 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
               svyr-px-4
               svyr-py-2.5 svyr-font-inter-semibold
               svyr-text-theme-on-surface
-            focus:svyr-border-blue-600 focus:svyr-outline-none"
+              focus:svyr-border-blue-600 focus:svyr-outline-none"
               aria-label="Filter Telemtries"
               defaultValue={"Latest"}>
               <option value="Latest">Latest</option>
@@ -179,14 +175,39 @@ const DataBody: FC<{ apiUrl: string; mappedTelemetries: MappedTelemetries }> = (
           <button
             onClick={() => {
               if (selectedIds.length > 0) {
-                deleteTemplate()
-                setSelectedIds([])
-                setOrderedList(prev =>
-                  prev.filter(tel => !selectedIds.includes(tel[1].id))
+                // fetch(apiUrl, {
+                //   method: "DELETE",
+                //   headers: { "Content-Type": "application/json" },
+                //   body: JSON.stringify({ telemetries: selectedIds }),
+                // })
+
+                setOrderedList(prev => {
+                  const newTels = prev.filter(
+                    ([, tel]) => !selectedIds.includes(tel.id)
+                  )
+                  // Update global state of telemetries
+                  const nm = new Map()
+                  newTels.map(([num, tel]) => nm.set(num, tel))
+                  setMappedTelemetries(nm)
+
+                  return newTels
+                })
+
+                showToast(
+                  4000,
+                  `${selectedIds.length} ${
+                    selectedIds.length > 1 ? "ids" : "id"
+                  } have been deleted`,
+                  "left",
+                  "right",
+                  "bottom",
+                  { x: "350px", y: 0 }
                 )
+
+                setSelectedIds([])
               }
             }}
-            className={`svyr-font-poppins-bold svyr-bg-theme-error svyr-opacity-60 ${
+            className={`srvyr-button svyr-font-poppins-bold svyr-bg-theme-error svyr-opacity-60 ${
               selectedIds.length > 0
                 ? "svyr-opacity-100"
                 : "svyr-cursor-not-allowed"

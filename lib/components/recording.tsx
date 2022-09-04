@@ -1,11 +1,14 @@
 import { DashboardPage, Recording } from "@/utils/types"
 import { ExitIcon, PauseIcon, PlayIcon, SaveIcon } from "./icons"
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect } from "react"
+import { showToast } from "@/utils/dashboard"
 
 const RecordingBody: FC<{
   setPage: Dispatch<SetStateAction<DashboardPage>>
-}> = ({ setPage }) => {
+  setRecordedPaths: Dispatch<SetStateAction<Recording[]>>
+  recordedPaths: Recording[]
+}> = ({ setPage, recordedPaths, setRecordedPaths }) => {
   useEffect(() => {
     const iframe = document.getElementById(
       "svyr-website-rec"
@@ -14,12 +17,12 @@ const RecordingBody: FC<{
     let iframeDoc: Document
     let url = iframe.src
 
-    let path: Recording = { title: "", data: [] }
-    let paths: Recording[] = []
+    let newPath: Recording = { title: "", data: [] }
+    let paths = recordedPaths
 
-    if (localStorage.hasOwnProperty("srvyr-paths")) {
-      paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
-    }
+    // if (localStorage.hasOwnProperty("srvyr-paths")) {
+    //   paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
+    // }
 
     iframe.onload = () => {
       iframeDoc = iframe.contentDocument!
@@ -46,8 +49,8 @@ const RecordingBody: FC<{
           Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
 
         // AVOID SEQUENCES OF SAME CLASSES
-        if (targetClass && path.data.at(-1)?.class !== targetClass) {
-          path.data.push({
+        if (targetClass && newPath.data.at(-1)?.class !== targetClass) {
+          newPath.data.push({
             url: url,
             class: targetClass,
           })
@@ -67,7 +70,7 @@ const RecordingBody: FC<{
 
       recordingTitle.onkeyup = e => {
         const elem = e.target! as HTMLInputElement
-        path.title = elem.value
+        newPath.title = elem.value
       }
 
       btnRecord.onclick = () => {
@@ -88,13 +91,32 @@ const RecordingBody: FC<{
       // ) as HTMLButtonElement
 
       btnSave.onclick = () => {
-        if (
-          path.title !== "" &&
-          path.data.length > 0 &&
-          !paths.find(p => p.title === path.title)
+        if (newPath.title === "") {
+          showToast(
+            1500,
+            "Enter name for the path",
+            "bottom",
+            "center",
+            "bottom",
+            { x: 0, y: "80px" }
+          )
+        } else if (newPath.title !== "" && newPath.data.length === 0) {
+          showToast(
+            1500,
+            "Click some elements first",
+            "bottom",
+            "center",
+            "bottom",
+            { x: 0, y: "80px" }
+          )
+        } else if (
+          newPath.title !== "" &&
+          newPath.data.length > 0 &&
+          !paths.find(p => p.title === newPath.title)
         ) {
-          paths.push(path)
-          localStorage.setItem("srvyr-paths", JSON.stringify(paths))
+          paths.push(newPath)
+          setRecordedPaths(paths)
+          // localStorage.setItem("srvyr-paths", JSON.stringify(paths))
           setPage("viz")
         }
       }
@@ -110,9 +132,9 @@ const RecordingBody: FC<{
           id="recording-status"
           className="svyr-flex svyr-h-max svyr-items-center svyr-justify-center svyr-gap-4 svyr-text-center">
           <div className="svyr-mt-1 svyr-h-2 svyr-w-2 svyr-rounded-full svyr-bg-theme-primary" />
-          <h4 className="svyr-font-semibold svyr-text-theme-primary">
+          <p className="svyr-text-sm svyr-font-semibold svyr-text-theme-primary">
             Recording...
-          </h4>
+          </p>
         </div>
 
         <input
@@ -125,7 +147,7 @@ const RecordingBody: FC<{
         <div className="svyr-flex svyr-items-center svyr-gap-4">
           <button
             id="btn-record-pause"
-            className="svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm">
+            className="srvyr-button svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm">
             <PauseIcon
               spanClass="svyr-w-7 svyr-h-full"
               svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
@@ -134,7 +156,7 @@ const RecordingBody: FC<{
           </button>
           <button
             id="btn-record-play"
-            className="svyr-hidden svyr-w-max svyr-rounded-full svyr-text-sm">
+            className="srvyr-button svyr-hidden svyr-w-max svyr-rounded-full svyr-bg-theme-primary svyr-text-sm">
             <PlayIcon
               spanClass="svyr-w-7 svyr-h-full"
               svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
@@ -144,7 +166,7 @@ const RecordingBody: FC<{
 
           <button
             id="btn-save"
-            className="svyr-w-max svyr-rounded-full svyr-text-sm">
+            className="srvyr-button svyr-w-max svyr-rounded-full svyr-bg-theme-primary svyr-text-sm">
             <SaveIcon
               spanClass="svyr-w-7 svyr-h-full"
               svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
@@ -155,7 +177,7 @@ const RecordingBody: FC<{
           {/* <button
             id="btn-replay"
             onClick={() => setPage("viz")}
-            className="svyr-w-max svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-transparent svyr-py-4 svyr-px-6 svyr-text-sm">
+            className="srvyr-button svyr-w-max svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-transparent svyr-py-4 svyr-px-6 svyr-text-sm">
             <ExitIcon
               onClick={() => setPage("viz")}
               spanClass="svyr-w-7 svyr-h-full"
