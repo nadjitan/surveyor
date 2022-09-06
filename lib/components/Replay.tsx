@@ -59,14 +59,6 @@ export const ReplayBody: FC<{
         ) as HTMLElement
 
         if (elemToFollow) {
-          // let scrollTimeout: NodeJS.Timeout
-          // iframeDoc.body.onscroll = () => {
-          //   clearTimeout(scrollTimeout)
-          //   scrollTimeout = setTimeout(() => {
-
-          //   }, 100)
-          // }
-
           elemToFollow.scrollIntoView()
 
           let follower = iframeDoc.getElementById("svyr-follower")
@@ -177,7 +169,7 @@ export const ReplayBody: FC<{
                 iframe.onload = () => {
                   iframeLoadingElem.style.display = "none"
                   iframeDoc = iframe.contentDocument!
-                  // replayBtn.onclick = replay
+
                   setTimeout(() => moveFollower(false), 800)
                 }
               } else {
@@ -194,8 +186,6 @@ export const ReplayBody: FC<{
         replayBtn.onclick = null
         replayStop.onclick = null
         iframe.onload = null
-
-        // iframeDoc.body.onscroll = null
       }
     }
   }, [telemetry])

@@ -14,7 +14,7 @@ import DataBody from "./data"
  * Import to a dedicated page for ```<iframe />``` to work
  */
 const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
-  const [page, setPage] = useState<DashboardPage>("replay")
+  const [page, setPage] = useState<DashboardPage>("recording")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
