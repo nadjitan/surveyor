@@ -3,20 +3,7 @@ import { MappedTelemetries, Telemetry } from "@/utils/types"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
 import { FC, useEffect, useState } from "react"
-import { stringToHTML, stylesToString } from "@/utils/dashboard"
-
-const divFollower = stringToHTML(`
-<div id="svyr-follower" 
-  style="${stylesToString({
-    display: "none",
-    position: "absolute",
-    left: "0px",
-    top: "0px",
-    border: "2px solid green",
-    background: "rgb(0 128 0 / 0.5)",
-    transition: "all 0.2s linear, opacity 0.25s ease",
-  })}"></div>
-`) as HTMLElement
+import { divFollower, stringToHTML, stylesToString } from "@/utils/dashboard"
 
 export const ReplayBody: FC<{
   mappedTelemetries: MappedTelemetries
@@ -53,6 +40,14 @@ export const ReplayBody: FC<{
       let timelineNodes: HTMLCollectionOf<Element>
       let prevTimelineNode: HTMLElement | null = null
 
+      function removeFollowerOnClick() {
+        if (prevTimelineNode) {
+          prevTimelineNode.classList.remove("svyr-node-selected")
+        }
+        const box = iframeDoc.getElementById("svyr-follower")
+        if (box) box.remove()
+      }
+
       function moveFollower(clickElem = true) {
         const elemToFollow = iframeDoc.body.querySelector(
           `.${telemetry!.data[dataIndex].class!}`
@@ -88,6 +83,12 @@ export const ReplayBody: FC<{
             timelineNodes[dataIndex].classList.add("svyr-node-selected")
             prevTimelineNode = timelineNodes[dataIndex] as HTMLElement
           }
+
+          // if (allowChange) {
+          //   iframeDoc.onclick = removeFollowerOnClick
+          // } else {
+          //   iframeDoc.removeEventListener = removeFollowerOnClick
+          // }
         }
       }
 
@@ -103,9 +104,10 @@ export const ReplayBody: FC<{
         let clicksTimer: NodeJS.Timer
 
         function startTimer() {
+          setAllowChange(false)
+
           clicksTimer = setInterval(() => {
             if (dataIndex < telemetry!.data.length) {
-              setAllowChange(false)
               // IF IFRAME IS NOT EQUAL TO DATA URL
               if (iframe.src !== telemetry!.data[dataIndex].url) {
                 play = false
@@ -169,7 +171,6 @@ export const ReplayBody: FC<{
                 iframe.onload = () => {
                   iframeLoadingElem.style.display = "none"
                   iframeDoc = iframe.contentDocument!
-
                   setTimeout(() => moveFollower(false), 800)
                 }
               } else {
@@ -186,6 +187,7 @@ export const ReplayBody: FC<{
         replayBtn.onclick = null
         replayStop.onclick = null
         iframe.onload = null
+        iframeDoc.onclick = null
       }
     }
   }, [telemetry])

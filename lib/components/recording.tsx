@@ -8,8 +8,15 @@ import {
   SaveIcon,
 } from "./icons"
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
-import { showToast } from "@/utils/dashboard"
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+import { divFollower, showToast } from "@/utils/dashboard"
 
 const RecordingBody: FC<{
   setPage: Dispatch<SetStateAction<DashboardPage>>
@@ -19,86 +26,127 @@ const RecordingBody: FC<{
   const [newPath, setNewPath] = useState<Recording>({ title: "", data: [] })
   const [showList, setShowList] = useState(false)
 
-  useEffect(() => {
-    const iframe = document.getElementById(
-      "svyr-website-rec"
-    ) as HTMLIFrameElement
-    iframe.src = window.location.origin
-    let iframeDoc: Document
-    let url = iframe.src
+  const iframe = useRef<HTMLIFrameElement>(null)
+  const [recording, setRecording] = useState(true)
 
-    // if (localStorage.hasOwnProperty("srvyr-paths")) {
-    //   paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
+  function removeFollower() {
+    const box = iframe.current!.contentDocument!.getElementById("svyr-follower")
+    if (box) box.remove()
+  }
+
+  function recordElems(e: MouseEvent) {
+    const elem = e.target! as HTMLElement
+
+    // Update current url of <iframe />
+    // Required because SPA apps does not change the src of <iframe />
+    // if (elem.tagName === "A" && elem.getAttribute("href")?.startsWith("/")) {
+    //   iframe.current!.src = window.location.origin + elem.getAttribute("href")
+    //   return
+    // } else if (elem.tagName === "A") {
+    //   iframe.current!.src = elem.getAttribute("href")!
+    //   return
     // }
 
-    iframe.onload = () => {
-      iframeDoc = iframe.contentDocument!
+    const targetClass =
+      elem.className &&
+      Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
 
-      const recordingStatus = document.getElementById(
-        "recording-status"
-      ) as HTMLDivElement
-      const btnRecord = document.getElementById(
-        "btn-record-play"
-      ) as HTMLButtonElement
-      const btnPause = document.getElementById(
-        "btn-record-pause"
-      ) as HTMLButtonElement
-
-      function recordElems(e: MouseEvent) {
-        const elem = e.target! as HTMLElement
-
-        const targetClass =
-          elem.className &&
-          Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
-
+    if (targetClass) {
+      setNewPath(prev => {
         // AVOID SEQUENCES OF SAME CLASSES
-        if (targetClass && newPath.data.at(-1)?.class !== targetClass) {
-          setNewPath(prev => ({
+        if (prev.data.at(-1)?.class !== targetClass) {
+          return {
             title: prev.title,
             data: [
               ...prev.data,
               {
-                url: url,
+                url: iframe.current!.contentWindow!.location.href,
                 class: targetClass,
               },
             ],
-          }))
-        }
+          }
+        } else return prev
+      })
+    }
+  }
 
-        // Required because SPA apps does not change the src of <iframe />
-        if (
-          elem.tagName === "A" &&
-          elem.getAttribute("href")?.startsWith("/")
-        ) {
-          url = iframe.src.slice(0, -1) + elem.getAttribute("href")
-        } else if (elem.tagName === "A") {
-          url = elem.getAttribute("href")!
-        }
-      }
-      iframeDoc.addEventListener("click", recordElems)
+  function setupListeners() {
+    iframe.current!.contentDocument!.onclick = e => {
+      removeFollower()
+      recordElems(e)
+    }
 
-      btnRecord.onclick = () => {
-        btnPause.style.display = "flex"
-        btnRecord.style.display = "none"
-        recordingStatus.style.display = "flex"
-        iframeDoc.addEventListener("click", recordElems)
-      }
+    const recordingStatus = document.getElementById(
+      "recording-status"
+    ) as HTMLDivElement
+    const btnRecord = document.getElementById(
+      "btn-record-play"
+    ) as HTMLButtonElement
+    const btnPause = document.getElementById(
+      "btn-record-pause"
+    ) as HTMLButtonElement
 
-      btnPause.onclick = () => {
-        btnPause.style.display = "none"
-        btnRecord.style.display = "flex"
-        recordingStatus.style.display = "none"
-        iframeDoc.removeEventListener("click", recordElems)
+    function showBtnPause() {
+      btnPause.style.display = "flex"
+      btnRecord.style.display = "none"
+      recordingStatus.style.display = "flex"
+    }
+    function showBtnRecord() {
+      btnPause.style.display = "none"
+      btnRecord.style.display = "flex"
+      recordingStatus.style.display = "none"
+    }
+
+    if (recording) showBtnPause()
+    else showBtnRecord()
+
+    btnRecord.onclick = () => {
+      showBtnPause()
+      setRecording(true)
+    }
+
+    btnPause.onclick = () => {
+      showBtnRecord()
+      setRecording(false)
+    }
+  }
+
+  useEffect(() => {
+    if (iframe.current) {
+      // const iframe = document.getElementById(
+      //   "svyr-website-rec"
+      // ) as HTMLIFrameElement
+      iframe.current.src = window.location.origin
+
+      // if (localStorage.hasOwnProperty("srvyr-paths")) {
+      //   paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
+      // }
+
+      iframe.current.onload = () => {
+        setupListeners()
+        // const btnExit = document.getElementById(
+        //   "btn-exit"
+        // ) as HTMLButtonElement
       }
-      // const btnExit = document.getElementById(
-      //   "btn-exit"
-      // ) as HTMLButtonElement
     }
   }, [])
 
+  useEffect(() => {
+    if (recording) {
+      iframe.current!.contentDocument!.onclick = e => {
+        removeFollower()
+        recordElems(e)
+      }
+    } else iframe.current!.contentDocument!.onclick = e => removeFollower()
+  }, [recording])
+
   return (
     <div className="svyr-grid svyr-place-items-center">
-      <iframe id="svyr-website-rec" className="svyr-h-screen svyr-w-full" />
+      <iframe
+        ref={iframe}
+        id="svyr-website-rec"
+        className="svyr-h-screen svyr-w-full"
+      />
 
       <div className="svyr-absolute svyr-bottom-0 svyr-box-border svyr-flex svyr-h-20 svyr-w-3/4 svyr-items-center svyr-justify-center svyr-gap-8 svyr-rounded-t-[46px] svyr-bg-theme-background svyr-px-10">
         <div
@@ -149,17 +197,86 @@ const RecordingBody: FC<{
                     <div
                       key={index}
                       className="svyr-flex svyr-w-full svyr-select-none svyr-flex-row svyr-justify-between svyr-rounded-md svyr-bg-black svyr-bg-opacity-20 svyr-text-theme-on-surface">
-                      <p className="svyr-w-full svyr-cursor-pointer svyr-rounded-l-md svyr-bg-black svyr-bg-opacity-0 svyr-p-2 svyr-text-sm hover:svyr-bg-opacity-60">
+                      <p
+                        className="svyr-w-full svyr-cursor-pointer svyr-rounded-l-md svyr-bg-black svyr-bg-opacity-0 svyr-p-2 svyr-text-sm hover:svyr-bg-opacity-60"
+                        onClick={() => {
+                          let iframeDoc = iframe.current!.contentDocument!
+
+                          function moveBox() {
+                            const elemToFollow = iframeDoc.body.querySelector(
+                              `.${np.class!}`
+                            ) as HTMLElement
+
+                            if (elemToFollow) {
+                              elemToFollow.scrollIntoView()
+
+                              let follower =
+                                iframeDoc.getElementById("svyr-follower")
+                              if (!follower) {
+                                iframeDoc.body.style.position = "relative"
+                                iframeDoc.body.appendChild(divFollower)
+                                follower = divFollower
+                              }
+
+                              const bcr = elemToFollow.getBoundingClientRect()
+                              follower.style.transform = `translate(${
+                                bcr.left
+                              }px, ${
+                                bcr.top + iframe.current!.contentWindow!.scrollY
+                              }px)`
+                              follower.style.opacity = "1"
+                              follower.style.width = `${bcr.width}px`
+                              follower.style.height = `${bcr.height}px`
+                              follower.style.display = "grid"
+                              follower.style.pointerEvents = "none"
+
+                              // if (elemToFollow.tagName !== "A") {
+                              //   elemToFollow.click()
+                              // }
+                            }
+                          }
+
+                          if (
+                            iframe.current!.contentWindow!.location.href !==
+                            np.url
+                          ) {
+                            iframe.current!.src = np.url
+                            iframe.current!.onload = () => {
+                              iframeDoc = iframe.current?.contentDocument!
+                              setTimeout(() => {
+                                moveBox()
+
+                                if (recording) {
+                                  iframe.current!.contentDocument!.onclick =
+                                    e => {
+                                      removeFollower()
+                                      recordElems(e)
+                                    }
+                                } else {
+                                  iframe.current!.contentDocument!.onclick =
+                                    () => removeFollower()
+                                }
+                              }, 800)
+                            }
+                          } else moveBox()
+                        }}>
                         {np.class}
                       </p>
+
                       <ExIcon
                         spanClass="svyr-h-full svyr-p-2 svyr-rounded-r-md svyr-bg-black svyr-cursor-pointer svyr-bg-opacity-20"
                         svgClass="svyr-fill-theme-on-surface svyr-h-4 svyr-w-4"
                         onClick={() => {
-                          setNewPath(prev => ({
-                            ...prev,
-                            data: prev.data.filter(d => d.class !== np.class),
-                          }))
+                          const box =
+                            iframe.current?.contentDocument!.getElementById(
+                              "svyr-follower"
+                            )
+                          if (box) box.remove()
+
+                          setNewPath(prev => {
+                            prev.data.splice(index, 1)
+                            return { ...prev }
+                          })
                         }}
                       />
                     </div>
@@ -176,7 +293,7 @@ const RecordingBody: FC<{
               } srvyr-button svyr-w-max svyr-rounded-full svyr-text-sm`}
               onClick={() => setShowList(!showList)}>
               <ListIcon
-                spanClass="svyr-w-7 svyr-h-full"
+                spanClass="svyr-w-8 svyr-h-full"
                 svgClass="svyr-fill-theme-on-surface svyr-h-6 svyr-w-6"
               />
               <span>List</span>

@@ -43,7 +43,7 @@ const Surveyor: FC<
      */
     apiUrl: string
     /**
-     * Tha last element to find e.g.
+     * The last element to find e.g.
      * ```url: http://localhost:3000/user```
      * ```class: srvyr-YnXm23N7```
      */

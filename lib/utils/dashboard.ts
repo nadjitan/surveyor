@@ -69,6 +69,19 @@ export function stylesToString(cssStyles: Partial<CSSStyleDeclaration>) {
   return string
 }
 
+export const divFollower = stringToHTML(`
+<div id="svyr-follower" 
+  style="${stylesToString({
+    display: "none",
+    position: "absolute",
+    left: "0px",
+    top: "0px",
+    border: "2px solid green",
+    background: "rgb(0 128 0 / 0.5)",
+    transition: "all 0.2s linear, opacity 0.25s ease",
+  })}"></div>
+`) as HTMLElement
+
 /**
  * Must only have a single parent
  *
