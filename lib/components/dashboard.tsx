@@ -14,7 +14,7 @@ import DataBody from "./data"
  * Import to a dedicated page for ```<iframe />``` to work
  */
 const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
-  const [page, setPage] = useState<DashboardPage>("replay")
+  const [page, setPage] = useState<DashboardPage>("viz")
 
   const [selectedRec, setSelectedRec] = useState<Recording | null>(null)
 
@@ -35,10 +35,22 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
     {
       title: "Login 2",
       data: [
-        { url: "https://capstone-demo-site.vercel.app/", class: "srvyr-zpjNVjDa" },
-        { url: "https://capstone-demo-site.vercel.app/login", class: "srvyr-ZpPZbdPx" },
-        { url: "https://capstone-demo-site.vercel.app/login", class: "srvyr-kq3Vd6jR" },
-        { url: "https://capstone-demo-site.vercel.app/login", class: "srvyr-JvPMMKP4" },
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-zpjNVjDa",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-ZpPZbdPx",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-kq3Vd6jR",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-JvPMMKP4",
+        },
       ],
     },
     {

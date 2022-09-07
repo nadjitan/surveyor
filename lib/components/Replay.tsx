@@ -2,8 +2,8 @@ import clientStyle from "./dashboard.module.css"
 import { MappedTelemetries, Telemetry } from "@/utils/types"
 import { LoadingIcon, PlayIcon, SearchIcon, StopIcon } from "./icons"
 
-import { FC, useEffect, useState } from "react"
-import { divFollower, stringToHTML, stylesToString } from "@/utils/dashboard"
+import { FC, useEffect, useRef, useState } from "react"
+import { divFollower } from "@/utils/dashboard"
 
 export const ReplayBody: FC<{
   mappedTelemetries: MappedTelemetries
@@ -14,6 +14,8 @@ export const ReplayBody: FC<{
 
   const [telemetry, setTelemetry] = useState<Telemetry>()
   const [allowChange, setAllowChange] = useState(true)
+
+  const iframe = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
     if (mappedTelemetries) {
@@ -27,9 +29,6 @@ export const ReplayBody: FC<{
       const replayBtn = document.getElementById("btn-replay")!
       const replayStop = document.getElementById("btn-stop")!
 
-      const iframe = document.getElementById(
-        "svyr-website"
-      ) as HTMLIFrameElement
       let iframeDoc: Document
       const iframeLoadingElem = document.getElementById("svyr-iframe-loading")!
 
@@ -41,11 +40,13 @@ export const ReplayBody: FC<{
       let prevTimelineNode: HTMLElement | null = null
 
       function removeFollowerOnClick() {
-        if (prevTimelineNode) {
-          prevTimelineNode.classList.remove("svyr-node-selected")
+        iframeDoc.onclick = () => {
+          if (prevTimelineNode) {
+            prevTimelineNode.classList.remove("svyr-node-selected")
+          }
+          const box = iframeDoc.getElementById("svyr-follower")
+          if (box) box.remove()
         }
-        const box = iframeDoc.getElementById("svyr-follower")
-        if (box) box.remove()
       }
 
       function moveFollower(clickElem = true) {
@@ -65,7 +66,7 @@ export const ReplayBody: FC<{
 
           const bcr = elemToFollow.getBoundingClientRect()
           follower.style.transform = `translate(${bcr.left}px, ${
-            bcr.top + iframe.contentWindow!.scrollY
+            bcr.top + iframe.current!.contentWindow!.scrollY
           }px)`
           follower.style.width = `${bcr.width}px`
           follower.style.height = `${bcr.height}px`
@@ -83,12 +84,6 @@ export const ReplayBody: FC<{
             timelineNodes[dataIndex].classList.add("svyr-node-selected")
             prevTimelineNode = timelineNodes[dataIndex] as HTMLElement
           }
-
-          // if (allowChange) {
-          //   iframeDoc.onclick = removeFollowerOnClick
-          // } else {
-          //   iframeDoc.removeEventListener = removeFollowerOnClick
-          // }
         }
       }
 
@@ -108,18 +103,23 @@ export const ReplayBody: FC<{
 
           clicksTimer = setInterval(() => {
             if (dataIndex < telemetry!.data.length) {
+              iframe.current!.contentDocument!.onclick = null
+
               // IF IFRAME IS NOT EQUAL TO DATA URL
-              if (iframe.src !== telemetry!.data[dataIndex].url) {
+              if (
+                iframe.current!.contentWindow!.location.href !==
+                telemetry!.data[dataIndex].url
+              ) {
                 play = false
                 clearInterval(clicksTimer)
 
-                iframe.src = telemetry!.data[dataIndex].url!
+                iframe.current!.src = telemetry!.data[dataIndex].url!
                 iframeLoadingElem.style.display = "flex"
 
-                iframe.onload = () => {
+                iframe.current!.onload = () => {
                   startTimer()
                   iframeLoadingElem.style.display = "none"
-                  iframeDoc = iframe.contentDocument!
+                  iframeDoc = iframe.current!.contentDocument!
                   play = true
                 }
               }
@@ -133,6 +133,7 @@ export const ReplayBody: FC<{
               replayBtn.style.display = "flex"
               replayStop.style.display = "none"
               setAllowChange(true)
+              removeFollowerOnClick()
             }
           }, delay)
         }
@@ -146,13 +147,16 @@ export const ReplayBody: FC<{
           replayBtn.style.display = "flex"
           replayStop.style.display = "none"
           setAllowChange(true)
+          removeFollowerOnClick()
         }
       }
 
-      iframe.src = window.location.origin
-      iframe.onload = () => {
-        iframeDoc = iframe.contentDocument!
+      iframe.current!.src = window.location.origin
+      iframe.current!.onload = () => {
+        iframeDoc = iframe.current!.contentDocument!
         iframeLoadingElem.style.display = "none"
+
+        removeFollowerOnClick()
 
         // TIMELINE NODES
         timelineNodes = document.getElementsByClassName("svyr-tl-node")
@@ -164,13 +168,17 @@ export const ReplayBody: FC<{
               replayStop.style.display = "none"
               dataIndex = index
 
-              if (iframe.src !== telemetry.data[dataIndex].url) {
-                iframe.src = telemetry.data[dataIndex].url!
+              if (
+                iframe.current!.contentWindow!.location.href !==
+                telemetry.data[dataIndex].url
+              ) {
+                iframe.current!.src = telemetry.data[dataIndex].url!
                 iframeLoadingElem.style.display = "flex"
 
-                iframe.onload = () => {
+                iframe.current!.onload = () => {
                   iframeLoadingElem.style.display = "none"
-                  iframeDoc = iframe.contentDocument!
+                  iframeDoc = iframe.current!.contentDocument!
+                  removeFollowerOnClick()
                   setTimeout(() => moveFollower(false), 800)
                 }
               } else {
@@ -186,8 +194,6 @@ export const ReplayBody: FC<{
       return () => {
         replayBtn.onclick = null
         replayStop.onclick = null
-        iframe.onload = null
-        iframeDoc.onclick = null
       }
     }
   }, [telemetry])
@@ -238,7 +244,11 @@ export const ReplayBody: FC<{
             </div>
 
             <div className="svyr-relative svyr-mt-8 svyr-grid svyr-h-full svyr-w-full svyr-border svyr-border-theme-surface">
-              <iframe id="svyr-website" className="svyr-h-full svyr-w-full" />
+              <iframe
+                ref={iframe}
+                id="svyr-website"
+                className="svyr-h-full svyr-w-full"
+              />
               <div
                 id="svyr-iframe-loading"
                 className="svyr-absolute svyr-right-5 svyr-bottom-5 svyr-flex svyr-flex-row svyr-items-center">
