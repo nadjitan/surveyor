@@ -94,29 +94,29 @@ const Surveyor: FC<
   }
 
   useEffect(() => {
-    setUrl(window.location.href)
-    // When page load always check if there is a telemetry in sessionStorage
-    if (sessionStorage.getItem("srvyr") === null) {
-      sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
-    } else {
-      telemetry = JSON.parse(sessionStorage.getItem("srvyr")!)
-    }
-    // Make hashed classes for every element
-    elems = Array.from(
-      document.body.querySelectorAll("*:not(script):not(style)")
-    )
-    elems.forEach((elem, index) => {
-      const newClass = `srvyr-${hashids.encode(index)}`
-      if (index === 0) {
-        // Avoid repetition of class name
-        if (!document.body.classList.contains(newClass))
-          document.body.classList.add(newClass)
-      } else {
-        if (!elem.classList.contains(newClass)) elem.classList.add(newClass)
-      }
-    })
-
     if (logClicks) {
+      setUrl(window.location.href)
+      // When page load always check if there is a telemetry in sessionStorage
+      if (sessionStorage.getItem("srvyr") === null) {
+        sessionStorage.setItem("srvyr", JSON.stringify(telemetry))
+      } else {
+        telemetry = JSON.parse(sessionStorage.getItem("srvyr")!)
+      }
+      // Make hashed classes for every element
+      elems = Array.from(
+        document.body.querySelectorAll("*:not(script):not(style)")
+      )
+      elems.forEach((elem, index) => {
+        const newClass = `srvyr-${hashids.encode(index)}`
+        if (index === 0) {
+          // Avoid repetition of class name
+          if (!document.body.classList.contains(newClass))
+            document.body.classList.add(newClass)
+        } else {
+          if (!elem.classList.contains(newClass)) elem.classList.add(newClass)
+        }
+      })
+
       document.body.onclick = e => {
         if (!dataFound) {
           e.stopPropagation()
