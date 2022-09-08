@@ -52,6 +52,7 @@ const Debug: FC = () => {
 
   return (
     <div
+      className="srvyr-app"
       ref={debugDiv}
       style={{
         position: "fixed",
@@ -72,12 +73,19 @@ const Debug: FC = () => {
         zIndex: 100,
         transition: "all 0.01s linear, opacity 0.25s ease",
       }}>
-      <div>
-        <div style={{ marginBottom: "8px" }}>
-          tag: <span style={{ fontStyle: "italic" }}>{tagName}</span>
+      <div className="srvyr-app">
+        <div className="srvyr-app" style={{ marginBottom: "8px" }}>
+          tag:{" "}
+          <span className="srvyr-app" style={{ fontStyle: "italic" }}>
+            {tagName}
+          </span>
         </div>
-        <div>
-          class: <span style={{ fontWeight: "bold" }}>{targetClass}</span>
+
+        <div className="srvyr-app">
+          class:{" "}
+          <span className="srvyr-app" style={{ fontWeight: "bold" }}>
+            {targetClass}
+          </span>
         </div>
       </div>
     </div>

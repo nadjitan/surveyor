@@ -70,7 +70,7 @@ export function stylesToString(cssStyles: Partial<CSSStyleDeclaration>) {
 }
 
 export const divFollower = stringToHTML(`
-<div id="svyr-follower" 
+<div id="svyr-follower" class="srvyr-app"
   style="${stylesToString({
     display: "none",
     position: "absolute",

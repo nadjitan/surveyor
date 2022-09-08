@@ -26,10 +26,10 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
     {
       title: "Login",
       data: [
-        { url: "http://localhost:3000/", class: "srvyr-zpjNVjDa" },
-        { url: "http://localhost:3000/login", class: "srvyr-ZpPZbdPx" },
-        { url: "http://localhost:3000/login", class: "srvyr-kq3Vd6jR" },
-        { url: "http://localhost:3000/login", class: "srvyr-JvPMMKP4" },
+        { url: "http://localhost:3000/", class: "srvyr-g8j40j2v" },
+        { url: "http://localhost:3000/login", class: "srvyr-4qP06VXZ" },
+        { url: "http://localhost:3000/login", class: "srvyr-MdP10w3l" },
+        { url: "http://localhost:3000/login", class: "srvyr-AYj8YOXp" },
       ],
     },
     {
@@ -37,26 +37,26 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
       data: [
         {
           url: "https://capstone-demo-site.vercel.app/",
-          class: "srvyr-zpjNVjDa",
+          class: "srvyr-g8j40j2v",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-ZpPZbdPx",
+          class: "srvyr-4qP06VXZ",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-kq3Vd6jR",
+          class: "srvyr-MdP10w3l",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-JvPMMKP4",
+          class: "srvyr-AYj8YOXp",
         },
       ],
     },
     {
       title: "Some Other Path",
       data: [
-        { url: "http://localhost:3000/", class: "srvyr-gaPlpPVK" },
+        { url: "http://localhost:3000/", class: "srvyr-g8j40j2v" },
         { url: "http://localhost:3000/signup", class: "srvyr-YnXm23N7" },
       ],
     },
