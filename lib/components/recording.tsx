@@ -27,9 +27,12 @@ const RecordingBody: FC<{
   const [showList, setShowList] = useState(false)
 
   const iframe = useRef<HTMLIFrameElement>(null)
-  const [recording, setRecording] = useState(true)
+  const recording = useRef(true)
 
   const currUrl = useRef("")
+  function updateCurrUrl() {
+    currUrl.current = iframe.current!.contentWindow!.location.href
+  }
 
   function removeFollower() {
     const box = iframe.current!.contentDocument!.getElementById("svyr-follower")
@@ -39,24 +42,18 @@ const RecordingBody: FC<{
   function recordEl(e: MouseEvent) {
     const elem = e.target! as HTMLElement
 
-    // Update current url of <iframe />
-    // Required because SPA apps does not change the src of <iframe />
-    // if (elem.tagName === "A" && elem.getAttribute("href")?.startsWith("/")) {
-    //   iframe.current!.src = window.location.origin + elem.getAttribute("href")
-    //   return
-    // } else if (elem.tagName === "A") {
-    //   iframe.current!.src = elem.getAttribute("href")!
-    //   return
-    // }
-
     const targetClass =
       elem.className &&
       Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
 
     if (targetClass) {
       setNewPath(prev => {
-        // AVOID SEQUENCES OF SAME CLASSES
-        if (prev.data.at(-1)?.class !== targetClass) {
+        const prevData = prev.data.at(-1)
+        // AVOID REPEATING SEQUENCE
+        if (
+          prevData!.class !== targetClass ||
+          prevData!.url !== currUrl.current
+        ) {
           return {
             title: prev.title,
             data: [...prev.data, { url: currUrl.current, class: targetClass }],
@@ -66,11 +63,23 @@ const RecordingBody: FC<{
     }
   }
 
+  function changeDocListeners(rec: boolean) {
+    if (rec)
+      iframe.current!.contentDocument!.onclick = e => {
+        removeFollower()
+        recordEl(e)
+        updateCurrUrl()
+      }
+    else
+      iframe.current!.contentDocument!.onclick = _ => {
+        removeFollower()
+        updateCurrUrl()
+      }
+  }
+
   function setupListeners() {
-    iframe.current!.contentDocument!.onclick = e => {
-      removeFollower()
-      recordEl(e)
-    }
+    updateCurrUrl()
+    changeDocListeners(recording.current)
 
     const recordingStatus = document.getElementById(
       "recording-status"
@@ -93,17 +102,18 @@ const RecordingBody: FC<{
       recordingStatus.style.display = "none"
     }
 
-    if (recording) showBtnPause()
-    else showBtnRecord()
+    showBtnPause()
 
     btnRecord.onclick = () => {
       showBtnPause()
-      setRecording(true)
+      recording.current = true
+      changeDocListeners(recording.current)
     }
 
     btnPause.onclick = () => {
       showBtnRecord()
-      setRecording(false)
+      recording.current = false
+      changeDocListeners(recording.current)
     }
   }
 
@@ -119,7 +129,6 @@ const RecordingBody: FC<{
       // }
 
       iframe.current.onload = () => {
-        currUrl.current = iframe.current!.contentWindow!.location.href
         setupListeners()
         // const btnExit = document.getElementById(
         //   "btn-exit"
@@ -127,20 +136,6 @@ const RecordingBody: FC<{
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (recording) {
-      iframe.current!.contentDocument!.onclick = e => {
-        removeFollower()
-        recordEl(e)
-        currUrl.current = iframe.current!.contentWindow!.location.href
-      }
-    } else
-      iframe.current!.contentDocument!.onclick = _ => {
-        removeFollower()
-        currUrl.current = iframe.current!.contentWindow!.location.href
-      }
-  }, [recording])
 
   return (
     <div className="svyr-grid svyr-place-items-center">
@@ -248,16 +243,7 @@ const RecordingBody: FC<{
                               setTimeout(() => {
                                 moveBox()
 
-                                if (recording) {
-                                  iframe.current!.contentDocument!.onclick =
-                                    e => {
-                                      removeFollower()
-                                      recordEl(e)
-                                    }
-                                } else {
-                                  iframe.current!.contentDocument!.onclick =
-                                    () => removeFollower()
-                                }
+                                setupListeners()
                               }, 800)
                             }
                           } else moveBox()
@@ -313,7 +299,8 @@ const RecordingBody: FC<{
                   "bottom",
                   "center",
                   "bottom",
-                  { x: 0, y: "80px" }
+                  { x: 0, y: "80px" },
+                  "rgb(187,33,36)"
                 )
               } else if (newPath.title !== "" && newPath.data.length === 0) {
                 showToast(
@@ -322,7 +309,8 @@ const RecordingBody: FC<{
                   "bottom",
                   "center",
                   "bottom",
-                  { x: 0, y: "80px" }
+                  { x: 0, y: "80px" },
+                  "rgb(187,33,36)"
                 )
               } else if (
                 newPath.title !== "" &&
