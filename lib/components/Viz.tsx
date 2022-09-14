@@ -329,7 +329,10 @@ export const VizBody: FC<{
 
       const dcTextColored = document.getElementById("dc-colored-text")
       const dcText = document.getElementById("dc-text")
-      dcTextColored!.textContent = `${Math.round(dnChartText.percent)}% users`
+      dcTextColored!.textContent =
+        dnChartText.percent > 1
+          ? `${Math.round(dnChartText.percent)}% users`
+          : ""
       dcText!.textContent = dnChartText.text
 
       return () => {
@@ -476,33 +479,35 @@ export const VizBody: FC<{
                   </h5>
 
                   <div className="svyr-h-5/6 svyr-w-full svyr-overflow-y-auto svyr-overflow-x-hidden">
-                    {userScores.map((up, i) => (
-                      <div
-                        key={i}
-                        className={clientStyle.pathDataContainer}
-                        onClick={() => {
-                          let key = 0
-                          mappedTelemetries?.forEach(
-                            (v, k) => v.id === up.telemetry.id && (key = k)
-                          )
+                    {userScores
+                      .sort((a, b) => (a.score > b.score ? -1 : 1))
+                      .map((up, i) => (
+                        <div
+                          key={i}
+                          className={clientStyle.pathDataContainer}
+                          onClick={() => {
+                            let key = 0
+                            mappedTelemetries?.forEach(
+                              (v, k) => v.id === up.telemetry.id && (key = k)
+                            )
 
-                          setTelemetryIndex(key)
-                          setPage("replay")
-                        }}>
-                        <h5>{up.score}%</h5>
+                            setTelemetryIndex(key)
+                            setPage("replay")
+                          }}>
+                          <h5>{up.score}%</h5>
 
-                        {up.telemetry.data.map((d, i) => {
-                          const page = d.url.split("/").pop()
-                            ? d.url.split("/").pop()
-                            : "/ "
-                          return i === 0 ? (
-                            <p key={i}>{page}</p>
-                          ) : (
-                            <p key={i}>&nbsp; &gt; {page} </p>
-                          )
-                        })}
-                      </div>
-                    ))}
+                          {up.telemetry.data.map((d, i) => {
+                            const page = d.url.split("/").pop()
+                              ? d.url.split("/").pop()
+                              : "/ "
+                            return i === 0 ? (
+                              <p key={i}>{page}</p>
+                            ) : (
+                              <p key={i}>&nbsp; &gt; {page} </p>
+                            )
+                          })}
+                        </div>
+                      ))}
                   </div>
                 </>
               )}

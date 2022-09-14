@@ -27,7 +27,8 @@ export function showToast(
   borderPlace: "top" | "right" | "bottom" | "left" = "bottom",
   pos: "left" | "center" | "right" = "right",
   grav: "top" | "bottom" = "top",
-  offset: Toastify.Offset = { x: 0, y: 0 }
+  offset: Toastify.Offset = { x: 0, y: 0 },
+  color: string = "rgb(75, 181, 67)"
 ) {
   Toastify({
     text: msg,
@@ -41,7 +42,7 @@ export function showToast(
       width: "max-content",
       display: "flex",
       borderRadius: "0.5rem",
-      [`border-${borderPlace}`]: `4px solid ${PRIMARY}`,
+      [`border-${borderPlace}`]: `8px solid ${color}`,
       boxSizing: "border-box",
     },
     close: true,

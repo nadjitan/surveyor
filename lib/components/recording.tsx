@@ -29,12 +29,14 @@ const RecordingBody: FC<{
   const iframe = useRef<HTMLIFrameElement>(null)
   const [recording, setRecording] = useState(true)
 
+  const currUrl = useRef("")
+
   function removeFollower() {
     const box = iframe.current!.contentDocument!.getElementById("svyr-follower")
     if (box) box.remove()
   }
 
-  function recordElems(e: MouseEvent) {
+  function recordEl(e: MouseEvent) {
     const elem = e.target! as HTMLElement
 
     // Update current url of <iframe />
@@ -57,13 +59,7 @@ const RecordingBody: FC<{
         if (prev.data.at(-1)?.class !== targetClass) {
           return {
             title: prev.title,
-            data: [
-              ...prev.data,
-              {
-                url: iframe.current!.contentWindow!.location.href,
-                class: targetClass,
-              },
-            ],
+            data: [...prev.data, { url: currUrl.current, class: targetClass }],
           }
         } else return prev
       })
@@ -73,7 +69,7 @@ const RecordingBody: FC<{
   function setupListeners() {
     iframe.current!.contentDocument!.onclick = e => {
       removeFollower()
-      recordElems(e)
+      recordEl(e)
     }
 
     const recordingStatus = document.getElementById(
@@ -123,6 +119,7 @@ const RecordingBody: FC<{
       // }
 
       iframe.current.onload = () => {
+        currUrl.current = iframe.current!.contentWindow!.location.href
         setupListeners()
         // const btnExit = document.getElementById(
         //   "btn-exit"
@@ -135,9 +132,14 @@ const RecordingBody: FC<{
     if (recording) {
       iframe.current!.contentDocument!.onclick = e => {
         removeFollower()
-        recordElems(e)
+        recordEl(e)
+        currUrl.current = iframe.current!.contentWindow!.location.href
       }
-    } else iframe.current!.contentDocument!.onclick = e => removeFollower()
+    } else
+      iframe.current!.contentDocument!.onclick = _ => {
+        removeFollower()
+        currUrl.current = iframe.current!.contentWindow!.location.href
+      }
   }, [recording])
 
   return (
@@ -250,7 +252,7 @@ const RecordingBody: FC<{
                                   iframe.current!.contentDocument!.onclick =
                                     e => {
                                       removeFollower()
-                                      recordElems(e)
+                                      recordEl(e)
                                     }
                                 } else {
                                   iframe.current!.contentDocument!.onclick =
