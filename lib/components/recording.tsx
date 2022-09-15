@@ -30,9 +30,17 @@ const RecordingBody: FC<{
   const recording = useRef(true)
 
   const currUrl = useRef("")
-  function updateCurrUrl() {
-    currUrl.current = iframe.current!.contentWindow!.location.href
+  function updateCurrUrl(el?: HTMLElement) {
+    if (el) {
+      if (el.tagName === "A" && el.getAttribute("href")?.startsWith("/")) {
+        currUrl.current = window.location.origin + el.getAttribute("href")
+      } else if (el.tagName === "A") currUrl.current = el.getAttribute("href")!
+    } else {
+      currUrl.current = iframe.current!.contentWindow!.location.href
+    }
   }
+
+  useEffect(() => console.table(newPath.data), [newPath])
 
   function removeFollower() {
     const box = iframe.current!.contentDocument!.getElementById("svyr-follower")
@@ -47,18 +55,21 @@ const RecordingBody: FC<{
       Array.from(elem.classList).find(c => c.startsWith("srvyr-"))
 
     if (targetClass) {
+      const data = { url: currUrl.current, class: targetClass }
+
       setNewPath(prev => {
-        const prevData = prev.data.at(-1)
+        const prevData = prev.data.slice(-1)[0]
+
         // AVOID REPEATING SEQUENCE
-        if (
-          prevData!.class !== targetClass ||
-          prevData!.url !== currUrl.current
-        ) {
-          return {
-            title: prev.title,
-            data: [...prev.data, { url: currUrl.current, class: targetClass }],
+        if (prevData) {
+          if (prevData.class !== data.class || prevData.url !== data.url) {
+            prev.data.push(data)
           }
-        } else return prev
+        } else {
+          prev.data.push(data)
+        }
+
+        return { ...prev }
       })
     }
   }
@@ -68,16 +79,17 @@ const RecordingBody: FC<{
       iframe.current!.contentDocument!.onclick = e => {
         removeFollower()
         recordEl(e)
-        updateCurrUrl()
+        updateCurrUrl(e.target as HTMLElement)
       }
     else
-      iframe.current!.contentDocument!.onclick = _ => {
+      iframe.current!.contentDocument!.onclick = e => {
         removeFollower()
-        updateCurrUrl()
+        updateCurrUrl(e.target as HTMLElement)
       }
   }
 
   function setupListeners() {
+    // TODO: Find out why it does not change on first page change
     updateCurrUrl()
     changeDocListeners(recording.current)
 
@@ -102,7 +114,8 @@ const RecordingBody: FC<{
       recordingStatus.style.display = "none"
     }
 
-    showBtnPause()
+    if (recording.current === true) showBtnPause()
+    else showBtnRecord()
 
     btnRecord.onclick = () => {
       showBtnPause()
@@ -119,21 +132,13 @@ const RecordingBody: FC<{
 
   useEffect(() => {
     if (iframe.current) {
-      // const iframe = document.getElementById(
-      //   "svyr-website-rec"
-      // ) as HTMLIFrameElement
       iframe.current.src = window.location.origin
 
       // if (localStorage.hasOwnProperty("srvyr-paths")) {
       //   paths = JSON.parse(localStorage.getItem("srvyr-paths")!)
       // }
 
-      iframe.current.onload = () => {
-        setupListeners()
-        // const btnExit = document.getElementById(
-        //   "btn-exit"
-        // ) as HTMLButtonElement
-      }
+      iframe.current.onload = () => setupListeners()
     }
   }, [])
 
@@ -227,9 +232,8 @@ const RecordingBody: FC<{
                               follower.style.display = "grid"
                               follower.style.pointerEvents = "none"
 
-                              // if (elemToFollow.tagName !== "A") {
+                              // if (elemToFollow.tagName !== "A")
                               //   elemToFollow.click()
-                              // }
                             }
                           }
 
