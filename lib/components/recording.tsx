@@ -35,9 +35,7 @@ const RecordingBody: FC<{
       if (el.tagName === "A" && el.getAttribute("href")?.startsWith("/")) {
         currUrl.current = window.location.origin + el.getAttribute("href")
       } else if (el.tagName === "A") currUrl.current = el.getAttribute("href")!
-    } else {
-      currUrl.current = iframe.current!.contentWindow!.location.href
-    }
+    } else currUrl.current = iframe.current!.contentWindow!.location.href
   }
 
   useEffect(() => console.table(newPath.data), [newPath])
@@ -89,7 +87,6 @@ const RecordingBody: FC<{
   }
 
   function setupListeners() {
-    // TODO: Find out why it does not change on first page change
     updateCurrUrl()
     changeDocListeners(recording.current)
 
