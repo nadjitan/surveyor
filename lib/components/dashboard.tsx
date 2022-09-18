@@ -26,38 +26,76 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
     {
       title: "Login",
       data: [
-        { url: "http://localhost:3000/", class: "srvyr-g8j40j2v" },
-        { url: "http://localhost:3000/login", class: "srvyr-4qP06VXZ" },
-        { url: "http://localhost:3000/login", class: "srvyr-MdP10w3l" },
-        { url: "http://localhost:3000/login", class: "srvyr-AYj8YOXp" },
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-vNXrnX0q",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-ZqXOoqXA",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-KLjWqG32",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-2W3k7K3O",
+        },
       ],
     },
     {
-      title: "Login 2",
+      title: "Register",
       data: [
         {
           url: "https://capstone-demo-site.vercel.app/",
-          class: "srvyr-g8j40j2v",
+          class: "srvyr-vNXrnX0q",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-4qP06VXZ",
+          class: "srvyr-ZpPZbdPx",
         },
         {
-          url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-MdP10w3l",
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-ZqXOoqXA",
         },
         {
-          url: "https://capstone-demo-site.vercel.app/login",
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-KLjWqG32",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
           class: "srvyr-AYj8YOXp",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-wB3wazjq",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-qVXLL8Xz",
         },
       ],
     },
     {
-      title: "Some Other Path",
+      title: "Forgot password",
       data: [
-        { url: "http://localhost:3000/", class: "srvyr-g8j40j2v" },
-        { url: "http://localhost:3000/signup", class: "srvyr-YnXm23N7" },
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-vNXrnX0q",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-wB3wazjq",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-ZqXOoqXA",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-8V36GrPY",
+        },
       ],
     },
   ])
