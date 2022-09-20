@@ -178,7 +178,9 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
           <div className="slider svyr-pt-5">
             <div className="slides">
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <h3 className="svyr-text-2xl">Welcome</h3>
+                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                  Welcome
+                </span>
                 <br />
                 <VWelcome />
                 <span className="svyr-text-base svyr-text-theme-on-surface">
@@ -191,7 +193,9 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <h3 className="svyr-text-2xl">How does it work?</h3>
+                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                  How does it work?
+                </span>
                 <br />
                 <Vhdiw />
                 <span className="svyr-text-base svyr-text-theme-on-surface">
@@ -205,7 +209,9 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <h3 className="svyr-text-2xl">Why record?</h3>
+                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                  Why record?
+                </span>
                 <br />
                 <VWhyRecord />
                 <span className="svyr-text-base svyr-text-theme-on-surface">
@@ -219,7 +225,9 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <h3 className="svyr-text-2xl">Great! Where do I start?</h3>
+                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                  Great! Where do I start?
+                </span>
                 <br />
                 <VGreat />
                 <span className="svyr-text-base svyr-text-theme-on-surface">
