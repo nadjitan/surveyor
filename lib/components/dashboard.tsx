@@ -181,10 +181,10 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
                 <h3 className="svyr-text-2xl">Welcome</h3>
                 <br />
                 <VWelcome />
-                <h4>
+                <span className="svyr-text-base svyr-text-theme-on-surface">
                   This is a JavaScript Package that aims to improve a website's
                   user navigability.
-                </h4>
+                </span>
                 <p className="svyr-text-sm svyr-text-theme-grey">
                   This package should be inserted to an existing website.
                 </p>
@@ -194,10 +194,10 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
                 <h3 className="svyr-text-2xl">How does it work?</h3>
                 <br />
                 <Vhdiw />
-                <h4>
+                <span className="svyr-text-base svyr-text-theme-on-surface">
                   Use this package to record the "ideal" way to navigate to a
                   page.
-                </h4>
+                </span>
                 <p className="svyr-text-sm svyr-text-theme-grey">
                   Then, the website's testers will be tested to determine if
                   they can navigate to the page well.
@@ -208,10 +208,10 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
                 <h3 className="svyr-text-2xl">Why record?</h3>
                 <br />
                 <VWhyRecord />
-                <h4>
+                <span className="svyr-text-base svyr-text-theme-on-surface">
                   The statistics of the website testers' performance will be
                   visualized.
-                </h4>
+                </span>
                 <p className="svyr-text-sm svyr-text-theme-grey">
                   A system analyst can use this visualized data to determine if
                   the website's UI is easily navigable or not.
@@ -222,10 +222,10 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
                 <h3 className="svyr-text-2xl">Great! Where do I start?</h3>
                 <br />
                 <VGreat />
-                <h4>
+                <span className="svyr-text-base svyr-text-theme-on-surface">
                   Get started with the "Record a new path" found in the "Viz"
                   page.
-                </h4>
+                </span>
                 <p className="svyr-text-sm svyr-text-theme-grey">
                   This is where you record the "ideal" way to navigate to a
                   website's page.

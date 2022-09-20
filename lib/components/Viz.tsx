@@ -352,10 +352,10 @@ export const VizBody: FC<{
           id="srvyr-no-data"
           className="svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
           <div className="svyr-grid svyr-h-[480px] svyr-w-[400px] svyr-flex-col svyr-place-items-center svyr-items-center svyr-rounded-3xl svyr-bg-theme-surface svyr-p-8 svyr-text-center svyr-text-theme-on-surface">
-            <h3 className="svyr-text-2xl">
+            <span className="svyr-text-xl svyr-text-theme-on-surface">
               There needs to be data of website tester performance for this path
               to visualize the statistics off of.
-            </h3>
+            </span>
 
             <p className="svyr-text-base svyr-text-theme-grey">
               However, for the purposes of this package demo, the recording
