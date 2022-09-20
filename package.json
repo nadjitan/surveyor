@@ -1,6 +1,6 @@
 {
   "name": "@nadjitan/surveyor",
-  "version": "1.3.6",
+  "version": "1.3.13",
   "private": false,
   "description": "A library for a capstone project",
   "main": "dist/surveyor.umd.js",

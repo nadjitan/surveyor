@@ -76,14 +76,14 @@ const Debug: FC = () => {
       <div className="srvyr-app">
         <div className="srvyr-app" style={{ marginBottom: "8px" }}>
           tag:{" "}
-          <span className="srvyr-app" style={{ fontStyle: "italic" }}>
+          <span className="svyr-span srvyr-app" style={{ fontStyle: "italic" }}>
             {tagName}
           </span>
         </div>
 
         <div className="srvyr-app">
           class:{" "}
-          <span className="srvyr-app" style={{ fontWeight: "bold" }}>
+          <span className="svyr-span srvyr-app" style={{ fontWeight: "bold" }}>
             {targetClass}
           </span>
         </div>

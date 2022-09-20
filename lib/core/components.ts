@@ -21,12 +21,12 @@ export const dashboard = (child: string) =>
   <nav class="left-nav">
     <div class="left-item" id="viz-page">
       ${TempIcon({ svgStyles: { fill: GREY, width: "32px", height: "32px" } })}
-      <span>Data</span>
+      <span class="svyr-span">Data</span>
     </div>
 
     <div class="left-item" id="replay-page">
       ${TempIcon({ svgStyles: { fill: GREY, width: "32px", height: "32px" } })}
-      <span>Replay</span>
+      <span class="svyr-span">Replay</span>
     </div>
   </nav>
   ${child}
@@ -62,7 +62,7 @@ export const viz = (
     aria-modal="true">
 
     <div>
-      <h4>Are you sure you want to delete?</h4>
+      <h4 class="svyr-h4">Are you sure you want to delete?</h4>
 
       <div>
         <button class"srvyr-button">DELETE</button>
@@ -80,7 +80,7 @@ export const viz = (
       <div class="cc-header-l">
         <div></div>
 
-        <span id="title-input">${selectedRec.title}</span>
+        <span class="svyr-span" id="title-input">${selectedRec.title}</span>
 
         ${SaveIcon({
           id: "btn-save-selected-rec",
@@ -108,7 +108,7 @@ export const viz = (
           spanStyles: { width: "28px", height: "full" },
           svgStyles: { fill: ON_SURFACE, width: "20px", height: "20px" },
         })}
-        <span>Play a Recording</span>
+        <span class="svyr-span">Play a Recording</span>
       </button>
     </div>
     
@@ -142,7 +142,7 @@ export const viz = (
       <p>Recorded Paths</p>
 
       <div class="search-container">
-        <input type="text" placeholder="Search a pathing..."/>
+        <input class="svyr-input" type="text" placeholder="Search a pathing..."/>
         ${SearchIcon({
           spanStyles: { width: "48px", height: "full" },
           svgStyles: {
@@ -158,7 +158,7 @@ export const viz = (
     ${
       recordedPaths
         ? recPathsDiv.innerHTML
-        : '<span class="empty-prompt">Record a path to get started!</span>'
+        : '<span class="svyr-span empty-prompt">Record a path to get started!</span>'
     }
     </div>
 
@@ -169,7 +169,7 @@ export const viz = (
           spanStyles: { width: "32px", height: "full" },
           svgStyles: { fill: ON_SURFACE, width: "20px", height: "20px" },
         })}
-        <span>Record a new path</span>
+        <span class="svyr-span">Record a new path</span>
       </button>
     </div>
   </nav>
@@ -206,7 +206,7 @@ export const replay = (
     <div class="replay-header">
       <div class="replay-header-title">
         <div></div>
-        <h4>${mappedTelemetries.get(telemetryIndex)?.id}</h4>
+        <h4 class="svyr-h4">${mappedTelemetries.get(telemetryIndex)?.id}</h4>
       </div>
 
       <button class="srvyr-button" id="btn-replay">
@@ -219,7 +219,7 @@ export const replay = (
             height: "20px",
           },
         })}
-        <span>Play</span>
+        <span class="svyr-span">Play</span>
       </button>
 
       <button class="srvyr-button" id="btn-stop">
@@ -232,7 +232,7 @@ export const replay = (
             height: "20px",
           },
         })}
-        <span>Stop</span>
+        <span class="svyr-span">Stop</span>
       </button>
     </div>
     
@@ -252,7 +252,7 @@ export const replay = (
       <p>Recordings</p>
 
       <div class="search-container">
-        <input type="text" placeholder="Search by ID..."/>
+        <input class="svyr-input" type="text" placeholder="Search by ID..."/>
         ${SearchIcon({
           spanStyles: { width: "48px", height: "full" },
           svgStyles: {
@@ -283,10 +283,11 @@ export const recording = () =>
   <div>
     <div id="recording-status">
       <div></div>
-      <h4>Recording...</h4>
+      <h4 class="svyr-h4">Recording...</h4>
     </div>
 
     <input
+      class="svyr-input"
       id="input-recording-title"
       type="text"
       placeholder="Enter name of path..."
@@ -304,7 +305,7 @@ export const recording = () =>
             height: "20px",
           },
         })}
-        <span>Pause</span>
+        <span class="svyr-span">Pause</span>
       </button>
 
       <button class="srvyr-button" id="btn-record-play">
@@ -318,7 +319,7 @@ export const recording = () =>
             height: "20px",
           },
         })}
-        <span>Record</span>
+        <span class="svyr-span">Record</span>
       </button>
 
       <button class="srvyr-button" id="btn-save">
@@ -332,7 +333,7 @@ export const recording = () =>
             height: "20px",
           },
         })}
-        <span>Save</span>
+        <span class="svyr-span">Save</span>
       </button>
 
       <div id="btn-record-exit">${ExitIcon({

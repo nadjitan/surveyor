@@ -155,11 +155,11 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
     <>
       <dialog
         id="srvyr-help"
-        className="svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
+        className="svyr-dialog svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
         <div className="svyr-relative svyr-flex svyr-h-[540px] svyr-w-[400px] svyr-flex-col svyr-items-center svyr-rounded-3xl svyr-bg-theme-surface svyr-p-8 svyr-text-theme-on-surface">
           <XCircleIcon
-            svgClass="svyr-stroke-theme-grey"
-            spanClass="svyr-w-6 svyr-h-6 svyr-absolute svyr-right-4 svyr-top-4"
+            svgClass="svyr-svg svyr-stroke-theme-grey"
+            spanClass="svyr-span svyr-w-6 svyr-h-6 svyr-absolute svyr-right-4 svyr-top-4"
             onClick={() => {
               const dialog = document.getElementById(
                 "srvyr-help"
@@ -172,12 +172,12 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
           <div className="slider svyr-pt-5">
             <div className="slides">
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-xl svyr-text-theme-on-surface">
                   Welcome
                 </span>
                 <br />
                 <VWelcome />
-                <span className="svyr-text-base svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-base svyr-text-theme-on-surface">
                   This is a JavaScript Package that aims to improve a website's
                   user navigability.
                 </span>
@@ -187,12 +187,12 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-xl svyr-text-theme-on-surface">
                   How does it work?
                 </span>
                 <br />
                 <Vhdiw />
-                <span className="svyr-text-base svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-base svyr-text-theme-on-surface">
                   Use this package to record the "ideal" way to navigate to a
                   page.
                 </span>
@@ -203,12 +203,12 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-xl svyr-text-theme-on-surface">
                   Why record?
                 </span>
                 <br />
                 <VWhyRecord />
-                <span className="svyr-text-base svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-base svyr-text-theme-on-surface">
                   The statistics of the website testers' performance will be
                   visualized.
                 </span>
@@ -219,12 +219,12 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               </div>
 
               <div className="slides-content svyr-gap-2 svyr-text-center">
-                <span className="svyr-text-xl svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-xl svyr-text-theme-on-surface">
                   Great! Where do I start?
                 </span>
                 <br />
                 <VGreat />
-                <span className="svyr-text-base svyr-text-theme-on-surface">
+                <span className="svyr-span svyr-text-base svyr-text-theme-on-surface">
                   Get started with the "Record a new path" found in the "Viz"
                   page.
                 </span>
@@ -264,7 +264,7 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
           <nav className={clientStyle.leftNav}>
             <div onClick={() => setPage("viz")} className={clientStyle.lItem}>
               <PieChartIcon
-                svgClass={`svyr-w-8 svyr-h-8 ${
+                svgClass={`svyr-svg svyr-w-8 svyr-h-8 ${
                   page !== "viz" && "svyr-stroke-theme-grey"
                 }`}
               />
@@ -279,7 +279,7 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
               onClick={() => setPage("replay")}
               className={clientStyle.lItem}>
               <FilmIcon
-                svgClass={`svyr-w-8 svyr-h-8 ${
+                svgClass={`svyr-svg svyr-w-8 svyr-h-8 ${
                   page !== "replay" && "svyr-stroke-theme-grey"
                 }`}
               />
@@ -292,7 +292,7 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
             </div>
             <div onClick={() => setPage("data")} className={clientStyle.lItem}>
               <DatabaseIcon
-                svgClass={`svyr-w-8 svyr-h-8 ${
+                svgClass={`svyr-svg svyr-w-8 svyr-h-8 ${
                   page !== "data" && "svyr-stroke-theme-grey"
                 }`}
               />
@@ -307,7 +307,7 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
             <div className={clientStyle.lItem}>
               <HelpIcon
                 title="Help"
-                svgClass="svyr-w-8 svyr-h-8 svyr-stroke-theme-grey"
+                svgClass="svyr-svg svyr-w-8 svyr-h-8 svyr-stroke-theme-grey"
                 onClick={() => {
                   const dialog = document.getElementById(
                     "srvyr-help"

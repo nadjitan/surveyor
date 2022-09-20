@@ -23,27 +23,27 @@
   background-color: rgb(0 128 0 / 0.5);
 }
 .svyr-node-selected {
-  background-color: var(--on-surface);
+  background-color: var(--svyr-on-surface);
 }
 
 :root {
-  --primary: rgb(92, 56, 255);
-  --primary-disabled: rgb(64, 41, 166);
-  --secondary: rgb(51, 171, 160);
-  --tertiary: rgb(108, 105, 120);
-  --background: rgb(19, 21, 23);
-  --surface: rgb(31, 35, 37);
-  --selected: rgba(255, 255, 255, 0.261);
-  --grey: rgb(108, 105, 120);
-  --container: rgb(38, 43, 46);
-  --error: rgb(176, 0, 32);
-  --on-primary: rgb(255, 255, 255);
-  --on-secondary: rgb(255, 255, 255);
-  --on-background: rgb(255, 255, 255);
-  --on-surface: rgb(255, 255, 255);
-  --on-error: rgb(255, 255, 255);
-  --shadow: rgba(0, 0, 0, 0.205);
-  --scrollbar-width: 8px;
+  --svyr-primary: rgb(92, 56, 255);
+  --svyr-primary-disabled: rgb(64, 41, 166);
+  --svyr-secondary: rgb(51, 171, 160);
+  --svyr-tertiary: rgb(108, 105, 120);
+  --svyr-background: rgb(19, 21, 23);
+  --svyr-surface: rgb(31, 35, 37);
+  --svyr-selected: rgba(255, 255, 255, 0.261);
+  --svyr-grey: rgb(108, 105, 120);
+  --svyr-container: rgb(38, 43, 46);
+  --svyr-error: rgb(176, 0, 32);
+  --svyr-on-primary: rgb(255, 255, 255);
+  --svyr-on-secondary: rgb(255, 255, 255);
+  --svyr-on-background: rgb(255, 255, 255);
+  --svyr-on-surface: rgb(255, 255, 255);
+  --svyr-on-error: rgb(255, 255, 255);
+  --svyr-shadow: rgba(0, 0, 0, 0.205);
+  --svyr-scrollbar-width: 8px;
 }
 
 /**
@@ -64,13 +64,13 @@ body {
   overflow: hidden;
   border-radius: 9999px;
   border-width: 2px;
-  border-color: var(--grey);
+  border-color: var(--svyr-grey);
 }
 .search-container:focus-within {
-  border-color: var(--on-surface);
+  border-color: var(--svyr-on-surface);
 }
 .search-container:focus-within > svg {
-  fill: var(--on-surface);
+  fill: var(--svyr-on-surface);
 }
 .search-container span {
   width: 3rem;
@@ -91,94 +91,96 @@ body {
   line-height: 1.25rem;
   min-width: max-content;
 }
-h1 {
+.svyr-h1 {
   font-size: 1.875rem;
   line-height: 2.25rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-h2 {
+.svyr-h2 {
   font-size: 1.5rem;
   line-height: 2rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-h3 {
+.svyr-h3 {
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 500;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-h4 {
+.svyr-h4 {
+  font-size: 1rem /* 16px */;
+  line-height: 1.5rem /* 24px */;
   font-weight: 500;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-p {
+.svyr-p {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-span {
+.svyr-span {
   display: flex;
   align-items: center;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-ul {
+.svyr-ul {
   list-style-position: inside;
   list-style-type: disc;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-svg {
+.svyr-svg {
   cursor: pointer;
 }
-input {
+.svyr-input {
   font-size: 0.875rem;
   line-height: 1.25rem;
   box-sizing: border-box;
   width: 100%;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
   padding: 1rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
-input::placeholder {
+.svyr-input::placeholder {
   font-family: "Inter Medium", sans-serif;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
-input:focus {
+.svyr-input:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
 @media (min-width: 768px) {
-  h1 {
+  .svyr-h1 {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
-  h2 {
+  .svyr-h2 {
     font-size: 1.5rem;
     line-height: 2rem;
   }
-  h3 {
+  .svyr-h3 {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
-  p {
+  .svyr-p {
     font-size: 1rem /* 16px */;
     line-height: 1.5rem /* 24px */;
   }
 }
 @media (min-width: 1024px) {
-  h1 {
+  .svyr-h1 {
     font-size: 3rem;
     line-height: 1;
   }
-  h2 {
+  .svyr-h2 {
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
-  h3 {
+  .svyr-h3 {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
-  p {
+  .svyr-p {
     font-size: 1.125rem;
     line-height: 1.75rem;
   }
@@ -199,7 +201,7 @@ input:focus {
   overflow: hidden;
 }
 
-dialog {
+.svyr-dialog {
   width: 100% !important;
   height: 100% !important;
 }
@@ -283,7 +285,7 @@ dialog {
   display: grid;
   min-height: 100vh;
   width: 100%;
-  color: var(--on-background);
+  color: var(--svyr-on-background);
   grid-template-areas:
     "lnav content rnav"
     "lnav content rnav";
@@ -295,7 +297,7 @@ dialog {
   max-height: 100vh;
   min-height: 100vh;
   flex-direction: column;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
 }
 .client-body .left-nav .left-item {
   margin-top: 1rem;
@@ -321,7 +323,7 @@ dialog {
   grid-auto-rows: auto;
   flex-direction: column;
   overflow-x: hidden;
-  background-color: var(--background);
+  background-color: var(--svyr-background);
   padding: 2rem;
 }
 .client-content .cc-header {
@@ -349,7 +351,7 @@ dialog {
   max-height: 100%;
   max-width: 100%;
   overflow-y: auto;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
   padding: 1.5rem;
 }
 
@@ -361,7 +363,7 @@ dialog {
   min-height: 100vh;
   flex-direction: column;
   overflow: hidden;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
   padding: 2rem;
 }
 .right-nav > div {
@@ -371,7 +373,7 @@ dialog {
   font-family: Inter SemiBold, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 .right-nav .rn-container {
   margin-top: 0.5rem;
@@ -388,7 +390,7 @@ dialog {
   font-family: Inter Medium, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 .right-nav .btn-record {
   margin-top: 1rem;
@@ -423,7 +425,7 @@ dialog {
   display: grid;
   place-items: center;
   border-radius: 0.5rem /* 8px */;
-  background-color: var(--background);
+  background-color: var(--svyr-background);
   gap: 1rem;
   padding: 2.5rem 3.2rem;
 }
@@ -437,14 +439,14 @@ dialog {
   font-family: Inter Semibold, sans-serif;
 }
 #viz-modal div > div button:first-child {
-  background-color: var(--background);
-  border-color: var(--primary);
+  background-color: var(--svyr-background);
+  border-color: var(--svyr-primary);
   border-width: 2px;
-  color: var(--primary);
+  color: var(--svyr-primary);
 }
 #viz-modal div > div button:first-child:hover {
-  background-color: var(--primary);
-  color: var(--on-background);
+  background-color: var(--svyr-primary);
+  color: var(--svyr-on-background);
 }
 .rec-path-item {
   margin-top: 0.5rem;
@@ -453,32 +455,32 @@ dialog {
   cursor: pointer;
   user-select: none;
   border-radius: 0.375rem;
-  background-color: var(--container);
+  background-color: var(--svyr-container);
   padding: 0.75rem;
 }
 .rec-path-item:hover {
-  background-color: var(--selected);
+  background-color: var(--svyr-selected);
 }
 .rec-path-item:hover > p {
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 .rec-path-selected-item {
-  background-color: var(--selected);
+  background-color: var(--svyr-selected);
 }
 .rec-path-item.rec-path-selected-item > p {
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 .rec-path-item > h5 {
   overflow-wrap: break-word;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-family: Inter Medium, sans-serif;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 .rec-path-item > p {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 #charts-container {
   display: flex;
@@ -501,17 +503,17 @@ dialog {
 }
 #charts-container #doughnut-chart > div {
   width: 100%;
-  background-color: var(--container);
+  background-color: var(--svyr-container);
   padding: 1rem;
   text-align: center;
   font-family: Inter Medium, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 #charts-container #doughnut-chart > div > span {
   display: inline;
-  color: var(--primary);
+  color: var(--svyr-primary);
 }
 .cc-body-bottom {
   margin-top: 1rem;
@@ -519,7 +521,7 @@ dialog {
   height: 20rem;
   width: 100%;
   overflow: hidden;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
   padding: 1.5rem;
 }
 .cc-body-bottom #rec-path-datas {
@@ -530,7 +532,7 @@ dialog {
 }
 .cc-body-bottom > h5 {
   font-family: Inter SemiBold, sans-serif;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 .cc-body-bottom .path-data-container {
   margin-top: 0.5rem;
@@ -540,21 +542,21 @@ dialog {
   align-items: center;
   overflow-y: auto;
   border-radius: 0.375rem;
-  background-color: var(--container);
+  background-color: var(--svyr-container);
   padding: 0.75rem;
 }
 .cc-body-bottom .path-data-container:hover {
-  background-color: var(--selected);
+  background-color: var(--svyr-selected);
 }
 .cc-body-bottom .path-data-container h5 {
   width: 4rem;
   font-family: Inter SemiBold, sans-serif;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 .cc-body-bottom .path-data-container p {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 /* #endregion */
 
@@ -578,7 +580,7 @@ dialog {
 .replay-header .replay-header-title > div {
   height: 24px;
   width: 0.25rem;
-  background-color: var(--primary);
+  background-color: var(--svyr-primary);
 }
 .replay-header .replay-header-title > h4 {
   margin-left: 0.75rem;
@@ -594,7 +596,7 @@ dialog {
   display: none;
   width: max-content;
   border-radius: 9999px;
-  background-color: var(--primary-disabled);
+  background-color: var(--svyr-primary-disabled);
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
@@ -602,7 +604,7 @@ dialog {
   font-family: Inter SemiBold, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 .replay-rn-item {
   margin-top: 0.5rem;
@@ -612,17 +614,17 @@ dialog {
   cursor: pointer;
   user-select: none;
   border-radius: 0.375rem;
-  background-color: var(--container);
+  background-color: var(--svyr-container);
   padding: 0.75rem;
 }
 .replay-rn-item-selected {
-  background-color: var(--selected);
+  background-color: var(--svyr-selected);
 }
 .replay-rn-item:hover {
-  background-color: var(--selected);
+  background-color: var(--svyr-selected);
 }
 .replay-rn-item:nth-child(2):hover {
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 .replay-timeline-container {
   position: relative;
@@ -632,12 +634,12 @@ dialog {
   width: 100%;
   min-width: 100%;
   overflow-y: hidden;
-  background-color: var(--surface);
+  background-color: var(--svyr-surface);
   padding: 1.5rem;
 }
 .replay-timeline-container > h5 {
   font-family: Inter SemiBold, sans-serif;
-  color: var(--grey);
+  color: var(--svyr-grey);
 }
 .replay-iframe-container {
   position: relative;
@@ -646,7 +648,7 @@ dialog {
   height: 100%;
   width: 100%;
   border-width: 1px;
-  border-color: var(--surface);
+  border-color: var(--svyr-surface);
 }
 #svyr-website {
   height: 100%;
@@ -671,7 +673,7 @@ dialog {
   flex-direction: row;
   align-items: center;
   overflow: visible;
-  background-color: var(--grey);
+  background-color: var(--svyr-grey);
 }
 #timeline .tl-node {
   margin-left: 1rem;
@@ -684,14 +686,14 @@ dialog {
   transform: rotate(45deg);
   cursor: pointer;
   border-width: 2px;
-  border-color: var(--grey);
-  background-color: var(--surface);
+  border-color: var(--svyr-grey);
+  background-color: var(--svyr-surface);
 }
 #timeline .tl-node > div:hover {
-  background-color: var(--on-surface);
+  background-color: var(--svyr-on-surface);
 }
 #timeline .tl-node .tl-node-selected {
-  background-color: var(--on-surface);
+  background-color: var(--svyr-on-surface);
 }
 /* #endregion */
 
@@ -721,7 +723,7 @@ dialog {
   gap: 2rem;
   border-top-left-radius: 46px;
   border-top-right-radius: 46px;
-  background-color: var(--background);
+  background-color: var(--svyr-background);
   padding-left: 2.5rem;
   padding-right: 2.5rem;
 }
@@ -730,14 +732,14 @@ dialog {
   width: 100%;
   border-radius: 9999px;
   border-width: 2px;
-  border-color: var(--surface);
+  border-color: var(--svyr-surface);
   background-color: transparent;
   padding: 1rem;
   padding-left: 1.25rem;
-  color: var(--on-surface);
+  color: var(--svyr-on-surface);
 }
 #input-recording-title:focus {
-  border-color: var(--on-surface);
+  border-color: var(--svyr-on-surface);
 }
 #recording-buttons {
   display: flex;
@@ -747,7 +749,7 @@ dialog {
 #btn-record-pause {
   width: max-content;
   border-radius: 9999px;
-  background-color: var(--primary-disabled);
+  background-color: var(--svyr-primary-disabled);
   font-size: 0.875rem;
   line-height: 1.25rem;
 }

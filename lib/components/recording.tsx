@@ -161,7 +161,7 @@ const RecordingBody: FC<{
           id="input-recording-title"
           type="text"
           placeholder="Enter name of path..."
-          className="svyr-box-border svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-surface svyr-bg-transparent svyr-p-4 svyr-pl-5 svyr-text-theme-on-surface focus:svyr-border-theme-on-surface"
+          className="svyr-input svyr-box-border svyr-w-full svyr-rounded-full svyr-border-[2px] svyr-border-theme-surface svyr-bg-transparent svyr-p-4 svyr-pl-5 svyr-text-theme-on-surface focus:svyr-border-theme-on-surface"
           onKeyUp={e =>
             setNewPath(prev => ({ ...prev, title: e.target.value }))
           }
@@ -172,20 +172,20 @@ const RecordingBody: FC<{
             id="btn-record-pause"
             className="srvyr-button svyr-w-max svyr-rounded-full svyr-bg-theme-primary-disabled svyr-text-sm">
             <PauseIcon
-              spanClass="svyr-w-7 svyr-h-full"
-              svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+              spanClass="svyr-span svyr-w-7 svyr-h-full"
+              svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
             />
-            <span className="svyr-h-full svyr-w-max">Pause</span>
+            <span className="svyr-span svyr-h-full svyr-w-max">Pause</span>
           </button>
 
           <button
             id="btn-record-play"
             className="srvyr-button svyr-hidden svyr-w-max svyr-rounded-full svyr-bg-theme-primary svyr-text-sm">
             <PlayIcon
-              spanClass="svyr-w-7 svyr-h-full"
-              svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+              spanClass="svyr-span svyr-w-7 svyr-h-full"
+              svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
             />
-            <span>Record</span>
+            <span className="svyr-span">Record</span>
           </button>
 
           <div className="svyr-grid svyr-place-items-center">
@@ -253,8 +253,8 @@ const RecordingBody: FC<{
                       </p>
 
                       <ExIcon
-                        spanClass="svyr-h-full svyr-p-2 svyr-rounded-r-md svyr-bg-black svyr-cursor-pointer svyr-bg-opacity-20"
-                        svgClass="svyr-fill-theme-on-surface svyr-h-4 svyr-w-4"
+                        spanClass="svyr-span svyr-h-full svyr-p-2 svyr-rounded-r-md svyr-bg-black svyr-cursor-pointer svyr-bg-opacity-20"
+                        svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-4 svyr-w-4"
                         onClick={() => {
                           const box =
                             iframe.current?.contentDocument!.getElementById(
@@ -282,10 +282,10 @@ const RecordingBody: FC<{
               } srvyr-button svyr-w-max svyr-rounded-full svyr-text-sm`}
               onClick={() => setShowList(!showList)}>
               <ListIcon
-                spanClass="svyr-w-8 svyr-h-full"
-                svgClass="svyr-fill-theme-on-surface svyr-h-6 svyr-w-6"
+                spanClass="svyr-span svyr-w-8 svyr-h-full"
+                svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-6 svyr-w-6"
               />
-              <span>List</span>
+              <span className="svyr-span">List</span>
             </button>
           </div>
 
@@ -324,10 +324,10 @@ const RecordingBody: FC<{
               }
             }}>
             <SaveIcon
-              spanClass="svyr-w-7 svyr-h-full"
-              svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+              spanClass="svyr-span svyr-w-7 svyr-h-full"
+              svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
             />
-            <span>Save</span>
+            <span className="svyr-span">Save</span>
           </button>
 
           {/* <button
@@ -336,14 +336,14 @@ const RecordingBody: FC<{
             className="srvyr-button svyr-w-max svyr-rounded-full svyr-border-[2px] svyr-border-theme-primary svyr-bg-transparent svyr-py-4 svyr-px-6 svyr-text-sm">
             <ExitIcon
               onClick={() => setPage("viz")}
-              spanClass="svyr-w-7 svyr-h-full"
-              svgClass=" svyr-h-5 svyr-w-5"
+              spanClass="svyr-span svyr-w-7 svyr-h-full"
+              svgClass="svyr-svg  svyr-h-5 svyr-w-5"
             />
-            <span className="svyr-h-full svyr-w-max">Exit</span>
+            <span className="svyr-span svyr-h-full svyr-w-max">Exit</span>
           </button> */}
           <ExitIcon
             onClick={() => setPage("viz")}
-            spanClass="svyr-w-8 svyr-h-8"
+            spanClass="svyr-span svyr-w-8 svyr-h-8"
             title="Exit"
           />
         </div>

@@ -218,7 +218,7 @@ export const ReplayBody: FC<{
             <div className="svyr-flex svyr-w-full svyr-justify-between">
               <div className="svyr-flex svyr-flex-row svyr-items-center svyr-justify-center">
                 <div className="svyr-h-[24px] svyr-w-1 svyr-bg-theme-primary"></div>
-                <h4 className="svyr-text-md svyr-ml-3 svyr-font-inter-semibold">
+                <h4 className="svyr-h4 svyr-text-md svyr-ml-3 svyr-font-inter-semibold">
                   {telemetry.id}
                 </h4>
               </div>
@@ -227,19 +227,19 @@ export const ReplayBody: FC<{
                 id="btn-replay"
                 className="svyr-flex svyr-w-max svyr-flex-row svyr-rounded-full svyr-bg-theme-primary svyr-py-4 svyr-px-6 svyr-font-inter-semibold svyr-text-sm">
                 <PlayIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+                  spanClass="svyr-span svyr-w-7 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
                 />
-                <span>Play</span>
+                <span className="svyr-span">Play</span>
               </button>
               <button
                 id="btn-stop"
                 className="svyr-hidden svyr-w-max svyr-flex-row svyr-rounded-full svyr-bg-theme-primary-disabled svyr-py-4 svyr-px-6 svyr-font-inter-semibold svyr-text-sm">
                 <StopIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+                  spanClass="svyr-span svyr-w-7 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
                 />
-                <span>Stop</span>
+                <span className="svyr-span">Stop</span>
               </button>
             </div>
 
@@ -252,7 +252,7 @@ export const ReplayBody: FC<{
               <div
                 id="svyr-iframe-loading"
                 className="svyr-absolute svyr-right-5 svyr-bottom-5 svyr-flex svyr-flex-row svyr-items-center">
-                <LoadingIcon svgClass="svyr-fill-theme-grey" />
+                <LoadingIcon svgClass="svyr-svg svyr-fill-theme-grey" />
               </div>
             </div>
 
@@ -281,21 +281,21 @@ export const ReplayBody: FC<{
         {filteredTelemetries ? (
           <>
             <div className="svyr-h-24">
-              <p className="svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
+              <p className="svyr-p svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recordings
               </p>
               <div className="svyr-mt-4 svyr-flex svyr-h-12 svyr-w-full svyr-flex-row svyr-overflow-hidden svyr-rounded-full svyr-border-[2px] svyr-border-theme-grey focus-within:svyr-border-theme-on-surface [&>*:nth-child(2)>*:nth-child(1)]:focus-within:svyr-fill-theme-on-surface">
                 <input
                   type="text"
                   placeholder="Search by ID..."
-                  className="svyr-box-border svyr-w-full svyr-bg-theme-surface svyr-p-4 svyr-text-theme-on-surface"
+                  className="svyr-input svyr-box-border svyr-w-full svyr-bg-theme-surface svyr-p-4 svyr-text-theme-on-surface"
                   onChange={e =>
                     searchTelemetries(e.target.value.toLowerCase())
                   }
                 />
                 <SearchIcon
-                  svgClass="svyr-fill-theme-grey svyr-h-6 svyr-w-6"
-                  spanClass="svyr-w-12 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-grey svyr-h-6 svyr-w-6"
+                  spanClass="svyr-span svyr-w-12 svyr-h-full"
                 />
               </div>
             </div>

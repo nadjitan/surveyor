@@ -1,6 +1,4 @@
-import {
-  stringToHTML,
-} from "@/utils/dashboard"
+import { stringToHTML } from "@/utils/dashboard"
 import Hashids from "hashids"
 
 interface Telemetry {
@@ -45,21 +43,21 @@ export function initSurveyor({
   const dataFoundDiv = `
   <div style="position: fixed; z-index: 50; display: grid; height: 100%; width: 100%; place-items: center; background-color: rgb(0 0 0 / 0.5); ">
     <div style="display: grid; place-items: center;">
-      <h1 style="font-size: 3.75rem; line-height: 1; font-weight: 700; color: rgb(255 255 255 / 1); ">
+      <h1 class="svyr-h1" style="font-size: 3.75rem; line-height: 1; font-weight: 700; color: rgb(255 255 255 / 1); ">
         Congratulations!
       </h1>
-      <p style="margin-top: 0.5rem;">You may now close this window.</p>
+      <p class="svyr-p" style="margin-top: 0.5rem;">You may now close this window.</p>
     </div>
   </div>`
   const sendingParentDiv = `
   <div id="srvyr-recording-status" style="pointer-events: none; position: fixed; top: 0px; left: 0px; display: grid; border-bottom-right-radius: 1.5rem; background-color: rgb(19, 21, 23); padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 0.75rem; padding-bottom: 0.75rem;">
     <div style="display: flex; height: max-content; align-items: center; gap: 0.75rem;">
       <div style="margin-top: 0.1rem; height: 0.5rem; width: 0.5rem; border-radius: 9999px; background-color: rgb(92, 56, 255);"></div>
-      <p style="font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: rgb(92, 56, 255);">
+      <p class="svyr-p" style="font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; color: rgb(92, 56, 255);">
         Recording...
       </p>
     </div>
-    <p style="margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.25rem;">Locate the "${locateMsg}"</p>
+    <p class="svyr-p" style="margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.25rem;">Locate the "${locateMsg}"</p>
   </div>`
 
   function clickEvent(e: MouseEvent | FocusEvent) {
@@ -135,7 +133,7 @@ export function initSurveyor({
           putTemplate(telemetry)
           document.getElementById(
             "srvyr-recording-status"
-          )!.innerHTML = `<p style="font-size: 0.875rem; line-height: 1.25rem;">Sending data...</p>`
+          )!.innerHTML = `<p class="svyr-p" style="font-size: 0.875rem; line-height: 1.25rem;">Sending data...</p>`
 
           // Delay because Firefox is unreliable with unload listener
           const time = Date.now()

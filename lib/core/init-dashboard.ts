@@ -209,13 +209,13 @@ export class SurveyorDashboard {
           percentage = p
 
           dnChartTextDiv!.innerHTML = `
-          <span>${p}% users</span> had minor issues when navigating the website.`
+          <span class="svyr-span">${p}% users</span> had minor issues when navigating the website.`
         } else if (aggregatedScores.get("100%")!.length > 0) {
           const p = (aggregatedScores.get("100%")!.length * 100) / dataLength
           percentage = p
 
           dnChartTextDiv!.innerHTML = `
-          <span>${p}% users</span> have successfully navigated through the desired path.`
+          <span class="svyr-span">${p}% users</span> have successfully navigated through the desired path.`
         } else {
           dnChartTextDiv!.textContent = `
           Everyone had a hard time navigating the website.`

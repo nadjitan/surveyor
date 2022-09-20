@@ -353,9 +353,9 @@ export const VizBody: FC<{
       <main className={clientStyle.clientContent}>
         <dialog
           id="srvyr-no-data"
-          className="svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
+          className="svyr-dialog svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
           <div className="svyr-grid svyr-h-[480px] svyr-w-[400px] svyr-flex-col svyr-place-items-center svyr-items-center svyr-rounded-3xl svyr-bg-theme-surface svyr-p-8 svyr-text-center svyr-text-theme-on-surface">
-            <span className="svyr-text-xl svyr-text-theme-on-surface">
+            <span className="svyr-span svyr-text-xl svyr-text-theme-on-surface">
               There needs to be data of website tester performance for this path
               to visualize the statistics off of.
             </span>
@@ -404,7 +404,7 @@ export const VizBody: FC<{
                   {/* MODAL */}
                   <div className="svyr-relative svyr-transform svyr-overflow-hidden svyr-rounded-lg svyr-text-left svyr-shadow-xl svyr-transition-all sm:svyr-my-8 sm:svyr-w-full sm:svyr-max-w-lg">
                     <div className="svyr-bg-theme-background svyr-px-4 svyr-pt-5 svyr-pb-4 sm:svyr-p-6 sm:svyr-pb-4">
-                      <h4 className="svyr-w-full svyr-text-center svyr-font-inter-medium">
+                      <h4 className="svyr-h4 svyr-w-full svyr-text-center svyr-font-inter-medium">
                         Are you sure you want to delete?
                       </h4>
 
@@ -434,7 +434,7 @@ export const VizBody: FC<{
                   id="titleInput"
                   className={`${
                     editTitle && "svyr-border-2 svyr-border-theme-grey"
-                  } svyr-ml-3 svyr-h-[38px] svyr-w-max svyr-max-w-md svyr-overflow-x-auto svyr-overflow-y-hidden svyr-rounded-lg svyr-bg-transparent svyr-p-2 svyr-font-inter-semibold`}
+                  } svyr-span svyr-ml-3 svyr-h-[38px] svyr-w-max svyr-max-w-md svyr-overflow-x-auto svyr-overflow-y-hidden svyr-rounded-lg svyr-bg-transparent svyr-p-2 svyr-font-inter-semibold`}
                   contentEditable={editTitle ? true : false}
                   suppressContentEditableWarning={true}>
                   {selectedRec.title}
@@ -442,10 +442,10 @@ export const VizBody: FC<{
 
                 <SaveIcon
                   title="Save Title"
-                  spanClass={`svyr-w-8 svyr-h-full svyr-ml-6 ${
+                  spanClass={`svyr-span svyr-w-8 svyr-h-full svyr-ml-6 ${
                     editTitle ? "svyr-flex" : "svyr-hidden"
                   }`}
-                  svgClass="svyr-fill-theme-grey svyr-h-5 svyr-w-5"
+                  svgClass="svyr-svg svyr-fill-theme-grey svyr-h-5 svyr-w-5"
                   onClick={() => {
                     setEditTitle(false)
                     editRecName()
@@ -453,16 +453,16 @@ export const VizBody: FC<{
                 />
                 <EditIcon
                   title="Edit Recording"
-                  spanClass={`svyr-w-8 svyr-h-full svyr-ml-6 ${
+                  spanClass={`svyr-span svyr-w-8 svyr-h-full svyr-ml-6 ${
                     !editTitle ? "svyr-flex" : "svyr-hidden"
                   }`}
-                  svgClass="svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
+                  svgClass="svyr-svg svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
                   onClick={() => setEditTitle(true)}
                 />
                 <DeleteIcon
                   title="Delete Recording"
-                  spanClass="svyr-w-8 svyr-h-full"
-                  svgClass="svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
+                  spanClass="svyr-span svyr-w-8 svyr-h-full"
+                  svgClass="svyr-svg svyr-stroke-theme-grey svyr-h-5 svyr-w-5"
                   onClick={() => setShowModal(true)}
                 />
               </div>
@@ -471,10 +471,10 @@ export const VizBody: FC<{
                 className="srvyr-button svyr-bg-theme-primary"
                 onClick={() => setPage("replay")}>
                 <PlayIcon
-                  spanClass="svyr-w-7 svyr-h-full"
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+                  spanClass="svyr-span svyr-w-7 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
                 />
-                <span>Play a Recording</span>
+                <span className="svyr-span">Play a Recording</span>
               </button>
             </div>
 
@@ -506,7 +506,7 @@ export const VizBody: FC<{
                 <div className="svyr-m-auto svyr-grid svyr-place-items-center">
                   There is no matching data to calculate...
                   <span
-                    className="svyr-cursor-pointer svyr-text-theme-primary svyr-underline"
+                    className="svyr-cursor-pointer svyr-text-base svyr-text-theme-primary svyr-underline"
                     onClick={() => {
                       const dialog = document.getElementById(
                         "srvyr-no-data"
@@ -582,8 +582,8 @@ export const VizBody: FC<{
 
         {recordedPaths.length === 0 && (
           <VEmpty
-            spanClass="svyr-m-auto"
-            svgClass="svyr-font-inter-medium svyr-select-none svyr-cursor-default"
+            spanClass="svyr-span svyr-m-auto"
+            svgClass="svyr-svg svyr-font-inter-medium svyr-select-none svyr-cursor-default"
           />
         )}
       </main>
@@ -592,7 +592,7 @@ export const VizBody: FC<{
         {mappedTelemetries ? (
           <>
             <div className="svyr-h-24">
-              <p className="svyr-select-none svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
+              <p className="svyr-p svyr-select-none svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recorded Paths
               </p>
 
@@ -600,14 +600,14 @@ export const VizBody: FC<{
                 <input
                   type="text"
                   placeholder="Search a pathing..."
-                  className="svyr-box-border svyr-w-full svyr-bg-theme-surface svyr-p-4 svyr-text-theme-on-surface"
+                  className="svyr-input svyr-box-border svyr-w-full svyr-bg-theme-surface svyr-p-4 svyr-text-theme-on-surface"
                   onChange={e =>
                     searchRecordedPaths(e.target.value.toLowerCase())
                   }
                 />
                 <SearchIcon
-                  svgClass="svyr-fill-theme-grey svyr-h-6 svyr-w-6"
-                  spanClass="svyr-w-12 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-grey svyr-h-6 svyr-w-6"
+                  spanClass="svyr-span svyr-w-12 svyr-h-full"
                 />
               </div>
             </div>
@@ -645,11 +645,11 @@ export const VizBody: FC<{
                   </div>
                 ))
               ) : recordedPaths.length === 0 ? (
-                <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
+                <span className="svyr-span svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
                   Empty...
                 </span>
               ) : (
-                <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
+                <span className="svyr-span svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
                   No results...
                 </span>
               )}
@@ -660,10 +660,10 @@ export const VizBody: FC<{
                 onClick={() => setPage("recording")}
                 className="srvyr-button svyr-w-4/5 svyr-rounded-full svyr-bg-theme-primary svyr-text-sm">
                 <PlayIcon
-                  svgClass="svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
-                  spanClass="svyr-w-8 svyr-h-full"
+                  svgClass="svyr-svg svyr-fill-theme-on-surface svyr-h-5 svyr-w-5"
+                  spanClass="svyr-span svyr-w-8 svyr-h-full"
                 />
-                <span>Record a new path</span>
+                <span className="svyr-span">Record a new path</span>
               </button>
             </div>
           </>

@@ -15,7 +15,7 @@ export const TempIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -35,7 +35,7 @@ export const DatabaseIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
   ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -61,7 +61,7 @@ export const PieChartIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
   ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -86,7 +86,7 @@ export const FilmIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
   ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -117,7 +117,7 @@ export const SaveIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -137,7 +137,7 @@ export const PauseIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -158,7 +158,7 @@ export const StopIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -178,7 +178,7 @@ export const PlayIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
   <svg
     ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -198,7 +198,7 @@ export const SearchIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}>
 <svg
   ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
@@ -218,7 +218,7 @@ export const DeleteIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
@@ -243,7 +243,7 @@ export const EditIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
@@ -266,7 +266,7 @@ export const ExitIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="46"
@@ -290,7 +290,7 @@ export const LoadingIcon = ({
   svgStyles,
   title,
 }: Props) => `<span ${title && `title="${title}"`} ${id && `id="${id}"`} ${
-  className && `class="${className}"`
+  className && `class="svyr-span ${className}"`
 } ${spanStyles && `style="${stylesToString(spanStyles!)}"`}><svg
 ${svgStyles && `style="${stylesToString(svgStyles!)}"`}
 width="44"

@@ -167,8 +167,8 @@ const DataBody: FC<{
             </select>
 
             <ChevronDownIcon
-              spanClass="svyr-absolute svyr-right-4 svyr-h-6 svyr-w-6 svyr-pointer-events-none"
-              svgClass="svyr-stroke-theme-on-surface"
+              spanClass="svyr-span svyr-absolute svyr-right-4 svyr-h-6 svyr-w-6 svyr-pointer-events-none"
+              svgClass="svyr-svg svyr-stroke-theme-on-surface"
             />
           </div>
 
@@ -243,7 +243,7 @@ const DataBody: FC<{
                         <input
                           data-telemetry-id={data.id}
                           type="checkbox"
-                          className="telemetry-id svyr-h-5 svyr-w-5"
+                          className="svyr-input telemetry-id svyr-h-5 svyr-w-5"
                         />
                       </td>
                       <td className="svyr-box-border svyr-w-[250px] svyr-break-words svyr-px-5 svyr-text-center svyr-text-sm">

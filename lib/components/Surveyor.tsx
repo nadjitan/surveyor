@@ -182,16 +182,16 @@ const Surveyor: FC<
       {dataFound && (
         <div className="srvyr-app svyr-fixed svyr-z-50 svyr-grid svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
           <div className="srvyr-app svyr-grid svyr-place-items-center">
-            <h1 className="srvyr-app svyr-text-6xl svyr-font-bold svyr-text-white">
+            <h1 className="svyr-h1 srvyr-app svyr-text-6xl svyr-font-bold svyr-text-white">
               Congratulations!
             </h1>
 
             {sendData ? (
-              <p className="srvyr-app svyr-mt-2">
+              <p className="svyr-p srvyr-app svyr-mt-2">
                 Sending data... Please wait a moment.
               </p>
             ) : (
-              <p className="srvyr-app svyr-mt-2">
+              <p className="svyr-p srvyr-app svyr-mt-2">
                 You may now close this window.
               </p>
             )}
