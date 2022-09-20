@@ -33,81 +33,81 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
     useState<MappedTelemetries | null>(null)
 
   const [recordedPaths, setRecordedPaths] = useState<Recording[]>([
-    // {
-    //   title: "Login",
-    //   data: [
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/",
-    //       class: "srvyr-vNXrnX0q",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/login",
-    //       class: "srvyr-ZqXOoqXA",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/login",
-    //       class: "srvyr-KLjWqG32",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/login",
-    //       class: "srvyr-2W3k7K3O",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Register",
-    //   data: [
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/",
-    //       class: "srvyr-vNXrnX0q",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/login",
-    //       class: "srvyr-ZpPZbdPx",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/register",
-    //       class: "srvyr-ZqXOoqXA",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/register",
-    //       class: "srvyr-KLjWqG32",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/register",
-    //       class: "srvyr-AYj8YOXp",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/register",
-    //       class: "srvyr-wB3wazjq",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/register",
-    //       class: "srvyr-qVXLL8Xz",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Forgot password",
-    //   data: [
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/",
-    //       class: "srvyr-vNXrnX0q",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/login",
-    //       class: "srvyr-wB3wazjq",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/forgot-password",
-    //       class: "srvyr-ZqXOoqXA",
-    //     },
-    //     {
-    //       url: "https://capstone-demo-site.vercel.app/forgot-password",
-    //       class: "srvyr-8V36GrPY",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Login",
+      data: [
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-vNXrnX0q",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-ZqXOoqXA",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-KLjWqG32",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-2W3k7K3O",
+        },
+      ],
+    },
+    {
+      title: "Register",
+      data: [
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-vNXrnX0q",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-ZpPZbdPx",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-ZqXOoqXA",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-KLjWqG32",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-AYj8YOXp",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-wB3wazjq",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-qVXLL8Xz",
+        },
+      ],
+    },
+    {
+      title: "Forgot password",
+      data: [
+        {
+          url: "https://capstone-demo-site.vercel.app/",
+          class: "srvyr-vNXrnX0q",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-wB3wazjq",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/forgot-password",
+          class: "srvyr-ZqXOoqXA",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/forgot-password",
+          class: "srvyr-8V36GrPY",
+        },
+      ],
+    },
   ])
 
   useEffect(() => {
