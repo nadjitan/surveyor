@@ -208,7 +208,9 @@ const Surveyor: FC<
             </p>
           </div>
 
-          <p className="srvyr-app svyr-mt-1 svyr-text-sm">{locateMsg}</p>
+          <p className="srvyr-app svyr-mt-1 svyr-text-sm svyr-text-white">
+            {locateMsg}
+          </p>
         </div>
       )}
       {/* {checkIfDataReached()} */}
