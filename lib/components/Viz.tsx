@@ -13,6 +13,7 @@ import {
   PlayIcon,
   SaveIcon,
   SearchIcon,
+  VEmpty,
 } from "./icons"
 
 import {
@@ -347,6 +348,40 @@ export const VizBody: FC<{
   return (
     <>
       <main className={clientStyle.clientContent}>
+        <dialog
+          id="srvyr-no-data"
+          className="svyr-fixed svyr-z-50 svyr-hidden svyr-h-full svyr-w-full svyr-place-items-center svyr-bg-black svyr-bg-opacity-50">
+          <div className="svyr-grid svyr-h-[480px] svyr-w-[400px] svyr-flex-col svyr-place-items-center svyr-items-center svyr-rounded-3xl svyr-bg-theme-surface svyr-p-8 svyr-text-center svyr-text-theme-on-surface">
+            <h3 className="svyr-text-2xl">
+              There needs to be data of website tester performance for this path
+              to visualize the statistics off of.
+            </h3>
+
+            <p className="svyr-text-base svyr-text-theme-grey">
+              However, for the purposes of this package demo, the recording
+              feature for website testers has been omitted.
+            </p>
+
+            <p className="svyr-text-base svyr-text-theme-grey">
+              Worry not, we have made and left paths with sample tester
+              performance for you to see the visualization aspect on the right
+              sidebar.
+            </p>
+
+            <button
+              onClick={() => {
+                const dialog = document.getElementById(
+                  "srvyr-no-data"
+                ) as HTMLDialogElement
+
+                dialog.style.display = "none"
+              }}
+              className="svyr-w-28 svyr-rounded-full svyr-bg-theme-primary svyr-p-2 svyr-font-inter-semibold svyr-text-sm">
+              Close
+            </button>
+          </div>
+        </dialog>
+
         {selectedRec && (
           <>
             <div
@@ -441,18 +476,18 @@ export const VizBody: FC<{
             </div>
 
             <div className={clientStyle.ccBodyTop}>
-              {userScores.length > 0 ? (
+              {userScores.length >= 1 ? (
                 <>
-                  <h5 className="svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
+                  <h5 className="svyr-absolute svyr-left-6 svyr-top-6 svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
                     User Performance Chart
                   </h5>
 
-                  <div className="svyr-flex svyr-h-full svyr-w-[95%] svyr-flex-row svyr-items-center svyr-gap-36 svyr-place-self-center">
+                  <div className="svyr-flex svyr-w-[95%] svyr-scale-90 svyr-flex-row svyr-items-center svyr-gap-28">
                     <div className="svyr-relative svyr-w-[80%]">
                       <canvas ref={bcContainer} id="bar-canvas" />
                     </div>
 
-                    <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-4">
+                    <div className="svyr-relative svyr-grid svyr-w-[40%] svyr-gap-2">
                       <canvas ref={dcContainer} id="doughnut-canvas" />
 
                       <div className="svyr-w-full svyr-bg-theme-container svyr-p-4 svyr-text-center svyr-font-inter-medium svyr-text-sm svyr-text-theme-on-surface">
@@ -465,8 +500,19 @@ export const VizBody: FC<{
                   </div>
                 </>
               ) : (
-                <div className="svyr-self-center svyr-justify-self-center">
+                <div className="svyr-m-auto svyr-grid svyr-place-items-center">
                   There is no matching data to calculate...
+                  <span
+                    className="svyr-cursor-pointer svyr-text-theme-primary svyr-underline"
+                    onClick={() => {
+                      const dialog = document.getElementById(
+                        "srvyr-no-data"
+                      ) as HTMLDialogElement
+
+                      dialog.style.display = "grid"
+                    }}>
+                    Why?
+                  </span>
                 </div>
               )}
             </div>
@@ -496,16 +542,25 @@ export const VizBody: FC<{
                           }}>
                           <h5>{up.score}%</h5>
 
-                          {up.telemetry.data.map((d, i) => {
-                            const page = d.url.split("/").pop()
-                              ? d.url.split("/").pop()
-                              : "/ "
-                            return i === 0 ? (
-                              <p key={i}>{page}</p>
-                            ) : (
-                              <p key={i}>&nbsp; &gt; {page} </p>
-                            )
-                          })}
+                          <div id="data-urls">
+                            {up.telemetry.data.map((d, i) => {
+                              const page = d.url.split("/").pop()
+                                ? d.url.split("/").pop()
+                                : "/ "
+                              return i === 0 ? (
+                                <span key={i} className="svyr-inline-flex">
+                                  &#x2F;
+                                </span>
+                              ) : (
+                                <span key={i} className="svyr-inline-flex">
+                                  <span className="svyr-text-theme-grey">
+                                    &nbsp;&#8594;&nbsp;
+                                  </span>
+                                  {page}
+                                </span>
+                              )
+                            })}
+                          </div>
                         </div>
                       ))}
                   </div>
@@ -513,6 +568,13 @@ export const VizBody: FC<{
               )}
             </div>
           </>
+        )}
+
+        {recordedPaths.length === 0 && (
+          <VEmpty
+            spanClass="svyr-m-auto"
+            svgClass="svyr-font-inter-medium svyr-cursor-default"
+          />
         )}
       </main>
 
@@ -574,7 +636,7 @@ export const VizBody: FC<{
                 ))
               ) : recordedPaths.length === 0 ? (
                 <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">
-                  Record a path to get started!
+                  Empty...
                 </span>
               ) : (
                 <span className="svyr-m-auto svyr-font-inter-medium svyr-text-sm svyr-text-theme-grey">

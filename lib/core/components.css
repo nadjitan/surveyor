@@ -198,6 +198,79 @@ input:focus {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+dialog {
+  width: 100% !important;
+  height: 100% !important;
+}
+/* #endregion */
+
+/**
+ * ----------------------------------------
+ *           SLIDES STYLES
+ * ----------------------------------------
+ * Source: https://css-tricks.com/css-only-carousel/
+ */
+/* #region */
+.slider {
+  @apply svyr-h-full svyr-w-full;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+
+  /*
+  scroll-snap-points-x: repeat(300px);
+  scroll-snap-type: mandatory;
+  */
+}
+.slides::-webkit-scrollbar {
+  /* width: 10px;
+  height: 10px; */
+  display: none;
+}
+/* .slides::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 10px;
+}
+.slides::-webkit-scrollbar-track {
+  background: transparent;
+} */
+.slides > div {
+  @apply svyr-flex svyr-h-full svyr-w-full svyr-shrink-0 svyr-snap-start svyr-flex-col;
+  margin-right: 50px;
+  transform-origin: center center;
+  transition: transform 0.5s;
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* .slides > div:target {
+  transform: scale(0.8);
+} */
+.slides-tab {
+  @apply svyr-h-3 svyr-w-3 svyr-cursor-pointer svyr-bg-theme-grey;
+
+  text-decoration: none;
+  border-radius: 50%;
+  position: relative;
+}
+.slides-tab.slides-tab-active {
+  @apply svyr-h-3 svyr-w-3 svyr-bg-theme-primary;
+}
+.slider-tab:active {
+  top: 1px;
+}
 /* #endregion */
 
 /**
@@ -424,7 +497,7 @@ input:focus {
   position: relative;
   display: grid;
   width: 40%;
-  gap: 1rem;
+  /* gap: 1rem; */
 }
 #charts-container #doughnut-chart > div {
   width: 100%;

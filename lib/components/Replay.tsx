@@ -303,9 +303,18 @@ export const ReplayBody: FC<{
             <div className={clientStyle.rnContainer}>
               {[...filteredTelemetries].map(([num, data]) => (
                 <div
-                  onClick={() =>
-                    allowChange && setTelemetry(mappedTelemetries.get(num))
-                  }
+                  onClick={() => {
+                    if (allowChange) {
+                      const timelineNodes =
+                        document.getElementsByClassName("svyr-tl-node")
+
+                      setTelemetry(mappedTelemetries.get(num))
+
+                      Array.from(timelineNodes).map(tl =>
+                        tl.classList.remove("svyr-node-selected")
+                      )
+                    }
+                  }}
                   key={num}
                   className={`replay-item svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-break-words svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
                     data.id === telemetry?.id ? " svyr-bg-theme-selected" : ""

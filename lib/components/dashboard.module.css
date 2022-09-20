@@ -1,5 +1,5 @@
 .clientBody {
-  @apply svyr-grid svyr-min-h-screen svyr-w-full svyr-text-theme-on-background;
+  @apply svyr-relative svyr-grid svyr-min-h-screen svyr-w-full svyr-text-theme-on-background;
   grid-template-areas:
     "lnav content rnav"
     "lnav content rnav";
@@ -12,6 +12,9 @@
 }
 .leftNav .lItem {
   @apply svyr-mt-4 svyr-flex svyr-h-16 svyr-w-full svyr-cursor-pointer svyr-flex-col svyr-items-center svyr-justify-center svyr-py-10;
+}
+.leftNav .lItem:nth-child(4) {
+  @apply svyr-mt-auto svyr-self-end;
 }
 
 .clientContent {
@@ -28,19 +31,20 @@
   @apply svyr-mt-8 svyr-box-border svyr-h-full svyr-w-full svyr-bg-theme-surface svyr-p-6;
 } */
 .clientContent .ccBodyTop {
-  @apply svyr-mt-8 svyr-box-border svyr-grid svyr-h-full svyr-max-h-full svyr-max-w-full svyr-overflow-y-auto svyr-bg-theme-surface svyr-p-6;
+  @apply svyr-relative svyr-mt-4 svyr-box-border svyr-grid svyr-h-full svyr-max-h-full svyr-max-w-full svyr-flex-col svyr-place-items-center svyr-overflow-y-auto svyr-bg-theme-surface svyr-px-6;
 }
 .clientContent .ccBodyBottom {
   @apply svyr-mt-4 svyr-box-border svyr-h-80 svyr-w-full svyr-overflow-hidden svyr-bg-theme-surface svyr-p-6;
 }
 .clientContent .ccBodyBottom .pathDataContainer {
-  @apply svyr-mt-2 svyr-flex svyr-cursor-pointer svyr-flex-row svyr-items-center svyr-overflow-y-auto svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected;
+  @apply svyr-mt-2 svyr-grid svyr-w-full svyr-cursor-pointer svyr-grid-flow-col-dense svyr-overflow-y-auto svyr-overflow-x-hidden svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&_span]:hover:svyr-text-theme-on-surface;
+  grid-template-columns: 3.8rem 1fr;
 }
 .clientContent .ccBodyBottom .pathDataContainer h5 {
-  @apply svyr-w-16 svyr-font-inter-semibold svyr-text-theme-on-surface;
+  @apply svyr-font-inter-semibold svyr-text-base svyr-text-theme-on-surface;
 }
-.clientContent .ccBodyBottom .pathDataContainer p {
-  @apply svyr-text-sm svyr-text-theme-on-surface;
+.clientContent .ccBodyBottom .pathDataContainer #data-urls {
+  @apply svyr-flex svyr-w-full svyr-text-sm svyr-text-theme-on-surface;
 }
 
 .rightNav {
