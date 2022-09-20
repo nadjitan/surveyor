@@ -63,6 +63,7 @@ export const VizBody: FC<{
 
   // Calculated using Levenshtein Distance
   const [userScores, setUserScores] = useState<UserPerformance[]>([])
+  const [userScoresEmpty, setUserScoresEmpty] = useState(true)
   const aggregatedScores = useRef(initAS)
   // Canvas
   const bcContainer = useRef(null)
@@ -152,6 +153,7 @@ export const VizBody: FC<{
       const fifty = []
       const one = []
 
+      let scores: UserPerformance[] = []
       for (const [_, telemetry] of mappedTelemetries) {
         if (telemetry.data.length > 0) {
           const userSteps: string[] = []
@@ -174,8 +176,7 @@ export const VizBody: FC<{
 
           if (lastStep === designerSteps.slice(-1)[0]) {
             const p = percentage
-
-            setUserScores(prev => [...prev, { score: p, telemetry: telemetry }])
+            scores.push({ score: p, telemetry: telemetry })
 
             if (p === 100) hundred.push(p)
             else if (p >= 75 && p <= 99) seventy.push(p)
@@ -184,6 +185,8 @@ export const VizBody: FC<{
           }
         }
       }
+
+      setUserScores(scores)
 
       aggregatedScores.current.set("100%", hundred)
       aggregatedScores.current.set("75% - 99%", seventy)
@@ -340,7 +343,7 @@ export const VizBody: FC<{
         bc.destroy()
         dc.destroy()
         aggregatedScores.current = initAS
-        setUserScores([])
+        // setUserScores([])
       }
     }
   }, [userScores])
@@ -476,7 +479,7 @@ export const VizBody: FC<{
             </div>
 
             <div className={clientStyle.ccBodyTop}>
-              {userScores.length >= 1 ? (
+              {userScores.length > 0 ? (
                 <>
                   <h5 className="svyr-absolute svyr-left-6 svyr-top-6 svyr-select-none svyr-font-inter-semibold svyr-text-theme-grey">
                     User Performance Chart
@@ -515,6 +518,7 @@ export const VizBody: FC<{
                   </span>
                 </div>
               )}
+              <></>
             </div>
 
             <div className={clientStyle.ccBodyBottom}>
@@ -612,7 +616,7 @@ export const VizBody: FC<{
                     }`}
                     onClick={() => {
                       if (r.title !== selectedRec?.title) {
-                        setUserScores([])
+                        // setUserScores([])
                         setSelectedRec(r)
                       }
                     }}>
