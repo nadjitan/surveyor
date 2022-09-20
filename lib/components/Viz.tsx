@@ -385,7 +385,7 @@ export const VizBody: FC<{
           </div>
         </dialog>
 
-        {selectedRec && (
+        {selectedRec ? (
           <>
             <div
               className={`svyr-relative svyr-z-10 ${
@@ -572,12 +572,18 @@ export const VizBody: FC<{
               )}
             </div>
           </>
+        ) : (
+          recordedPaths.length !== 0 && (
+            <div className="svyr-m-auto svyr-select-none svyr-text-sm svyr-font-semibold svyr-text-theme-grey">
+              Click on a path to view...
+            </div>
+          )
         )}
 
         {recordedPaths.length === 0 && (
           <VEmpty
             spanClass="svyr-m-auto"
-            svgClass="svyr-font-inter-medium svyr-cursor-default"
+            svgClass="svyr-font-inter-medium svyr-select-none svyr-cursor-default"
           />
         )}
       </main>
