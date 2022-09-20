@@ -38,19 +38,19 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
       data: [
         {
           url: "https://capstone-demo-site.vercel.app/",
-          class: "srvyr-vNXrnX0q",
+          class: "srvyr-MlPza3WK",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-ZqXOoqXA",
+          class: "srvyr-YnXmb23N",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-4qP06VXZ",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
           class: "srvyr-KLjWqG32",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-2W3k7K3O",
         },
       ],
     },
@@ -59,31 +59,31 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
       data: [
         {
           url: "https://capstone-demo-site.vercel.app/",
-          class: "srvyr-vNXrnX0q",
+          class: "srvyr-MlPza3WK",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
+          class: "srvyr-2W3k7K3O",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-YnXmb23N",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-4qP06VXZ",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
+          class: "srvyr-MdP10w3l",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/register",
           class: "srvyr-ZpPZbdPx",
         },
         {
           url: "https://capstone-demo-site.vercel.app/register",
-          class: "srvyr-ZqXOoqXA",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/register",
-          class: "srvyr-KLjWqG32",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/register",
-          class: "srvyr-AYj8YOXp",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/register",
           class: "srvyr-wB3wazjq",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/register",
-          class: "srvyr-qVXLL8Xz",
         },
       ],
     },
@@ -92,19 +92,19 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
       data: [
         {
           url: "https://capstone-demo-site.vercel.app/",
-          class: "srvyr-vNXrnX0q",
+          class: "srvyr-MlPza3WK",
         },
         {
           url: "https://capstone-demo-site.vercel.app/login",
-          class: "srvyr-wB3wazjq",
+          class: "srvyr-ZpPZbdPx",
+        },
+        {
+          url: "https://capstone-demo-site.vercel.app/forgot-password",
+          class: "srvyr-YnXmb23N",
         },
         {
           url: "https://capstone-demo-site.vercel.app/forgot-password",
           class: "srvyr-ZqXOoqXA",
-        },
-        {
-          url: "https://capstone-demo-site.vercel.app/forgot-password",
-          class: "srvyr-8V36GrPY",
         },
       ],
     },
