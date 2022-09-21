@@ -592,7 +592,7 @@ export const VizBody: FC<{
         {mappedTelemetries ? (
           <>
             <div className="svyr-h-24">
-              <p className="svyr-p svyr-select-none svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
+              <p className="svyr-select-none svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recorded Paths
               </p>
 

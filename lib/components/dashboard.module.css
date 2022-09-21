@@ -18,7 +18,7 @@
 }
 
 .clientContent {
-  @apply svyr-box-border svyr-flex svyr-h-full svyr-max-h-screen svyr-min-h-screen svyr-min-w-full svyr-max-w-full svyr-auto-rows-auto svyr-flex-col svyr-overflow-x-hidden svyr-bg-theme-background svyr-p-8;
+  @apply svyr-box-border svyr-flex svyr-h-full svyr-max-h-screen svyr-min-h-screen svyr-min-w-full svyr-max-w-full svyr-auto-rows-auto svyr-flex-col svyr-overflow-x-hidden svyr-bg-theme-background svyr-px-4 svyr-py-4;
   grid-area: "content";
 }
 .clientContent .ccHeader {
@@ -48,7 +48,7 @@
 }
 
 .rightNav {
-  @apply svyr-box-border svyr-flex svyr-max-h-screen svyr-min-h-screen svyr-flex-col svyr-overflow-y-auto svyr-overflow-x-hidden svyr-bg-theme-surface svyr-p-8;
+  @apply svyr-box-border svyr-flex svyr-max-h-screen svyr-min-h-screen svyr-flex-col svyr-overflow-y-auto svyr-overflow-x-hidden svyr-bg-theme-surface svyr-p-6;
   grid-area: "rnav";
 }
 .rightNav .rnContainer {

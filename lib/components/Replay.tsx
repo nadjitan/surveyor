@@ -243,7 +243,7 @@ export const ReplayBody: FC<{
               </button>
             </div>
 
-            <div className="svyr-relative svyr-mt-8 svyr-grid svyr-h-full svyr-w-full svyr-border svyr-border-theme-surface">
+            <div className="svyr-relative svyr-mt-4 svyr-grid svyr-h-full svyr-w-full svyr-border svyr-border-theme-surface">
               <iframe
                 ref={iframe}
                 id="svyr-website"
@@ -281,7 +281,7 @@ export const ReplayBody: FC<{
         {filteredTelemetries ? (
           <>
             <div className="svyr-h-24">
-              <p className="svyr-p svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
+              <p className="svyr-font-inter-semibold svyr-text-sm svyr-text-theme-grey">
                 Recordings
               </p>
               <div className="svyr-mt-4 svyr-flex svyr-h-12 svyr-w-full svyr-flex-row svyr-overflow-hidden svyr-rounded-full svyr-border-[2px] svyr-border-theme-grey focus-within:svyr-border-theme-on-surface [&>*:nth-child(2)>*:nth-child(1)]:focus-within:svyr-fill-theme-on-surface">
