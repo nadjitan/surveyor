@@ -1,16 +1,15 @@
 import { MappedTelemetries, Telemetry } from "@/utils/types"
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
-import { ChevronDownIcon, DeleteIcon, DownArrowIcon } from "./icons"
+import { ChevronDownIcon } from "./icons"
 import clientStyle from "./dashboard.module.css"
 
 import LazyObjectView from "lazy-object-view"
 import { showToast } from "@/utils/dashboard"
 
 const DataBody: FC<{
-  apiUrl: string
   mappedTelemetries: MappedTelemetries
   setMappedTelemetries: Dispatch<SetStateAction<MappedTelemetries | null>>
-}> = ({ apiUrl, mappedTelemetries, setMappedTelemetries }) => {
+}> = ({ mappedTelemetries, setMappedTelemetries }) => {
   const [telemetry, setTelemetry] = useState<Telemetry>()
   const [orderedList, setOrderedList] = useState<[number, Telemetry][]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])

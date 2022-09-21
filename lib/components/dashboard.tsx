@@ -338,7 +338,6 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
           )}
           {page === "data" && (
             <DataBody
-              apiUrl={apiUrl}
               setMappedTelemetries={setMappedTelemetries}
               mappedTelemetries={mappedTelemetries!}
             />

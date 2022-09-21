@@ -442,7 +442,7 @@ export const VizBody: FC<{
 
                 <SaveIcon
                   title="Save Title"
-                  spanClass={`svyr-span svyr-w-8 svyr-h-full svyr-ml-6 ${
+                  spanClass={`svyr-items-center svyr-center svyr-w-8 svyr-h-full svyr-ml-6 ${
                     editTitle ? "svyr-flex" : "svyr-hidden"
                   }`}
                   svgClass="svyr-svg svyr-fill-theme-grey svyr-h-5 svyr-w-5"
@@ -453,7 +453,7 @@ export const VizBody: FC<{
                 />
                 <EditIcon
                   title="Edit Recording"
-                  spanClass={`svyr-span svyr-w-8 svyr-h-full svyr-ml-6 ${
+                  spanClass={`svyr-items-center svyr-w-8 svyr-h-full svyr-ml-6 ${
                     !editTitle ? "svyr-flex" : "svyr-hidden"
                   }`}
                   svgClass="svyr-svg svyr-stroke-theme-grey svyr-h-5 svyr-w-5"

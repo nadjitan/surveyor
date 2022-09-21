@@ -183,17 +183,16 @@ export function initSurveyor({
     }
     // Make hashed classes for every element
     elems = Array.from(
-      document.body.querySelectorAll("*:not(script):not(style)")
+      document.body.querySelectorAll("*:not(script):not(style):not(.srvyr-app)")
     )
-    elems.forEach((elem, index) => {
+    elems.forEach((el, index) => {
       const newClass = `srvyr-${hashids.encode(index)}`
       if (index === 0) {
         // Avoid repetition of class name
         if (!document.body.classList.contains(newClass))
           document.body.classList.add(newClass)
       } else {
-        if (!elem.classList.contains(newClass))
-          elem.classList.add(`srvyr-${hashids.encode(index)}`)
+        if (!el.classList.contains(newClass)) el.classList.add(newClass)
       }
     })
   }
