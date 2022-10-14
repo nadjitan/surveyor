@@ -319,7 +319,33 @@ export const ReplayBody: FC<{
                   className={`replay-item svyr-mt-2 svyr-box-border svyr-w-full svyr-cursor-pointer svyr-select-none svyr-break-words svyr-rounded-md svyr-bg-theme-container svyr-p-3 hover:svyr-bg-theme-selected [&>*:nth-child(2)]:hover:svyr-text-theme-on-surface ${
                     data.id === telemetry?.id ? " svyr-bg-theme-selected" : ""
                   }`}>
-                  <h5>{data.id}</h5>
+                  <div>
+                    <span
+                      className={`svyr-w-max svyr-text-sm svyr-font-semibold${
+                        data.id !== telemetry?.id ? " svyr-text-theme-grey" : ""
+                      }`}>
+                      id:
+                    </span>
+                    &nbsp;
+                    <code className="svyr-text-theme-on-surface">
+                      {data.id}
+                    </code>
+                  </div>
+
+                  <div>
+                    <span
+                      className={`svyr-w-max svyr-text-sm svyr-font-semibold${
+                        data.id !== telemetry?.id ? " svyr-text-theme-grey" : ""
+                      }`}>
+                      path:
+                    </span>
+                    &nbsp;
+                    <code className="svyr-text-theme-on-surface">
+                      {data.data.at(-1)?.url.split("/").pop()
+                        ? data.data.at(-1)?.url.split("/").pop()
+                        : "/ "}
+                    </code>
+                  </div>
                 </div>
               ))}
             </div>

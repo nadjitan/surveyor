@@ -221,9 +221,14 @@ const DataBody: FC<{
               <tr className="svyr-mb-4 svyr-flex svyr-w-full svyr-text-theme-grey">
                 <th className="svyr-w-12 svyr-text-center"></th>
                 <th className="svyr-w-[250px] svyr-text-center">ID</th>
+                <th className="svyr-w-28">Path</th>
                 <th className="svyr-flex-1">Data</th>
-                <th className="svyr-w-56">Start Time</th>
-                <th className="svyr-w-56">End Time</th>
+                <th className="svyr-w-28 svyr-text-center svyr-text-sm">
+                  Start Time
+                </th>
+                <th className="svyr-w-28 svyr-text-center svyr-text-sm">
+                  End Time
+                </th>
               </tr>
             </thead>
             <tbody className="svyr-flex svyr-h-[70vh] svyr-flex-col svyr-items-center svyr-overflow-y-auto svyr-overflow-x-hidden">
@@ -248,13 +253,20 @@ const DataBody: FC<{
                       <td className="svyr-box-border svyr-w-[250px] svyr-break-words svyr-px-5 svyr-text-center svyr-text-sm">
                         {data.id}
                       </td>
+                      <td className="svyr-box-border svyr-w-36 svyr-break-words svyr-text-sm">
+                        {data.data.at(-1)?.url.split("/").pop()
+                          ? data.data.at(-1)?.url.split("/").pop()
+                          : "/ "}
+                      </td>
                       <td className="line-clamp-2 svyr-box-border svyr-flex-1 svyr-pr-3 svyr-text-sm svyr-text-theme-grey">
                         {JSON.stringify(data.data)}
                       </td>
-                      <td className="svyr-w-56">
+                      <td className="svyr-w-28 svyr-text-center svyr-text-sm">
                         {startTime.toLocaleString()}
                       </td>
-                      <td className="svyr-w-56">{endTime.toLocaleString()}</td>
+                      <td className="svyr-w-28 svyr-text-center svyr-text-sm">
+                        {endTime.toLocaleString()}
+                      </td>
                     </tr>
                   )
                 })}
@@ -266,19 +278,33 @@ const DataBody: FC<{
       <nav className={clientStyle.rightNav}>
         {telemetry && (
           <div className="svyr-box-border svyr-grid svyr-w-full svyr-gap-4 svyr-break-words svyr-pr-2">
-            <div className="svyr-break-words svyr-text-theme-grey">
-              <span className="svyr-w-max svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
-                id{" "}
+            <div className="svyr-break-all svyr-text-theme-grey">
+              <span className="svyr-w-full svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
+                id
               </span>
+              &nbsp;&nbsp;
               <code className="svyr-text-theme-on-surface">
                 {telemetry?.id}
               </code>
             </div>
 
+            <div className="svyr-break-words svyr-text-theme-grey">
+              <span className="svyr-w-max svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
+                path
+              </span>
+              &nbsp;&nbsp;
+              <code className="svyr-text-theme-on-surface">
+                {telemetry.data.at(-1)?.url.split("/").pop()
+                  ? telemetry.data.at(-1)?.url.split("/").pop()
+                  : "/ "}
+              </code>
+            </div>
+
             <div className="svyr-text-theme-grey">
               <span className="svyr-w-max svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
-                startTime{" "}
+                startTime
               </span>
+              &nbsp;&nbsp;
               <code className="svyr-text-theme-on-surface">
                 {telemetry?.startTime}
               </code>
@@ -286,8 +312,9 @@ const DataBody: FC<{
 
             <div className="svyr-text-theme-grey">
               <span className="svyr-w-max svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
-                endTime{" "}
+                endTime
               </span>
+              &nbsp;&nbsp;
               <code className="svyr-text-theme-on-surface">
                 {telemetry?.endTime}
               </code>
@@ -295,7 +322,7 @@ const DataBody: FC<{
 
             <div className="svyr-text-theme-grey">
               <span className="svyr-w-max svyr-rounded svyr-bg-theme-container svyr-py-[0.1rem] svyr-px-2 svyr-font-inter-semibold svyr-text-theme-grey">
-                data{" "}
+                data
               </span>
               <code
                 id="telemetry-data-viewer"
