@@ -334,12 +334,14 @@ const Client: FC<{ apiUrl: string }> = ({ apiUrl }) => {
             <ReplayBody
               mappedTelemetries={mappedTelemetries!}
               telemetryIndex={telemetryIndex}
+              recordedPaths={recordedPaths}
             />
           )}
           {page === "data" && (
             <DataBody
               setMappedTelemetries={setMappedTelemetries}
               mappedTelemetries={mappedTelemetries!}
+              recordedPaths={recordedPaths}
             />
           )}
         </div>

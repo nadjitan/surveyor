@@ -1,4 +1,4 @@
-import { MappedTelemetries, Telemetry } from "@/utils/types"
+import { MappedTelemetries, Recording, Telemetry } from "@/utils/types"
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { ChevronDownIcon } from "./icons"
 import clientStyle from "./dashboard.module.css"
@@ -9,7 +9,8 @@ import { showToast } from "@/utils/dashboard"
 const DataBody: FC<{
   mappedTelemetries: MappedTelemetries
   setMappedTelemetries: Dispatch<SetStateAction<MappedTelemetries | null>>
-}> = ({ mappedTelemetries, setMappedTelemetries }) => {
+  recordedPaths: Recording[]
+}> = ({ mappedTelemetries, setMappedTelemetries, recordedPaths }) => {
   const [telemetry, setTelemetry] = useState<Telemetry>()
   const [orderedList, setOrderedList] = useState<[number, Telemetry][]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -221,7 +222,7 @@ const DataBody: FC<{
               <tr className="svyr-mb-4 svyr-flex svyr-w-full svyr-text-theme-grey">
                 <th className="svyr-w-12 svyr-text-center"></th>
                 <th className="svyr-w-[250px] svyr-text-center">ID</th>
-                <th className="svyr-w-28">Path</th>
+                <th className="svyr-w-32">Path</th>
                 <th className="svyr-flex-1">Data</th>
                 <th className="svyr-w-28 svyr-text-center svyr-text-sm">
                   Start Time
@@ -236,6 +237,13 @@ const DataBody: FC<{
                 [...orderedList].map(([num, data]) => {
                   const startTime = new Date(data.startTime)
                   const endTime = new Date(data.endTime)
+
+                  const pathing = recordedPaths.find(
+                    rp =>
+                      rp.data.at(-1)?.class === data.data.at(-1)?.class &&
+                      rp.data.at(-1)?.url === data.data.at(-1)?.url
+                  )
+
                   return (
                     <tr
                       key={num}
@@ -253,10 +261,12 @@ const DataBody: FC<{
                       <td className="svyr-box-border svyr-w-[250px] svyr-break-words svyr-px-5 svyr-text-center svyr-text-sm">
                         {data.id}
                       </td>
-                      <td className="svyr-box-border svyr-w-36 svyr-break-words svyr-text-sm">
-                        {data.data.at(-1)?.url.split("/").pop()
-                          ? data.data.at(-1)?.url.split("/").pop()
-                          : "/ "}
+                      <td className="svyr-box-border svyr-w-32 svyr-break-words svyr-text-sm">
+                        {pathing ? (
+                          pathing.title
+                        ) : (
+                          <span className="svyr-text-theme-grey">unset</span>
+                        )}
                       </td>
                       <td className="line-clamp-2 svyr-box-border svyr-flex-1 svyr-pr-3 svyr-text-sm svyr-text-theme-grey">
                         {JSON.stringify(data.data)}
